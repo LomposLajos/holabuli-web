@@ -1,8 +1,8 @@
-// Holabuli service worker – a 9a6d63e és /holabuli-web helyére a szerver (vagy a statikus build) ír értéket.
+// Holabuli service worker – a 9a6d63e-hqy3d és /holabuli-web helyére a szerver (vagy a statikus build) ír értéket.
 // Új build → új cache-név → a régi cache törlődik, skipWaiting + clients.claim után a kliens újratölt.
 const BASE = '/holabuli-web';
-const VERSION = 'holabuli-9a6d63e';
-const STATIC = [BASE + '/css/tokens.css?v=9a6d63e', BASE + '/css/base.css?v=9a6d63e', BASE + '/css/components.css?v=9a6d63e', BASE + '/js/app.js?v=9a6d63e', BASE + '/manifest.webmanifest', BASE + '/img/icon-192.png'];
+const VERSION = 'holabuli-9a6d63e-hqy3d';
+const STATIC = [BASE + '/css/tokens.css?v=9a6d63e-hqy3d', BASE + '/css/base.css?v=9a6d63e-hqy3d', BASE + '/css/components.css?v=9a6d63e-hqy3d', BASE + '/css/temak.css?v=9a6d63e-hqy3d', BASE + '/js/app.js?v=9a6d63e-hqy3d', BASE + '/js/tema.js?v=9a6d63e-hqy3d', BASE + '/manifest.webmanifest', BASE + '/img/icon-192.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(STATIC)).catch(() => {}).then(() => self.skipWaiting()));

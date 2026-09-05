@@ -1,5 +1,5 @@
 /* Kapu-mód: teljes képernyős, sötét, egy kézzel a kidobó telefonján. Nincs tabbar. */
-.body-kapu { background: #000; }
+.body-kapu { background: var(--kapu-bg); }
 .kapu {
   position: relative;
   max-width: var(--maxw);
@@ -9,7 +9,7 @@
   flex-direction: column;
   padding: calc(30px + var(--safe-t)) var(--pad) calc(14px + var(--safe-b));
   background:
-    radial-gradient(120% 40% at 50% -10%, rgba(139, 92, 246, 0.26), transparent 60%),
+    radial-gradient(120% 40% at 50% -10%, var(--halo), transparent 60%),
     var(--bg);
 }
 @media (min-width: 720px) { .kapu { box-shadow: 0 0 0 1px var(--line), var(--sh-2); } }
@@ -24,7 +24,7 @@
 .kc { min-width: 74px; padding: 10px 10px 8px; border-radius: var(--r-m); background: var(--surface); border: 1px solid var(--line); text-align: center; display: flex; flex-direction: column; }
 .kc b { font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
 .kc span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 5px; }
-.kc-bent { background: rgba(163, 230, 53, 0.12); border-color: rgba(163, 230, 53, 0.4); }
+.kc-bent { background: var(--ok-soft); border-color: var(--ok-line); }
 .kc-bent b { color: var(--ok); }
 .kc b.bump { animation: bump 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
 @keyframes bump { 40% { transform: scale(1.25); } }
@@ -49,7 +49,7 @@
 .reader-line { position: absolute; left: 8px; right: 8px; top: 0; height: 2px; background: var(--brand); box-shadow: 0 0 12px var(--brand); opacity: 0; }
 .kapu.scanning .reader-line { opacity: 0.9; animation: scanline 2.2s ease-in-out infinite; }
 @keyframes scanline { 0%, 100% { top: 4%; } 50% { top: 96%; } }
-.reader-idle { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; gap: 10px; background: radial-gradient(60% 60% at 50% 40%, rgba(139, 92, 246, 0.2), transparent 70%), var(--bg-2); }
+.reader-idle { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; gap: 10px; background: radial-gradient(60% 60% at 50% 40%, var(--halo), transparent 70%), var(--bg-2); }
 .reader-idle-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; margin-bottom: 4px; }
 .reader-idle-ico svg { width: 36px; height: 36px; fill: var(--brand); }
 .reader-idle p { color: var(--muted); font-size: var(--fs-s); max-width: 260px; }
@@ -89,9 +89,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 .kapu-overlay.show { opacity: 1; transform: none; }
-.kapu-overlay.ok { background: var(--ok); color: #0b1a05; }
+.kapu-overlay.ok { background: var(--ok); color: var(--on-ok); }
 .kapu-overlay.err { background: var(--err); background: color-mix(in srgb, var(--err) 78%, #000); color: #fff; }
-.kapu-overlay.warn { background: var(--warn); color: #1a1033; }
+.kapu-overlay.warn { background: var(--warn); color: var(--on-accent); }
 .ov-ikon { width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; font-size: 96px; font-weight: 900; line-height: 1; border: 6px solid currentColor; margin-bottom: 20px; padding-bottom: 6px; animation: ov-pop 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
 .ov-cim { font-size: clamp(34px, 10.5vw, 46px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.05; text-wrap: balance; }
 .ov-nev { font-size: var(--fs-2xl); font-weight: 800; margin-top: 10px; line-height: 1.15; overflow-wrap: anywhere; }

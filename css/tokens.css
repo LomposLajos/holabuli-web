@@ -1,33 +1,88 @@
-/* Holabuli dizájn-tokenek — egy helyen a paletta, tipó, távolságok, érintés-mérce. */
+/* Holabuli dizájn-tokenek. Az ALAPÉRTELMEZETT téma: „Neon éjjel”.
+   Minden szín innen jön; a többi téma a temak.css-ben CSAK ezeket írja felül
+   (`html[data-tema="..."]`). Ha új komponens kell, SOHA ne égess bele színt. */
 :root {
+  /* --- felületek --- */
   --bg: #0b0b12;
   --bg-2: #101019;
   --surface: #161624;
   --surface-2: #1f1f31;
   --line: rgba(255, 255, 255, 0.08);
+  --outside: #07070c;                       /* asztali háttér a „telefon” körül */
+  --halo: rgba(139, 92, 246, 0.22);         /* fény a lap tetején */
 
+  /* --- szöveg --- */
   --text: #f6f6fb;
   --muted: #a5a5c0;
-  --faint: #6f6f8a;
+  --faint: #797994;
 
+  /* --- márka --- */
   --brand: #ff4fa3;
   --brand-2: #8b5cf6;
   --brand-grad: linear-gradient(135deg, #ff4fa3 0%, #8b5cf6 100%);
   --gold-grad: linear-gradient(135deg, #fbbf24, #f97316);
+  --ring-grad: conic-gradient(from calc(var(--i, 0) * 53deg), #ff4fa3, #8b5cf6, #22d3ee, #ff4fa3);
+  --promo-grad: linear-gradient(135deg, rgba(255, 79, 163, 0.16), rgba(139, 92, 246, 0.16));
+  --brand-tint: linear-gradient(135deg, rgba(255, 79, 163, 0.2), rgba(139, 92, 246, 0.2));
+  --brand-line: rgba(255, 79, 163, 0.4);    /* márka-színű keret */
+  --brand-glow: rgba(255, 79, 163, 0.28);   /* elsődleges gomb árnyéka */
+  --brand-halo: rgba(255, 79, 163, 0.75);   /* logó-pötty ragyogása */
+  --focus-ring: rgba(255, 79, 163, 0.2);
+  --on-brand: #fff;                          /* szöveg a márka-felületen */
+  --on-accent: #1a1033;                      /* szöveg arany/figyelmeztető felületen */
 
+  /* --- állapotok --- */
   --ok: #a3e635;
+  --ok-grad: linear-gradient(90deg, #a3e635, #65a30d);
+  --ok-soft: rgba(163, 230, 53, 0.12);
+  --ok-line: rgba(163, 230, 53, 0.4);
+  --ok-ink: #d9f99d;
+  --on-ok: #0b1a05;                          /* szöveg a teli zöld kapu-overlayen */
   --warn: #fbbf24;
   --err: #ff5c7a;
+  --err-soft: rgba(255, 92, 122, 0.12);
+  --err-line: rgba(255, 92, 122, 0.35);
+  --err-ink: #ffb3c2;
   --info: #38bdf8;
 
+  /* --- rétegek, fátylak --- */
+  --bar: rgba(11, 11, 18, 0.92);             /* tab-sáv, CTA-sáv, chat-fejléc */
+  --scrim: rgba(11, 11, 18, 0.55);           /* kerek gomb kép fölött */
+  --scrim-ink: #fff;
+  --backdrop: rgba(0, 0, 0, 0.6);            /* alsó lap mögötti sötétítés */
+  --overlay-page: #000;                      /* sztori-nézegető háttere */
+  --card-shade: rgba(5, 5, 10, 0.82);        /* plakát-kártya alsó sötétítése */
+  --hero-shade-top: rgba(11, 11, 18, 0.4);
+  --hero-shade-bottom: rgba(11, 11, 18, 0.88);
+  --kapu-bg: #000;                           /* kapu-mód: teljes sötét */
+  --own-msg: rgba(139, 92, 246, 0.25);       /* saját chat-buborék */
+
+  /* --- „papír” felületek (jegy, kapu-link kártya) --- */
+  --paper: #fff;
+  --ink: #0b0b12;
+  --ink-2: #5b5b70;
+  --paper-line: rgba(11, 11, 18, 0.15);
+  --stamp: #16a34a;                          /* BELÉPETT pecsét */
+  --knob: #fff;                              /* kapcsoló gombja */
+
+  /* --- avatár-színek (hue-lépés a névkezdőbetűs körökhöz) --- */
+  --avatar-hue: 300;
+  --avatar-sat: 70%;
+  --avatar-lum: 45%;
+
+  /* --- forma --- */
   --r-s: 10px;
   --r-m: 16px;
   --r-l: 24px;
   --r-xl: 32px;
-
   --sh-1: 0 6px 20px rgba(0, 0, 0, 0.35);
   --sh-2: 0 14px 44px rgba(0, 0, 0, 0.55);
 
+  /* --- tipográfia --- */
+  --font: Inter, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --font-cim: var(--font);                   /* címsorok (témánként más lehet) */
+  --cim-spacing: -0.02em;
+  --cim-transform: none;
   --fs-xs: 12px;
   --fs-s: 15px;
   --fs-m: 17px;
@@ -36,13 +91,12 @@
   --fs-2xl: 30px;
   --fs-3xl: 36px;
 
-  /* Mobil érintés-mérce: minden gomb ≥ 48 px, elsődleges 56 px. */
+  /* --- méretek --- */
   --tap: 48px;
   --tap-l: 56px;
   --gap: 16px;
   --pad: 20px;
   --maxw: 520px;
-
   --tabbar: 64px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
