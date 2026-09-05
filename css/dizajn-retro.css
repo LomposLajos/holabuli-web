@@ -1,0 +1,617 @@
+/* ==========================================================================
+   Holabuli DIZÁJN-VÁLTOZAT: RETRÓ — 70-es évekbeli disco-plakát
+   --------------------------------------------------------------------------
+   Bemutató-eszköz (D-013): a megrendelő több TELJESEN MÁS megjelenést vet össze.
+   Nyelv: meleg borostyán–rozsda–krém, espresso-barna éjszaka, vastag kerek
+   betűk (Fredoka + Outfit), nagy formák, erős lekerekítés (22–36 px).
+
+   A LEGFONTOSABB SZERKEZETI ELTÉRÉS az alaptól:
+   a lista EGY hasábos, teljes szélességű NAGY plakát-kártyákkal, és a szöveg
+   NEM a képre kerül, hanem a kép alatti KRÉM „talpra” (mint egy kartonra
+   ragasztott plakát). Ehhez a `.card-poster` egész felépítése átíródik.
+
+   Minden szabály `html[data-dizajn="retro"]` alatt van, hogy a többi változat
+   és az alap („Neon”) érintetlen maradjon.
+
+   ⚠️ SPECIFICITÁS-CSAPDA: a `html[data-dizajn="retro"] .valami` erősebb, mint a
+   components.css `.valami.modositó` szabálya, ezért MINDEN módosítót
+   (`.ring.sm`, `.chip.sm`, `.btn-xl`, `.tile-ok`, `.info-row:last-child` …)
+   itt újra ki kell mondani. Lásd lentebb a „módosítók” blokkokat.
+   ========================================================================== */
+
+html[data-dizajn="retro"] {
+  /* --- felületek: espresso-barna éjszaka (sötét marad, tulaj-döntés) --- */
+  --bg: #190f06;
+  --bg-2: #201509;
+  --surface: #2b1c0d;
+  --surface-2: #3a2712;
+  --line: rgba(255, 216, 168, 0.18);
+  --outside: #120a03;
+  --halo: rgba(234, 88, 12, 0.26);
+
+  /* --- szöveg: krém és homok (mind ≥ 4.5:1 a barna alapon) --- */
+  --text: #fdf1dd;                            /* 16,9:1 */
+  --muted: #dcb98d;                           /* 10,2:1 */
+  --faint: #b7986b;                           /*  6,9:1 */
+
+  /* --- márka: borostyán → narancs → paprikapiros --- */
+  --brand: #f97316;
+  --brand-2: #fbbf24;
+  --brand-grad: linear-gradient(135deg, #fcd34d 0%, #fb923c 55%, #ef4444 100%);
+  --gold-grad: linear-gradient(135deg, #fde68a, #f59e0b);
+  --ring-grad: conic-gradient(from calc(var(--i, 0) * 53deg), #fcd34d, #f97316, #dc2626, #b45309, #fcd34d);
+  --promo-grad: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(251, 191, 36, 0.16));
+  --brand-tint: linear-gradient(135deg, rgba(249, 115, 22, 0.24), rgba(251, 191, 36, 0.18));
+  --brand-line: rgba(251, 146, 60, 0.5);
+  --brand-glow: rgba(249, 115, 22, 0.35);
+  --brand-halo: rgba(251, 191, 36, 0.85);
+  --focus-ring: rgba(251, 191, 36, 0.3);
+  --on-brand: #2a1002;                        /* sötét tinta a világos borostyánon */
+  --on-accent: #2a1002;
+
+  /* --- állapotok --- */
+  --ok: #84cc16;
+  --ok-grad: linear-gradient(90deg, #bef264, #65a30d);
+  --ok-soft: rgba(132, 204, 22, 0.16);
+  --ok-line: rgba(132, 204, 22, 0.45);
+  --ok-ink: #d9f99d;
+  --on-ok: #14200a;
+  --warn: #fcd34d;
+  /* A kapu PIROS overlayén fehér az óriás felirat; a shared réteg 78%-ban
+     feketével keveri. A halvány #f87171 így csak 4,4:1 lett — ez a telítettebb
+     retró-piros 6,3:1-et ad. */
+  --err: #e04338;
+  --err-soft: rgba(248, 113, 113, 0.15);
+  --err-line: rgba(248, 113, 113, 0.42);
+  --err-ink: #fecdd3;
+
+  /* --- rétegek, fátylak --- */
+  --bar: rgba(25, 15, 6, 0.95);
+  --scrim: rgba(25, 15, 6, 0.62);
+  --scrim-ink: #fdf1dd;
+  --backdrop: rgba(12, 6, 2, 0.68);
+  --overlay-page: #0d0703;
+  --card-shade: rgba(20, 10, 2, 0.85);
+  --hero-shade-top: rgba(25, 15, 6, 0.42);
+  --hero-shade-bottom: rgba(25, 15, 6, 0.92);
+  --kapu-bg: #100901;
+  --own-msg: rgba(251, 191, 36, 0.22);
+
+  /* --- „papír”: a krém talp, a jegy és a csempék anyaga --- */
+  --paper: #fbf1de;
+  --ink: #2a1a08;                             /* 15,6:1 a krémen */
+  --ink-2: #7a5c3c;                           /*  5,5:1 a krémen */
+  --paper-line: rgba(42, 26, 8, 0.22);
+  --stamp: #3f6b0a;                           /*  5,6:1 a krémen */
+  --knob: #fdf1dd;
+
+  /* --- avatár-körök: meleg terrakotta skála --- */
+  --avatar-hue: 22;
+  --avatar-sat: 66%;
+  --avatar-lum: 48%;
+
+  /* --- forma: mindenhol erős lekerekítés (a brief 22–36 px-e) --- */
+  --r-s: 14px;
+  --r-m: 22px;
+  --r-l: 28px;
+  --r-xl: 36px;
+  --sh-1: 0 12px 30px rgba(30, 12, 2, 0.58);  /* meleg (barna) árnyék, nem semleges fekete */
+  --sh-2: 0 22px 56px rgba(30, 12, 2, 0.7);
+
+  /* --- tipográfia: kerek, barátságos, vastag --- */
+  --font: Outfit, Inter, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --font-cim: Fredoka, Outfit, Inter, "Segoe UI", system-ui, sans-serif;
+  --cim-spacing: 0;
+  --cim-transform: none;
+  --fs-xs: 12px;
+  --fs-s: 15px;
+  --fs-m: 17px;
+  --fs-l: 21px;
+  --fs-xl: 26px;
+  --fs-2xl: 32px;
+  --fs-3xl: 40px;
+
+  /* --- méretek: nagyobb elemek, több levegő --- */
+  --tap: 48px;
+  --tap-l: 60px;                              /* → gombok, kereső, űrlap-mezők 60 px */
+  --gap: 18px;
+  --pad: 20px;
+  --tabbar: 70px;
+
+  /* --- saját, csak itt használt színek --- */
+  --rozsda: #96490a;                          /* dátum-sor a krém talpon, 5,8:1 */
+  --matrica-keret: rgba(42, 26, 8, 0.16);
+}
+
+/* ==========================================================================
+   1) ALAP: tipográfia és a lap „napsugaras” háttere
+   ========================================================================== */
+
+/* Az Outfit csak 500/700/800-ban töltődik be, ezért a törzs-szöveg 500-as:
+   ez adja a „vastag, barátságos” alaphangot. */
+html[data-dizajn="retro"] body { font-weight: 500; }
+
+/* A Fredoka legnagyobb betöltött vastagsága 700 — 800-at ne kérjünk, mert
+   a böngésző hamis (torzított) félkövéret rajzolna. Nagyobb sortáv is jár. */
+html[data-dizajn="retro"] h1 { font-weight: 700; line-height: 1.18; }
+html[data-dizajn="retro"] h2 { font-weight: 700; line-height: 1.22; }
+html[data-dizajn="retro"] h3 { font-weight: 600; line-height: 1.28; }
+
+/* Disco-napsugár: KESKENY, halvány sugarak a lap tetejéből + meleg fény.
+   Szándékosan gyenge (0,05 alfa): háttér-textúra legyen, ne minta. */
+html[data-dizajn="retro"] .page {
+  background:
+    repeating-conic-gradient(from 187deg at 50% -2%,
+      rgba(252, 211, 77, 0.05) 0deg 3.6deg, transparent 3.6deg 12deg),
+    radial-gradient(135% 46% at 50% -8%, var(--halo), transparent 62%),
+    var(--bg);
+}
+html[data-dizajn="retro"] .section { margin-top: 28px; }
+
+/* ==========================================================================
+   2) FEJLÉC: márka, város-pirula, óriás cím, párnás kereső
+   ========================================================================== */
+
+html[data-dizajn="retro"] .brand {
+  font-family: var(--font-cim);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0;
+  gap: 11px;
+}
+html[data-dizajn="retro"] .brand-mark {
+  width: 18px; height: 18px;
+  box-shadow: 0 0 22px var(--brand-halo), inset 0 0 0 3px rgba(42, 16, 2, 0.35);
+}
+html[data-dizajn="retro"] .city-pill {
+  height: 42px;
+  padding: 0 16px;
+  border: 2px solid var(--brand-line);
+  background: transparent;
+  font-weight: 700;
+}
+html[data-dizajn="retro"] .city-pill svg { fill: var(--brand-2); }
+
+/* A tagline SZILÁRD borostyán + rozsda „nyomdahiba”-árnyék.
+   (Az alap átlátszó, gradienssel kitöltött szövegére a text-shadow ráfeküdne,
+   ezért itt a gradiens-kitöltést kikapcsoljuk.) */
+html[data-dizajn="retro"] .hero-title {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--warn);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 14px 0 12px;
+  text-shadow: 0 4px 0 #a83f06, 0 6px 0 rgba(0, 0, 0, 0.35);
+}
+html[data-dizajn="retro"] .search {
+  height: 58px;
+  border-radius: 999px;
+  border: 2px solid var(--brand-line);
+  padding: 0 20px;
+  gap: 12px;
+}
+html[data-dizajn="retro"] .search svg { fill: var(--brand-2); width: 22px; height: 22px; }
+html[data-dizajn="retro"] .search input { font-weight: 500; }
+
+/* ==========================================================================
+   3) SZTORI-SÁV: nagyobb körök, vastag színes gyűrűvel
+   ========================================================================== */
+
+html[data-dizajn="retro"] .story-strip { gap: 15px; padding-top: 16px; padding-bottom: 6px; }
+html[data-dizajn="retro"] .story { width: 84px; gap: 7px; }
+html[data-dizajn="retro"] .ring { width: 74px; height: 74px; padding: 5px; }
+html[data-dizajn="retro"] .ring-in {
+  border: 4px solid var(--bg);
+  font-family: var(--font-cim);
+  font-weight: 600;
+  font-size: 21px;
+  background: var(--surface-2);
+}
+/* módosító visszaállítása (lásd a fejléc specificitás-figyelmeztetését) */
+html[data-dizajn="retro"] .ring.sm { width: 42px; height: 42px; padding: 3px; }
+html[data-dizajn="retro"] .ring.sm .ring-in { font-size: 14px; border-width: 2px; }
+html[data-dizajn="retro"] .story-nev {
+  max-width: 84px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   4) SZŰRŐ-CHIPEK: nagy, párnás pirulák
+   ========================================================================== */
+
+html[data-dizajn="retro"] .chips { gap: 10px; padding-top: 14px; padding-bottom: 6px; }
+html[data-dizajn="retro"] .chip {
+  height: 50px;
+  padding: 0 20px;
+  border: 2px solid var(--brand-line);
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: var(--fs-m);
+}
+html[data-dizajn="retro"] .chip.on {
+  background: var(--text);
+  color: var(--ink);
+  border-color: var(--text);
+}
+html[data-dizajn="retro"] .chip.gold {
+  background: var(--gold-grad);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+/* a hős-képen ülő apró címkék (nem érintés-célok, csak feliratok) */
+html[data-dizajn="retro"] .chip.sm {
+  height: 34px;
+  padding: 0 13px;
+  font-size: 13px;
+  border-width: 2px;
+}
+
+/* ==========================================================================
+   5) A VÁLTOZAT LELKE: PLAKÁT-KÁRTYA KRÉM TALPPAL
+   Egy hasáb, teljes szélesség, a szöveg a kép ALATT — nem rajta.
+   ========================================================================== */
+
+html[data-dizajn="retro"] .grid {
+  grid-template-columns: 1fr;                 /* EGY hasáb a két helyett */
+  gap: 22px;
+}
+
+html[data-dizajn="retro"] .card-poster {
+  aspect-ratio: auto;                         /* a magasságot a kép + talp adja */
+  background: var(--paper);
+  border: 4px solid var(--paper);             /* krém passzpartu a plakát körül */
+  border-radius: 30px;
+  box-shadow: 0 16px 32px rgba(30, 12, 2, 0.6);   /* erős, MELEG árnyék */
+}
+html[data-dizajn="retro"] .card-poster img {
+  aspect-ratio: 1 / 1;                        /* négyzetes plakát a listában */
+  height: auto;
+  border-radius: 22px 22px 5px 5px;
+}
+/* Az alap sötétítő fátyla itt felesleges: a szöveg már nem a képen ül. */
+html[data-dizajn="retro"] .card-poster::after { display: none; }
+
+html[data-dizajn="retro"] .card-poster .card-body {
+  position: static;                           /* kifolyik a képből: ez a „talp” */
+  padding: 15px 17px 17px;
+  color: var(--ink);
+}
+html[data-dizajn="retro"] .card-when {
+  color: var(--rozsda);
+  opacity: 1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+html[data-dizajn="retro"] .card-title {
+  font-family: var(--font-cim);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.14;
+  letter-spacing: 0;
+  margin: 7px 0 11px;
+  color: var(--ink);
+}
+/* Hely + ár egy meleg „matricán” (a kettő egy szövegcsomó, ezért egy pirula). */
+html[data-dizajn="retro"] .card-meta {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 2px solid var(--matrica-keret);
+  background: rgba(249, 115, 22, 0.13);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Heti Top: ugyanez a nyelv, csak nagyobb és álló (4:5) plakáttal. */
+html[data-dizajn="retro"] .h-scroll { gap: 18px; padding-bottom: 12px; }
+html[data-dizajn="retro"] .card-poster.lg { width: min(80vw, 320px); }
+html[data-dizajn="retro"] .card-poster.lg img { aspect-ratio: 4 / 5; }
+html[data-dizajn="retro"] .card-poster.lg .card-title { font-size: 27px; }
+
+/* MATRICÁK a plakáton: kerek, elforgatott, vastag keretű „★ Top”. */
+html[data-dizajn="retro"] .badge-top {
+  top: 14px; left: 14px;
+  width: 64px; height: 64px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  background: var(--gold-grad);
+  color: var(--on-accent);
+  font-family: var(--font-cim);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  transform: rotate(-12deg);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+html[data-dizajn="retro"] .going-pill {
+  top: 16px; right: 16px;
+  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  background: rgba(251, 241, 222, 0.95);
+  backdrop-filter: none;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Csoport-cím: nagybetűs, alatta borostyán aláhúzás (plakát-fejléc). */
+html[data-dizajn="retro"] .group-title {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: var(--fs-xl);
+  margin-bottom: 16px;
+}
+html[data-dizajn="retro"] .group-title::after {
+  content: "";
+  display: block;
+  width: 68px;
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: var(--gold-grad);
+}
+/* MINDEN szakasz-cím nagybetűs (plakát-fejléc nyelv). A `.sheet-panel h2`
+   (Megyek-űrlap) és a `.topbar h1` szándékosan kimarad: azok hosszú mondatok. */
+html[data-dizajn="retro"] .section > h2,
+html[data-dizajn="retro"] .section-head h2 { text-transform: uppercase; letter-spacing: 0.06em; }
+html[data-dizajn="retro"] .link { color: var(--brand-2); font-weight: 700; }
+
+/* ==========================================================================
+   6) GOMBOK: magas, teljesen kerek, vastag felirat, „domború” talppal
+   ========================================================================== */
+
+html[data-dizajn="retro"] .btn {
+  border-radius: 999px;
+  padding: 0 28px;
+  font-family: var(--font-cim);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+html[data-dizajn="retro"] .btn-primary {
+  background: var(--gold-grad);
+  color: var(--on-accent);
+  box-shadow: 0 6px 0 #a8560a, 0 12px 22px var(--brand-glow);
+}
+html[data-dizajn="retro"] .btn-ghost {
+  background: transparent;
+  border: 2px solid var(--brand-line);
+  color: var(--text);
+}
+html[data-dizajn="retro"] .btn-xl { height: 66px; font-size: 20px; }
+html[data-dizajn="retro"] .btn-block { margin-top: 14px; }
+html[data-dizajn="retro"] .btn-primary:active { box-shadow: 0 3px 0 #a8560a, 0 6px 14px var(--brand-glow); }
+
+/* A márka-gradiensen ülő szövegek tintája (az alap fehérrel számol). */
+html[data-dizajn="retro"] .step-n,
+html[data-dizajn="retro"] .profil-avatar,
+html[data-dizajn="retro"] .jegy-when,
+html[data-dizajn="retro"] .msg.hely .msg-avatar { color: var(--on-brand); }
+html[data-dizajn="retro"] .price-big {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--warn);
+}
+
+/* ==========================================================================
+   7) ESEMÉNY-OLDAL: erősen lekerekített hős-kép, levegős info-sorok
+   ========================================================================== */
+
+html[data-dizajn="retro"] .hero {
+  height: min(58vh, 500px);
+  border-radius: 0 0 46px 46px;               /* erősen lekerekített alsó sarkok */
+}
+html[data-dizajn="retro"] .hero-text h1 { font-size: 34px; line-height: 1.08; }
+html[data-dizajn="retro"] .back,
+html[data-dizajn="retro"] .share-btn {
+  width: 48px; height: 48px;
+  border: 2px solid rgba(253, 241, 221, 0.45);
+}
+
+html[data-dizajn="retro"] .info-block {
+  padding: 6px 18px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-xl);
+}
+html[data-dizajn="retro"] .info-row { padding: 18px 0; gap: 16px; }
+html[data-dizajn="retro"] .info-row:last-child { border-bottom: 0; }  /* módosító vissza */
+html[data-dizajn="retro"] .info-ico {
+  width: 54px; height: 54px;
+  border-radius: 18px;
+  background: var(--brand-tint);
+  border: 2px solid var(--brand-line);
+}
+html[data-dizajn="retro"] .info-ico svg { width: 24px; height: 24px; fill: var(--brand-2); }
+html[data-dizajn="retro"] .info-row b { font-size: var(--fs-m); }
+
+/* Az alap avatár-képlete 57°-onként lép a színkörön: az 5. kör már kék lenne,
+   és a sötét tinta ráolvashatatlan. Itt szűk, MELEG skálát adunk (20–64°),
+   világos tónusban, sötét tintával — így minden kör 7:1 fölött marad. */
+html[data-dizajn="retro"] .avatar {
+  width: 44px; height: 44px;
+  border: 3px solid var(--bg);
+  font-size: 14px;
+  background: hsl(calc(var(--i, 0) * 11 + 20) 78% 66%);
+  color: var(--ink);
+}
+html[data-dizajn="retro"] .lineup li {
+  padding: 16px 18px;
+  font-weight: 600;
+  box-shadow: inset 7px 0 0 var(--brand);     /* borostyán léc a sor elején */
+}
+html[data-dizajn="retro"] .tag {
+  padding: 9px 15px;
+  border: 2px solid var(--brand-line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+html[data-dizajn="retro"] .venue-card { border: 2px solid var(--line); padding: 20px; }
+html[data-dizajn="retro"] .mini-row { padding: 14px 16px; min-height: 56px; }
+html[data-dizajn="retro"] .mini-when { color: var(--brand-2); }
+
+/* Az akció-sáv KRÉM karton — ugyanaz az anyag, mint a kártyák talpa. */
+html[data-dizajn="retro"] .cta-bar {
+  background: var(--paper);
+  border-top: 0;
+  border-radius: 26px 26px 0 0;
+  padding: 14px var(--pad);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+}
+html[data-dizajn="retro"] .cta-price b { color: var(--ink); font-family: var(--font-cim); font-weight: 700; }
+html[data-dizajn="retro"] .cta-price .muted { color: var(--ink-2); font-weight: 600; }
+html[data-dizajn="retro"] .cta-spacer { height: 130px; }
+
+/* ==========================================================================
+   8) TAB-SÁV
+   ========================================================================== */
+
+html[data-dizajn="retro"] .tabbar { border-top: 3px solid var(--brand-line); }
+html[data-dizajn="retro"] .tab { font-size: 12px; font-weight: 700; }
+html[data-dizajn="retro"] .tab.on { color: var(--brand-2); }
+html[data-dizajn="retro"] .tab.on svg { filter: drop-shadow(0 0 8px var(--brand-glow)); }
+
+/* ==========================================================================
+   9) HETI TOP LISTA, PROMÓ
+   ========================================================================== */
+
+/* A Heti Top sor 390 px-en szűk: a rang/bélyeg méretét és a betűket úgy
+   hangoltuk, hogy az ár-pirula + „N megy” EGY sorban elférjen. */
+html[data-dizajn="retro"] .top-row {
+  grid-template-columns: auto 72px 1fr auto;
+  gap: 10px;
+  padding: 12px;
+  border: 2px solid var(--line);
+  margin-bottom: 14px;
+}
+html[data-dizajn="retro"] .top-thumb { width: 72px; height: 92px; border-radius: 16px; }
+html[data-dizajn="retro"] .top-rank {
+  width: 40px; height: 40px;
+  border: 2px solid var(--brand-line);
+  background: transparent;
+  font-family: var(--font-cim);
+  font-weight: 700;
+  font-size: 19px;
+}
+html[data-dizajn="retro"] .top-body b { font-family: var(--font-cim); font-weight: 600; font-size: 16px; }
+html[data-dizajn="retro"] .top-body .muted { font-size: 14px; }
+html[data-dizajn="retro"] .top-meta { gap: 7px; margin-top: 4px; }
+html[data-dizajn="retro"] .top-meta .small { font-size: 13px; white-space: nowrap; }
+html[data-dizajn="retro"] .pill {
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+html[data-dizajn="retro"] .chev { color: var(--brand-2); }
+html[data-dizajn="retro"] .promo-card { border: 2px solid var(--brand-line); padding: 22px; }
+html[data-dizajn="retro"] .step { border: 2px solid var(--line); padding: 16px; }
+html[data-dizajn="retro"] .price-card { border: 2px solid var(--line); padding: 18px; }
+
+/* ==========================================================================
+   10) PROFIL + STAT: krém csempék nagy, kerek számokkal
+   ========================================================================== */
+
+html[data-dizajn="retro"] .profil-avatar {
+  width: 104px; height: 104px;
+  font-family: var(--font-cim);
+  font-weight: 700;
+  font-size: 38px;
+  box-shadow: 0 0 0 5px var(--bg), 0 0 0 8px var(--brand-line);
+}
+html[data-dizajn="retro"] .rank-pill {
+  padding: 9px 18px;
+  border: 2px solid var(--brand-line);
+  background: transparent;
+  color: var(--brand-2);
+  font-weight: 700;
+}
+html[data-dizajn="retro"] .rank-bar { border: 2px solid var(--line); padding: 16px 18px; }
+html[data-dizajn="retro"] .bar { height: 14px; border-radius: 7px; }
+html[data-dizajn="retro"] .bar span { border-radius: 7px; }
+
+/* A profil 4-es csempesora is 2×2 lesz: nagyobb elem, több levegő. */
+html[data-dizajn="retro"] .stat-tiles { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+html[data-dizajn="retro"] .tile {
+  background: var(--paper);
+  border: 2px solid var(--paper);
+  border-radius: 24px;
+  padding: 16px 12px 14px;
+  color: var(--ink);
+}
+html[data-dizajn="retro"] .tile b {
+  font-family: var(--font-cim);
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+html[data-dizajn="retro"] .tile span { color: var(--ink-2); font-size: 12px; font-weight: 700; }
+/* módosító vissza: a stat „Bent” csempéje zöld marad — de krém alapon. */
+html[data-dizajn="retro"] .tile-ok { background: #e4f3c4; border-color: #cfe79c; }
+html[data-dizajn="retro"] .tile-ok b { color: #3d5a06; }
+html[data-dizajn="retro"] .stat-tiles-2x2 .tile b { font-size: 38px; }
+
+html[data-dizajn="retro"] .badge-card { border: 2px solid var(--line); padding: 16px; }
+html[data-dizajn="retro"] .badge-card b { font-family: var(--font-cim); font-weight: 600; }
+html[data-dizajn="retro"] .genre-bars { gap: 12px; }
+html[data-dizajn="retro"] .switch-row { padding: 16px 0; }
+html[data-dizajn="retro"] .stat-cim h1 { font-size: var(--fs-xl); }
+html[data-dizajn="retro"] .chart-card { border: 2px solid var(--line); padding: 14px 8px 6px; }
+html[data-dizajn="retro"] .stat-row { border: 2px solid var(--line); min-height: 64px; padding: 12px 16px; }
+html[data-dizajn="retro"] .sr-ini { width: 40px; height: 40px; font-size: 13px; }
+html[data-dizajn="retro"] .live-pill { height: 34px; font-weight: 700; }
+html[data-dizajn="retro"] .jegy-row { border: 2px solid var(--line); padding: 16px; }
+html[data-dizajn="retro"] .top-rank.first { background: var(--gold-grad); color: var(--on-accent); border-color: transparent; }
+
+/* ==========================================================================
+   11) PASSZ (jegy-kártya), űrlap, buborékok
+   ========================================================================== */
+
+html[data-dizajn="retro"] .ticket-top { padding: 24px 24px 20px; }
+html[data-dizajn="retro"] .ticket-genre { letter-spacing: 0.2em; }
+html[data-dizajn="retro"] .ticket-name { font-family: var(--font-cim); font-weight: 700; }
+html[data-dizajn="retro"] .hooray { border: 2px solid var(--brand-line); padding: 16px 18px; }
+html[data-dizajn="retro"] .field span { color: var(--muted); font-weight: 700; }
+html[data-dizajn="retro"] .field input { border: 2px solid var(--line); border-radius: 999px; padding: 0 20px; }
+/* A jelölőnégyzetes sorok az alapban 26 px magasak — itt teljes értékű,
+   48 px-es érintés-célok lesznek (nagyobb négyzet, több levegő). */
+html[data-dizajn="retro"] .check {
+  align-items: center;
+  min-height: 48px;
+  padding: 5px 0;
+  gap: 14px;
+}
+html[data-dizajn="retro"] .check input { width: 26px; height: 26px; margin-top: 0; }
+html[data-dizajn="retro"] .sheet-grip { width: 56px; height: 6px; background: var(--brand-line); }
+html[data-dizajn="retro"] .msg-body { border-radius: 6px 20px 20px 20px; padding: 12px 15px; }
+html[data-dizajn="retro"] .msg.own .msg-body { border-radius: 20px 6px 20px 20px; }
+html[data-dizajn="retro"] .toast { font-weight: 700; padding: 14px 20px; }
+
+/* ==========================================================================
+   12) KAPU-MÓD — csak visszafogott igazítás!
+   A kidobó sötétben, egy kézzel használja: marad a fekete alap, a nagybetűs
+   felirat és a teli zöld/piros óriás visszajelzés. Itt csak a betű-nyelvet
+   és a borostyán kiemelést hozzuk át.
+   ========================================================================== */
+
+html[data-dizajn="retro"] .kapu-tag { color: var(--brand-2); }
+html[data-dizajn="retro"] .kapu-title h1 { font-size: var(--fs-l); }
+html[data-dizajn="retro"] .kc b { font-family: var(--font-cim); font-weight: 700; }
+html[data-dizajn="retro"] .mode { font-family: var(--font-cim); font-weight: 600; }
+html[data-dizajn="retro"] .t-nev { font-family: var(--font-cim); font-weight: 600; }
+html[data-dizajn="retro"] .ov-cim { font-family: var(--font-cim); font-weight: 700; }

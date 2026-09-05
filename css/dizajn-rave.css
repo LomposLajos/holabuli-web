@@ -1,0 +1,837 @@
+/* ============================================================================
+   Holabuli DIZÁJN-VÁLTOZAT: RAVE — klub-szórólap + terminál.
+   Bemutató-eszköz (D-013): a megrendelő több TELJES megjelenést tud összevetni.
+
+   Formanyelv:
+   - fekete alap, savzöld (#a3e635) + cián (#22d3ee) jelzőszínek, semmi lila-rózsaszín
+   - éles sarkok (0–3 px), hajszálvonalak kártya-hézag helyett
+   - monospace számok és címkék, tabuláris számjegyek (az idő és az ár oszlopba áll)
+   - SŰRŰ egyhasábos sorlista: 64 px-es négyzet bélyeg + egysoros cím + apró meta-sor
+   - ragadós (sticky) kapcsoló-sáv a szűrőknek, vékony alsó tab-sáv
+
+   MINDEN szabály `html[data-dizajn="rave"]` alatt van, hogy a többi változatot
+   és az alapot (Neon) ne érintse. A közös rétegbe (tokens/base/components) NEM nyúlunk.
+   ========================================================================== */
+
+html[data-dizajn="rave"] {
+  /* --- felületek: majdnem teljes fekete, a „felület” csak egy fokkal világosabb --- */
+  --bg: #05060a;
+  --bg-2: #0a0c12;
+  --surface: #101319;
+  --surface-2: #191d26;
+  --line: rgba(160, 255, 220, 0.16);          /* hajszálvonal: hideg, alig zöldes */
+  --outside: #000;
+  --halo: rgba(34, 211, 238, 0.16);
+
+  /* --- szöveg (mind a három szint 4.5:1 fölött a fekete és a felület-háttéren) --- */
+  --text: #ecfeff;
+  --muted: #93a7ad;
+  --faint: #7f9299;
+
+  /* --- márka: cián + savzöld, gradiens helyett inkább lapos foltok --- */
+  --brand: #22d3ee;
+  --brand-2: #a3e635;
+  --brand-grad: linear-gradient(135deg, #22d3ee 0%, #a3e635 100%);
+  --gold-grad: linear-gradient(135deg, #a3e635, #22d3ee);
+  --ring-grad: conic-gradient(from calc(var(--i, 0) * 53deg), #22d3ee, #a3e635, #22d3ee);
+  --promo-grad: none;
+  --brand-tint: none;
+  --brand-line: rgba(34, 211, 238, 0.5);
+  --brand-glow: rgba(34, 211, 238, 0.28);
+  --brand-halo: rgba(34, 211, 238, 0.85);
+  --focus-ring: rgba(34, 211, 238, 0.3);
+  --on-brand: #03121a;                        /* sötét tinta a cián felületen */
+  --on-accent: #04140a;                       /* sötét tinta a savzöld felületen */
+
+  /* --- állapotok --- */
+  --ok: #a3e635;
+  --ok-grad: linear-gradient(90deg, #a3e635, #22d3ee);
+  --ok-soft: rgba(163, 230, 53, 0.12);
+  --ok-line: rgba(163, 230, 53, 0.5);
+  --ok-ink: #d9f99d;
+  --on-ok: #071a02;
+  --warn: #facc15;
+  --err: #ff2d6f;
+  --err-soft: rgba(255, 45, 111, 0.14);
+  --err-line: rgba(255, 45, 111, 0.45);
+  --err-ink: #ffc2d4;
+  --info: #22d3ee;
+
+  /* --- rétegek --- */
+  --bar: rgba(3, 4, 7, 0.96);
+  --scrim: rgba(5, 6, 10, 0.66);
+  --card-shade: rgba(0, 0, 0, 0.9);
+  --hero-shade-top: rgba(5, 6, 10, 0.55);
+  --hero-shade-bottom: rgba(5, 6, 10, 0.94);
+  --kapu-bg: #000;
+  --own-msg: rgba(163, 230, 53, 0.16);
+
+  /* --- „papír” (passz-jegy) --- */
+  --paper: #eefaf7;
+  --ink: #05060a;
+  --ink-2: #48585e;
+  --paper-line: rgba(5, 6, 10, 0.22);
+  --stamp: #0f766e;
+
+  --avatar-hue: 172;
+  --avatar-sat: 62%;
+  --avatar-lum: 38%;
+
+  /* --- forma: éles. Minden lekerekítés 0–3 px. --- */
+  --r-s: 0px;
+  --r-m: 2px;
+  --r-l: 2px;
+  --r-xl: 3px;
+  --sh-1: none;
+  --sh-2: 0 0 0 1px rgba(160, 255, 220, 0.1);
+
+  /* --- tipográfia: technikás. A számok és a címkék monospace-ek. --- */
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Roboto Mono", monospace;
+  --font-cim: "Space Grotesk", Inter, "Segoe UI", system-ui, sans-serif;
+  --cim-spacing: -0.01em;
+  --cim-transform: uppercase;
+  --fs-xs: 11px;
+  --fs-s: 13px;
+  --fs-m: 15px;
+  --fs-l: 18px;
+  --fs-xl: 21px;
+  --fs-2xl: 26px;
+  --fs-3xl: 30px;
+
+  /* --- méretek: szűkebb margók, vékonyabb tab-sáv (a sűrűség miatt) --- */
+  --tap: 46px;
+  --tap-l: 48px;
+  --gap: 12px;
+  --pad: 16px;
+  --tabbar: 54px;
+}
+
+/* Tabuláris számjegyek MINDENHOL: az időpontok és az árak oszlopba állnak. */
+html[data-dizajn="rave"] body { font-variant-numeric: tabular-nums; letter-spacing: 0.005em; }
+
+/* A lap háttere: szűk cián derengés a tetején, semmi lágy fátyol. */
+html[data-dizajn="rave"] .page {
+  background: radial-gradient(150% 22% at 50% -6%, var(--halo), transparent 62%), var(--bg);
+}
+
+/* Címsorok: a kisebb címek monospace-ek, „//” előtaggal — terminál-hangulat. */
+html[data-dizajn="rave"] h2,
+html[data-dizajn="rave"] h3 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+html[data-dizajn="rave"] h2 { font-size: 14px; }
+html[data-dizajn="rave"] h3 { font-size: 13px; }
+html[data-dizajn="rave"] .group-title::before,
+html[data-dizajn="rave"] .section-head > h2::before {
+  content: "//";
+  color: var(--brand);
+  margin-right: 8px;
+}
+html[data-dizajn="rave"] .group-title { margin-bottom: 8px; }
+html[data-dizajn="rave"] .section-head { margin-bottom: 8px; align-items: center; }
+html[data-dizajn="rave"] .section { margin-top: 22px; }
+
+/* Szöveges linkek: apró, monospace, ciánban.
+   A 20 px-es sormagasság + 2×13 px belső tér adja a 46 px-es érintés-célt. */
+html[data-dizajn="rave"] .link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+/* ===== Fejléc: márka-sor, mottó, kereső ================================== */
+html[data-dizajn="rave"] .topbar {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+html[data-dizajn="rave"] .brand {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  gap: 8px;
+}
+html[data-dizajn="rave"] .brand-mark {
+  width: 9px; height: 9px;
+  border-radius: 0;
+  background: var(--brand-2);
+  box-shadow: 0 0 10px var(--brand-halo);
+}
+html[data-dizajn="rave"] .city-pill {
+  height: 30px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+html[data-dizajn="rave"] .city-pill svg { width: 13px; height: 13px; }
+
+/* A mottó nem óriás gradiens-cím, hanem egy vékony technikás sor. */
+html[data-dizajn="rave"] .hero-title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  margin: 12px 0 10px;
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--brand-2);
+  display: block;
+}
+html[data-dizajn="rave"] .hero-title::before { content: "▸ "; color: var(--brand); }
+
+html[data-dizajn="rave"] .search {
+  height: 46px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+}
+html[data-dizajn="rave"] .search svg { fill: var(--brand); width: 17px; height: 17px; }
+html[data-dizajn="rave"] .search input { font-size: 14px; }
+
+/* ===== Sztori-sáv: apró NÉGYZET bélyegek, hogy alig vegyen el helyet =====
+   A vastag színes gyűrű helyett hajszálvékony cián–savzöld keret. */
+/* A vízszintes görgetők tapadási pontja: enélkül a böngésző az első elemet a
+   konténer széléhez rántja, és „elnyeli” a bal oldali 16 px-es margót. */
+html[data-dizajn="rave"] .story-strip,
+html[data-dizajn="rave"] .h-scroll { scroll-padding-left: var(--pad); }
+html[data-dizajn="rave"] .story-strip { gap: 10px; padding-top: 12px; padding-bottom: 2px; }
+html[data-dizajn="rave"] .story { width: 56px; gap: 5px; }
+html[data-dizajn="rave"] .story .ring {
+  width: 40px; height: 40px;
+  border-radius: 2px;
+  padding: 1px;
+  background: linear-gradient(150deg, var(--brand), var(--brand-2));
+}
+html[data-dizajn="rave"] .story .ring-in {
+  border-radius: 0;
+  border-width: 0;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  background: var(--surface-2);
+}
+html[data-dizajn="rave"] .story-nev {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  max-width: 56px;
+}
+
+/* ===== Szűrők: SZEGMENTÁLT kapcsoló-sáv, a lap tetejére ragad ============ */
+html[data-dizajn="rave"] .chips {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  gap: 0;
+  /* a felső fix DEMÓ-szalag alatt kezdődnek a gombok, hogy ne takarja őket */
+  padding: calc(var(--safe-t) + 22px) var(--pad) 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--brand-line);
+  margin-top: 2px;
+}
+html[data-dizajn="rave"] .chips .chip {
+  height: 44px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-right-width: 0;
+  border-bottom: 0;
+  padding: 0 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+html[data-dizajn="rave"] .chips .chip:last-child { border-right-width: 1px; }
+html[data-dizajn="rave"] .chips .chip.on {
+  background: var(--brand);
+  color: var(--on-brand);
+  border-color: var(--brand);
+}
+
+/* ===== Heti Top görgető: keskeny, NÉGYZETES szórólap-bélyegek ============ */
+html[data-dizajn="rave"] .h-scroll { gap: 8px; padding-bottom: 4px; }
+html[data-dizajn="rave"] .card-poster.lg {
+  width: 146px;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+  border: 1px solid var(--line);
+}
+html[data-dizajn="rave"] .card-poster.lg .card-body { left: 8px; right: 8px; bottom: 7px; }
+html[data-dizajn="rave"] .card-poster.lg .card-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 2px 0 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+html[data-dizajn="rave"] .card-poster.lg .card-when {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--brand-2);
+  opacity: 1;
+}
+html[data-dizajn="rave"] .card-poster.lg .card-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html[data-dizajn="rave"] .card-poster.lg .badge-top {
+  top: 0; left: 0;
+  border-radius: 0;
+  padding: 3px 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  background: var(--brand-2);
+  color: var(--on-accent);
+}
+
+/* ===== A LISTA: sűrű, egyhasábos SORLISTA hajszálvonalakkal ==============
+   A .card-poster itt nem plakát: feloldjuk a 3:4-es arányt és az abszolút
+   .card-body-t, és 64 px-es négyzet bélyeg + szöveg-oszlop rácsot csinálunk.
+   A kártya LINK marad, a .hidden továbbra is elrejti (nincs !important felülírás). */
+html[data-dizajn="rave"] .grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+html[data-dizajn="rave"] .grid .card-poster {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 11px;
+  aspect-ratio: auto;
+  min-height: 82px;
+  padding: 9px 2px 9px 10px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+html[data-dizajn="rave"] .grid .card-poster:active { transform: none; background: rgba(34, 211, 238, 0.07); }
+html[data-dizajn="rave"] .grid .card-poster::after { display: none; }   /* nem kell a plakát-sötétítés */
+html[data-dizajn="rave"] .grid .card-poster img {
+  grid-column: 1; grid-row: 1;
+  width: 64px; height: 64px;
+  border-radius: 1px;
+  object-fit: cover;
+  align-self: center;
+}
+
+/* Szöveg-oszlop: cím EGY sorban „…”-lel, alatta EGY apró nagybetűs meta-sor.
+   Rács (nem flex-wrap), hogy a meta soha ne csússzon harmadik sorba: így minden
+   sor pontosan ugyanolyan magas. */
+html[data-dizajn="rave"] .grid .card-poster .card-body {
+  position: static;
+  grid-column: 2; grid-row: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "cim ido" "meta meta";
+  align-items: baseline;
+  column-gap: 8px;
+  row-gap: 3px;
+  min-width: 0;
+}
+html[data-dizajn="rave"] .grid .card-poster .card-title {
+  grid-area: cim;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Az időpont a cím sorának jobb szélén, mint egy indulási tábla — így a meta-sor
+   TELJES szélességben megkapja a helyet és az árat (nem vágja le a „…”). */
+html[data-dizajn="rave"] .grid .card-poster .card-when {
+  grid-area: ido;
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--brand);
+  opacity: 1;
+  white-space: nowrap;
+}
+html[data-dizajn="rave"] .grid .card-poster .card-meta {
+  grid-area: meta;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* „Megy” szám: a sor jobb szélén, keretes monospace jelölő (nem lebegő pirula). */
+html[data-dizajn="rave"] .grid .card-poster .going-pill {
+  position: static;
+  grid-column: 3; grid-row: 1;
+  align-self: center;
+  border-radius: 0;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  backdrop-filter: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--muted);
+  white-space: nowrap;
+  padding: 2px 4px;   /* szűk, hogy a meta-sorban az ÁR is kiférjen „…” nélkül */
+}
+/* ★ Top-jelölés: apró savzöld négyzet a bélyeg bal felső sarkában. */
+html[data-dizajn="rave"] .grid .card-poster .badge-top {
+  top: 9px; left: 10px;
+  border-radius: 0;
+  padding: 1px 4px 2px;
+  font-size: 10px;
+  line-height: 1;
+  background: var(--brand-2);
+  color: var(--on-accent);
+}
+
+/* MA: 3 px-es savzöld csík a sor bal szélén + savzöld időpont. Nincs elcsúszás. */
+html[data-dizajn="rave"] .grid .card-poster[data-ma="1"]::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--ok);
+}
+html[data-dizajn="rave"] .grid .card-poster[data-ma="1"] .card-when { color: var(--ok); }
+/* Ingyenes bulik ára is savzöld — a lista így egy pillantással olvasható. */
+html[data-dizajn="rave"] .grid .card-poster[data-ingyen="1"] .card-meta { color: var(--ok-ink); }
+
+/* ===== Gombok: lapos, monospace, nagybetűs ============================== */
+html[data-dizajn="rave"] .btn {
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 18px;
+}
+html[data-dizajn="rave"] .btn-primary {
+  background: var(--brand);
+  color: var(--on-brand);
+  box-shadow: none;
+}
+html[data-dizajn="rave"] .btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+html[data-dizajn="rave"] .btn-xl { height: 56px; font-size: 15px; }
+
+/* ===== Alsó tab-sáv: vékony, éles felső vonal, aprócska felirat ========= */
+html[data-dizajn="rave"] .tabbar {
+  background: #000;
+  border-top: 1px solid var(--brand-line);
+  backdrop-filter: none;
+}
+html[data-dizajn="rave"] .tab {
+  position: relative;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+html[data-dizajn="rave"] .tab svg { width: 20px; height: 20px; }
+html[data-dizajn="rave"] .tab.on::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--brand);
+}
+
+/* ===== Esemény-oldal ==================================================== */
+/* A hős alacsony: az adatok (idő, hely, ár) rögtön a hajlat fölé kerülnek. */
+html[data-dizajn="rave"] .hero {
+  height: min(27vh, 216px);
+  border-radius: 0;
+  border-bottom: 1px solid var(--brand-line);
+}
+html[data-dizajn="rave"] .hero-img { object-position: center 35%; }
+html[data-dizajn="rave"] .hero-text { bottom: 12px; }
+html[data-dizajn="rave"] .hero-text h1 { font-size: 23px; margin-top: 8px; line-height: 1.1; }
+html[data-dizajn="rave"] .chips-row { gap: 6px; }
+html[data-dizajn="rave"] .chip.sm {
+  height: 26px;
+  border-radius: 0;
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(5, 6, 10, 0.7);
+  border-color: var(--line);
+  color: #fff;
+}
+html[data-dizajn="rave"] .chip.on.sm { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+html[data-dizajn="rave"] .chip.gold { background: var(--brand-2); color: var(--on-accent); }
+html[data-dizajn="rave"] .back,
+html[data-dizajn="rave"] .share-btn { border-radius: 0; border: 1px solid var(--line); }
+
+/* Adat-blokk: keretes táblázat, négyzet ikon-dobozok, monospace értékek. */
+html[data-dizajn="rave"] .info-block {
+  margin-top: 14px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+}
+html[data-dizajn="rave"] .info-row { padding: 11px 0; gap: 11px; align-items: center; }
+html[data-dizajn="rave"] .info-row > div > b {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+html[data-dizajn="rave"] .info-row .muted { font-size: 12px; }
+html[data-dizajn="rave"] .info-ico {
+  width: 32px; height: 32px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--brand-line);
+}
+html[data-dizajn="rave"] .info-ico svg { width: 16px; height: 16px; }
+
+/* Avatárok: EGYSÉGES sötét négyzetek cián monogrammal. A közös réteg szín-körhintája
+   (hsl(--avatar-hue…)) sötét tintával 4.5:1 alatt maradt — itt lecseréljük. */
+html[data-dizajn="rave"] .avatar {
+  border-radius: 0;
+  border: 2px solid var(--bg);
+  width: 34px; height: 34px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin-left: -8px;
+  background: var(--surface-2);
+  color: var(--brand);
+  box-shadow: inset 0 0 0 1px var(--brand-line);
+}
+html[data-dizajn="rave"] .avatar:first-child { margin-left: 0; }
+html[data-dizajn="rave"] .going-row b { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.04em; }
+
+/* Fellépők: sorszámozott lista hajszálvonallal (a sorszám CSS-számláló). */
+html[data-dizajn="rave"] .lineup { counter-reset: fellepo; gap: 0; border-top: 1px solid var(--line); }
+html[data-dizajn="rave"] .lineup li {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 11px 2px;
+  font-size: 14px;
+}
+html[data-dizajn="rave"] .lineup li::before {
+  counter-increment: fellepo;
+  content: counter(fellepo, decimal-leading-zero);
+  font-family: var(--font-mono);
+  color: var(--brand);
+  margin-right: 10px;
+}
+html[data-dizajn="rave"] .tag {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 8px;
+}
+html[data-dizajn="rave"] .venue-card { border-radius: 0; background: transparent; border: 1px solid var(--line); padding: 14px; }
+html[data-dizajn="rave"] .venue-card .ring { border-radius: 2px; }
+html[data-dizajn="rave"] .venue-card .ring-in { border-radius: 0; }
+html[data-dizajn="rave"] .mini-list { gap: 0; border-top: 1px solid var(--line); }
+html[data-dizajn="rave"] .mini-row {
+  min-height: 46px;
+  border-radius: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 2px;
+  font-size: 13px;
+}
+html[data-dizajn="rave"] .mini-when { font-family: var(--font-mono); font-size: 11px; }
+
+/* CTA-sáv: éles, az ár monospace-ben és savzölden. */
+html[data-dizajn="rave"] .cta-bar {
+  border-top: 1px solid var(--brand-line);
+  background: var(--bar);
+  padding: 10px var(--pad);
+}
+html[data-dizajn="rave"] .cta-price b {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--brand-2);
+}
+html[data-dizajn="rave"] .cta-price .muted { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+html[data-dizajn="rave"] .cta-bar .btn { min-width: 132px; }
+
+/* Alsó lap (Megyek-űrlap) */
+html[data-dizajn="rave"] .sheet-panel { border-radius: 0; border-top: 2px solid var(--brand); background: var(--bg-2); }
+html[data-dizajn="rave"] .sheet-grip { border-radius: 0; background: var(--surface-2); width: 36px; height: 3px; }
+html[data-dizajn="rave"] .field input { border-radius: 0; background: var(--surface); }
+html[data-dizajn="rave"] .field span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+html[data-dizajn="rave"] .alert { border-radius: 0; }
+html[data-dizajn="rave"] .hooray { border-radius: 0; background: var(--ok-soft); border: 1px solid var(--ok-line); color: var(--ok-ink); }
+
+/* ===== Heti Top oldal: ugyanaz a sűrű sor-nyelv ========================= */
+html[data-dizajn="rave"] .top-list { border-top: 1px solid var(--line); }
+html[data-dizajn="rave"] .top-row {
+  grid-template-columns: 24px 54px minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 76px;
+  padding: 8px 2px;
+  margin-bottom: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+html[data-dizajn="rave"] .top-rank {
+  width: 24px; height: 24px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  justify-items: end;
+}
+html[data-dizajn="rave"] .top-row:first-child .top-rank { background: transparent; color: var(--brand-2); }
+html[data-dizajn="rave"] .top-thumb { width: 54px; height: 54px; border-radius: 1px; }
+html[data-dizajn="rave"] .top-body b { font-size: 15px; }
+html[data-dizajn="rave"] .top-body .muted { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+html[data-dizajn="rave"] .top-meta { gap: 6px; margin-top: 3px; }
+html[data-dizajn="rave"] .pill {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+}
+html[data-dizajn="rave"] .chev { color: var(--brand); font-size: 18px; }
+html[data-dizajn="rave"] .promo-card {
+  border-radius: 0;
+  background: transparent;
+  border: 1px dashed var(--brand-line);
+  padding: 16px;
+}
+
+/* ===== „Helyeknek” oldal: lépések, árcsomagok ========================== */
+html[data-dizajn="rave"] .step {
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 2px;
+}
+html[data-dizajn="rave"] .step-n {
+  border-radius: 0;
+  width: 30px; height: 30px;
+  background: transparent;
+  border: 1px solid var(--brand-line);
+  color: var(--brand);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+html[data-dizajn="rave"] .price-card { border-radius: 0; background: transparent; border: 1px solid var(--line); }
+html[data-dizajn="rave"] .price-card.hi { border-color: var(--brand); box-shadow: none; }
+html[data-dizajn="rave"] .price-big {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--brand-2);
+  font-family: var(--font-mono);
+  font-size: 22px;
+}
+
+/* ===== Profil =========================================================== */
+html[data-dizajn="rave"] .profil-head { align-items: flex-start; text-align: left; }
+html[data-dizajn="rave"] .profil-avatar {
+  width: 64px; height: 64px;
+  border-radius: 2px;
+  background: transparent;
+  border: 2px solid var(--brand);
+  color: var(--brand);
+  font-family: var(--font-mono);
+  font-size: 26px;
+  box-shadow: none;
+}
+html[data-dizajn="rave"] .rank-pill {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--brand-line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+html[data-dizajn="rave"] .rank-bar { border-radius: 0; background: transparent; border: 1px solid var(--line); padding: 12px; }
+html[data-dizajn="rave"] .rank-bar-head { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
+html[data-dizajn="rave"] .bar { border-radius: 0; height: 6px; background: var(--surface-2); }
+html[data-dizajn="rave"] .bar span { border-radius: 0; }
+html[data-dizajn="rave"] .stat-tiles { gap: 1px; background: var(--line); border: 1px solid var(--line); }
+html[data-dizajn="rave"] .tile { border-radius: 0; border: 0; background: var(--bg); padding: 11px 3px; }
+html[data-dizajn="rave"] .tile b { font-family: var(--font-mono); font-size: 20px; letter-spacing: -0.02em; }
+html[data-dizajn="rave"] .tile span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; }
+html[data-dizajn="rave"] .gb { grid-template-columns: 96px 1fr 32px; font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+html[data-dizajn="rave"] .badges { gap: 1px; background: var(--line); border: 1px solid var(--line); }
+html[data-dizajn="rave"] .badge-card { border-radius: 0; border: 0; background: var(--bg); padding: 12px; }
+html[data-dizajn="rave"] .badge-card b { font-size: 14px; }
+html[data-dizajn="rave"] .badge-card span { font-size: 22px; }
+html[data-dizajn="rave"] .badge-card small { font-size: 11px; }
+html[data-dizajn="rave"] .switch-row input { border-radius: 0; width: 46px; height: 26px; }
+html[data-dizajn="rave"] .switch-row input::after { border-radius: 0; width: 20px; height: 20px; top: 3px; left: 3px; }
+html[data-dizajn="rave"] .switch-row input:checked::after { left: 23px; }
+
+/* ===== Stat-oldal (a stat.css UTÁN töltődik, ezért itt nagyobb fajsúly kell) */
+html[data-dizajn="rave"] .live-pill {
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  height: 26px;
+}
+html[data-dizajn="rave"] .live-pill i { border-radius: 0; width: 6px; height: 6px; }
+html[data-dizajn="rave"] .stat-cim h1 { font-size: 20px; }
+html[data-dizajn="rave"] .stat-tiles-2x2 { gap: 1px; }
+html[data-dizajn="rave"] .stat-tiles-2x2 .tile { border-radius: 0; padding: 14px 10px 12px; }
+html[data-dizajn="rave"] .stat-tiles-2x2 .tile b { font-family: var(--font-mono); font-size: 30px; }
+/* A „Bent” csempe ÁTLÁTSZATLAN sötétzöld: a rács-vonal (világos hajszál) nem üthet át
+   rajta, mert az feltolná a hátteret és megbukna a 4.5:1. */
+html[data-dizajn="rave"] .tile-ok { background: #131e08; border-color: var(--ok-line); }
+html[data-dizajn="rave"] .chart-card { border-radius: 0; background: transparent; border: 1px solid var(--line); }
+html[data-dizajn="rave"] .stat-lista { gap: 0; border-top: 1px solid var(--line); }
+html[data-dizajn="rave"] .stat-row {
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  min-height: 54px;
+  padding: 8px 2px;
+}
+html[data-dizajn="rave"] .sr-ini {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  width: 32px; height: 32px;
+}
+html[data-dizajn="rave"] .stat-time { font-family: var(--font-mono); font-size: 12px; }
+html[data-dizajn="rave"] .arany-meta { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ===== Jegyeim + passz ================================================== */
+html[data-dizajn="rave"] .jegy-row {
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0;
+  padding: 10px 2px;
+  gap: 12px;
+}
+html[data-dizajn="rave"] .jegy-when {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--brand-line);
+  color: var(--brand);
+  font-family: var(--font-mono);
+  min-width: 54px;
+}
+html[data-dizajn="rave"] .jegy-status { border-radius: 0; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; }
+html[data-dizajn="rave"] .skeleton-row { border-radius: 0; }
+html[data-dizajn="rave"] .ticket { border-radius: 0; box-shadow: 0 0 0 1px var(--brand-line); }
+html[data-dizajn="rave"] .ticket-top { background: var(--brand); color: var(--on-brand); }
+html[data-dizajn="rave"] .ticket-genre { font-family: var(--font-mono); }
+html[data-dizajn="rave"] .ticket-meta { font-family: var(--font-mono); font-size: 12px; }
+html[data-dizajn="rave"] .ticket-name { font-family: var(--font-mono); font-size: 19px; }
+html[data-dizajn="rave"] .invite-link { border-radius: 0; font-family: var(--font-mono); background: var(--surface); }
+html[data-dizajn="rave"] .stamp { border-radius: 0; }
+
+/* ===== Chat ============================================================= */
+html[data-dizajn="rave"] .msg-body { border-radius: 0; }
+html[data-dizajn="rave"] .msg.own .msg-body { border-radius: 0; }
+html[data-dizajn="rave"] .msg-avatar { border-radius: 0; font-family: var(--font-mono); }
+html[data-dizajn="rave"] .chat-input input { border-radius: 0; }
+html[data-dizajn="rave"] .chat-input .btn { border-radius: 0; }
+html[data-dizajn="rave"] .tag-hely { border-radius: 0; font-family: var(--font-mono); }
+
+/* ===== Kapu-mód: SÖTÉT és NAGYBETŰS marad (a kidobó egy kézzel, sötétben
+   használja) — itt csak visszafogott igazítás: éles sarkok, monospace számok. */
+html[data-dizajn="rave"] .kapu-tag { font-family: var(--font-mono); }
+html[data-dizajn="rave"] .kapu-counter .kc { border-radius: 0; }
+html[data-dizajn="rave"] .kapu-counter .kc b { font-family: var(--font-mono); }
+html[data-dizajn="rave"] .kapu-counter .kc span { font-family: var(--font-mono); font-size: 10px; }
+html[data-dizajn="rave"] .kapu-modes { border-radius: 0; padding: 0; background: transparent; border: 0; gap: 0; }
+html[data-dizajn="rave"] .mode {
+  border-radius: 0;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-right-width: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+html[data-dizajn="rave"] .kapu-modes .mode:last-child { border-right-width: 1px; }
+html[data-dizajn="rave"] .mode.on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); box-shadow: none; }
+html[data-dizajn="rave"] .reader-wrap { border-radius: 0; }
+html[data-dizajn="rave"] .reader-frame i { border-radius: 0; }
+html[data-dizajn="rave"] .reader-idle-ico { border-radius: 0; border: 1px solid var(--line); background: transparent; width: 60px; height: 60px; }
+html[data-dizajn="rave"] .talalat { border-radius: 0; background: transparent; border: 0; border-bottom: 1px solid var(--line); }
+html[data-dizajn="rave"] .talalatok { gap: 0; }
+html[data-dizajn="rave"] .kapu-link { border-radius: 0; font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+/* A kapu-overlay (ZÖLD/PIROS, óriás betű) SZÁNDÉKOSAN érintetlen. */
+
+/* ===== Apróságok ======================================================== */
+html[data-dizajn="rave"] .toast {
+  border-radius: 0;
+  background: var(--brand-2);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+html[data-dizajn="rave"] .demo-badge { border-radius: 0; font-family: var(--font-mono); }
+html[data-dizajn="rave"] .empty-emoji { font-size: 36px; }
+html[data-dizajn="rave"] .story-card { border-radius: 0; }
+html[data-dizajn="rave"] .story-close { border-radius: 0; }
+html[data-dizajn="rave"] .prose p, html[data-dizajn="rave"] .prose li { font-size: 13px; }
+html[data-dizajn="rave"] .page-foot { margin-top: 28px; }

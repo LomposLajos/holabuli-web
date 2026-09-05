@@ -1,0 +1,933 @@
+/* Holabuli DIZÁJN-VÁLTOZAT: MONO — nyomtatott program-újság.
+   Bemutató-eszköz (D-013): a megrendelő több TELJES megjelenést tud összevetni.
+   Nem csak más szín: más SZERKEZET (kép nélküli, tipográfiai lista), más formanyelv
+   (0 px sarok, hajszálvonalak), más tipográfia (talpas címek + nagybetűs rovat-fejek).
+
+   VEZÉRELV
+   - Fekete-fehér lap, EGYETLEN piros jelzőszín. A piros csak jelzés: ár, „Ma”,
+     aktív fül, elsődleges gomb, Heti Top jelölés. Nagy felületen soha.
+   - A KÉP NEM FŐSZEREPLŐ: a listákban nincs plakát, a sor tipográfiai.
+     Kép egyetlen helyen marad: az esemény-oldal alacsony, szürkeárnyalatos fej-sávja.
+   - Minden szabály `html[data-dizajn="mono"]` alatt van, hogy a többi változatot ne érintse.
+
+   KÉT PIROS KELL (kontraszt-ok, mérve):
+   - --brand (#ff5252) = piros SZÖVEG/keret sötét alapon        → 6,09:1 a #0d0d0d-n
+   - --brand-grad (#d61f1f) = piros FELÜLET fehér szöveggel     → 5,15:1 a fehérrel
+   Egyetlen piros nem tudja mindkettőt 4,5:1 fölött, ezért van kettő. */
+
+html[data-dizajn="mono"] {
+  /* --- felületek: lapos, matt fekete „papír”, halo nélkül --- */
+  --bg: #0d0d0d;
+  --bg-2: #131313;
+  --surface: #1a1a1a;
+  --surface-2: #1f1f1f;
+  --line: rgba(255, 255, 255, 0.14);
+  --outside: #000;
+  --halo: transparent;                       /* nincs fény-folt: sík újságoldal */
+
+  /* --- szöveg (mind ≥ 4,5:1 a #0d0d0d-n) --- */
+  --text: #fafafa;                           /* 18,8:1 */
+  --muted: #a3a3a3;                          /*  7,7:1 */
+  --faint: #8a8a8a;                          /*  5,6:1 */
+
+  /* --- a jelzőszín --- */
+  --brand: #ff5252;                          /* piros SZÖVEG sötéten */
+  --brand-2: #ff5252;
+  --brand-grad: #d61f1f;                     /* piros FELÜLET (nem gradiens!) fehér szöveggel */
+  --gold-grad: #fafafa;                      /* „arany” helyett tömör fehér */
+  --ring-grad: none;
+  --promo-grad: none;
+  --brand-tint: none;
+  --brand-line: rgba(255, 82, 82, 0.55);
+  --brand-glow: transparent;                 /* nincs ragyogás: nyomtatott lap */
+  --brand-halo: transparent;
+  --focus-ring: rgba(255, 82, 82, 0.3);
+  --on-brand: #fff;
+  --on-accent: #0d0d0d;
+
+  /* --- állapotok: mono, a „rendben” = fehér (a kapu-overlay kivétel, lásd lent) --- */
+  --ok: #d4d4d4;
+  --ok-grad: linear-gradient(90deg, #fafafa, #a3a3a3);
+  --ok-soft: rgba(255, 255, 255, 0.09);
+  --ok-line: rgba(255, 255, 255, 0.3);
+  --ok-ink: #fafafa;
+  --on-ok: #0d0d0d;
+  --warn: #fafafa;
+  --err: #ef2b2b;
+  --err-soft: rgba(239, 43, 43, 0.12);
+  --err-line: rgba(239, 43, 43, 0.45);
+  --err-ink: #ff9c9c;
+
+  --bar: rgba(13, 13, 13, 0.96);
+  --scrim: rgba(0, 0, 0, 0.72);
+  --backdrop: rgba(0, 0, 0, 0.72);
+  --card-shade: rgba(0, 0, 0, 0.85);
+  --hero-shade-top: transparent;
+  --hero-shade-bottom: transparent;
+  --kapu-bg: #000;
+  --own-msg: rgba(255, 255, 255, 0.13);
+
+  /* --- „papír” felületek (jegy) --- */
+  --paper: #fafafa;
+  --ink: #0d0d0d;
+  --ink-2: #4d4d4d;
+  --paper-line: rgba(13, 13, 13, 0.28);
+  --stamp: #0d0d0d;
+
+  /* --- avatár: szürke, telítettség nélkül --- */
+  --avatar-hue: 0;
+  --avatar-sat: 0%;
+  --avatar-lum: 30%;
+
+  /* --- forma: MINDEN éles --- */
+  --r-s: 0px;
+  --r-m: 0px;
+  --r-l: 0px;
+  --r-xl: 0px;
+  --sh-1: none;
+  --sh-2: 0 0 0 1px rgba(255, 255, 255, 0.14);
+
+  /* --- tipográfia: talpas cím + groteszk segéd-szöveg --- */
+  --font-cim: Georgia, "Times New Roman", "Noto Serif", "Liberation Serif", serif;
+  --cim-spacing: -0.012em;
+
+  /* --- saját segéd-változók --- */
+  --mono-vonal: rgba(255, 255, 255, 0.22);   /* sor-elválasztó hajszálvonal */
+  --mono-vonal-vastag: rgba(255, 255, 255, 0.9); /* rovat-fej vastag vonala */
+  --mono-piros: #d61f1f;                     /* piros felület (fehér szöveggel 5,15:1) */
+}
+
+/* ===================================================================
+   1. ALAP: éles élek, lapos felületek, talpas címek
+   =================================================================== */
+html[data-dizajn="mono"] body { letter-spacing: 0.002em; }
+html[data-dizajn="mono"] .page { background: var(--bg); }
+
+/* A „Mind →” típusú szöveges linkek: piros, éles fókusz-doboz. */
+html[data-dizajn="mono"] .link { border-radius: 0; font-weight: 700; }
+/* Fejléc-bevezető („lead”): kisebb fokozat, keskeny hasáb — ne nyomja el a rovat-fejeket. */
+html[data-dizajn="mono"] .topbar > h1 + .muted,
+html[data-dizajn="mono"] .topbar > h1 + .lead { font-size: 15px; max-width: 36ch; }
+
+/* ===================================================================
+   2. FEJLÉC — újság-fejléc: vastag vonal alatta, talpas márkanév
+   =================================================================== */
+html[data-dizajn="mono"] .brand-row {
+  border-bottom: 3px solid var(--mono-vonal-vastag);
+  padding-bottom: 10px;
+}
+html[data-dizajn="mono"] .brand {
+  font-family: var(--font-cim);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+html[data-dizajn="mono"] .brand-mark {
+  width: 11px; height: 11px;
+  border-radius: 0;
+  background: var(--brand);
+  box-shadow: none;
+}
+/* Város-jelölő: apró, nagybetűs, keretes — mint egy lapzárta-jelzés. */
+html[data-dizajn="mono"] .city-pill {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--mono-vonal);
+  height: 30px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+html[data-dizajn="mono"] .city-pill svg { fill: var(--muted); width: 13px; height: 13px; }
+
+/* A mottó: dőlt talpas „vezércikk-felütés”, nem gradiens-felirat. */
+html[data-dizajn="mono"] .hero-title {
+  font-family: var(--font-cim);
+  font-size: 29px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.2;
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--text);
+  display: block;
+  margin: 14px 0 14px;
+  max-width: 20ch;
+}
+/* Kereső: sima keretes mező, semmi lekerekítés. */
+html[data-dizajn="mono"] .search {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--mono-vonal);
+  height: 50px;
+}
+html[data-dizajn="mono"] .search svg { fill: var(--faint); }
+
+/* ===================================================================
+   3. SZTORI-SÁV — a körökből szögletes, keretes hely-címkék lettek
+   =================================================================== */
+html[data-dizajn="mono"] .story-strip { gap: 10px; padding-top: 16px; }
+html[data-dizajn="mono"] .story { width: 76px; gap: 7px; }
+html[data-dizajn="mono"] .ring {
+  width: 58px; height: 58px;
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--mono-vonal);
+  padding: 0;
+}
+html[data-dizajn="mono"] .ring-in {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+html[data-dizajn="mono"] .ring.sm { width: 38px; height: 38px; border-radius: 0; }
+html[data-dizajn="mono"] .ring.sm .ring-in { border: 0; font-size: 13px; }
+html[data-dizajn="mono"] .story-nev {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  max-width: 76px;
+}
+/* Sztori-nézegető: fekete lap, fehér keret, talpas idézet. */
+html[data-dizajn="mono"] .story-card {
+  border-radius: 0;
+  background: #0d0d0d;
+  border: 1px solid var(--mono-vonal);
+  box-shadow: none;
+}
+html[data-dizajn="mono"] .story-card p { font-family: var(--font-cim); font-weight: 400; }
+
+/* ===================================================================
+   4. SZŰRŐ-CHIPEK — szögletes, keretes; aktív = tömör fehér, fekete betű
+   =================================================================== */
+html[data-dizajn="mono"] .chip {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--mono-vonal);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 13px;
+}
+html[data-dizajn="mono"] .chip.on {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+/* A „Ma” szűrő az egyetlen piros chip — jelzés, nem dísz. */
+html[data-dizajn="mono"] .chip[data-szuro="ma"] { color: var(--brand); border-color: var(--brand-line); }
+html[data-dizajn="mono"] .chip[data-szuro="ma"].on {
+  background: var(--mono-piros);
+  border-color: var(--mono-piros);
+  color: #fff;
+}
+html[data-dizajn="mono"] .chip.sm { height: 28px; font-size: 10px; padding: 0 9px; }
+html[data-dizajn="mono"] .chip.gold {
+  background: none;
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* ===================================================================
+   5. A LISTA — EZ A VÁLTOZAT LELKE
+   Nincs plakát. A sor: bal oldalt időpont-blokk, mellette nagy talpas cím,
+   alatta hely + ár, jobbra a „Top” jelölés. Hajszálvonal választja el őket.
+   =================================================================== */
+html[data-dizajn="mono"] .card-poster img { display: none; }
+html[data-dizajn="mono"] .card-poster::after { content: none; }
+
+html[data-dizajn="mono"] .list-group .grid { grid-template-columns: 1fr; gap: 0; }
+html[data-dizajn="mono"] .list-group .grid .card-poster {
+  position: relative;
+  display: block;
+  aspect-ratio: auto;
+  min-height: 78px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-bottom: 1px solid var(--mono-vonal);
+  padding: 14px 0 15px;
+  overflow: visible;
+  transform: none;
+}
+html[data-dizajn="mono"] .card-poster:active { transform: none; background: rgba(255, 255, 255, 0.07); }
+
+/* A kártya-test rácsba rendezve: 1. oszlop = időpont, 2. oszlop = cím + hely·ár. */
+html[data-dizajn="mono"] .list-group .card-body {
+  position: static;
+  left: auto; right: auto; bottom: auto;
+  display: grid;
+  /* MÉRVE (390 px-es képernyő, 350 px tartalom-sáv):
+     - a leghosszabb időpont („szept. 14. · 21:00”) 13,5 px-en 117 px → a 120 px-es
+       oszlopban MINDEN sor időpontja EGY sorba fér: valódi tabuláris hasáb;
+     - a maradó 218 px cím-sávba a 19 px-es talpas címek közül csak a tényleg
+       hosszúak törnek két sorba (ez így helyes egy program-listában). */
+  grid-template-columns: 120px 1fr;
+  column-gap: 12px;
+  row-gap: 3px;
+  align-items: start;
+}
+html[data-dizajn="mono"] .list-group .card-when {
+  grid-column: 1; grid-row: 1;
+  font-family: var(--font);
+  font-size: 13.5px;                          /* mérve: így fér be a leghosszabb dátum is egy sorba */
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;                       /* kisbetű: keskenyebb, jobban tördel */
+  font-variant-numeric: tabular-nums;         /* tabuláris számok: az órák egymás alatt állnak */
+  color: var(--text);
+  opacity: 1;
+  padding-top: 1px;
+}
+html[data-dizajn="mono"] .list-group .card-title {
+  grid-column: 2; grid-row: 1;
+  font-family: var(--font-cim);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  margin: 0;
+  color: var(--text);
+}
+html[data-dizajn="mono"] .list-group .card-meta {
+  grid-column: 2; grid-row: 2;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* A MAI bulik időpontja piros — ez a lista egyetlen színes jele. */
+html[data-dizajn="mono"] .card-poster[data-ma="1"] .card-when { color: var(--brand); }
+
+/* „Top” jelölés: apró piros négyzet a sor jobb felső sarkában. */
+html[data-dizajn="mono"] .list-group .badge-top {
+  top: 14px; right: 0; left: auto;
+  background: var(--mono-piros);
+  color: #fff;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 3px 7px 4px;
+  line-height: 1;
+}
+/* Hányan mennek: az időpont-oszlop alatt, apró nagybetűkkel. */
+html[data-dizajn="mono"] .list-group .going-pill {
+  top: 40px; left: 0; right: auto; bottom: auto;
+  background: none;
+  backdrop-filter: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ===================================================================
+   6. ROVAT-FEJEK — nagybetűs, vastag felső vonallal (újság-rovat)
+   =================================================================== */
+html[data-dizajn="mono"] .group-title,
+html[data-dizajn="mono"] .section-head h2,
+html[data-dizajn="mono"] .section:not(.promo-card):not(.venue-card) > h2 {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+html[data-dizajn="mono"] .group-title {
+  border-top: 3px solid var(--mono-vonal-vastag);
+  padding-top: 9px;
+  margin-bottom: 4px;
+}
+html[data-dizajn="mono"] .section-head {
+  border-top: 3px solid var(--mono-vonal-vastag);
+  padding-top: 7px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+html[data-dizajn="mono"] .section:not(.promo-card):not(.venue-card) > h2 {
+  border-top: 2px solid var(--mono-vonal);
+  padding-top: 9px;
+  margin-bottom: 10px;
+}
+html[data-dizajn="mono"] .list-group { margin-top: 26px; }
+/* A Heti Top az egyetlen PIROS vonalú rovat a főoldalon. */
+html[data-dizajn="mono"] #heti-top-szekcio .section-head { border-top-color: var(--mono-piros); }
+
+/* ===================================================================
+   7. HETI TOP a főoldalon — szintén kép nélkül, keretes tipográfiai kártyák
+   (indoklás a jelentésben: a plakát-SVG maga is a CÍMET rajzolja ki,
+    így a bélyegkép megismételné a mellette álló szöveget)
+   =================================================================== */
+html[data-dizajn="mono"] .h-scroll { gap: 12px; align-items: stretch; }
+html[data-dizajn="mono"] .h-scroll .card-poster.lg {
+  position: relative;
+  width: 250px;
+  aspect-ratio: auto;
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid var(--mono-vonal);
+  border-top: 4px solid var(--mono-piros);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  padding: 16px 15px 15px;
+  overflow: hidden;
+  transform: none;
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg .card-body {
+  position: static;
+  left: auto; right: auto; bottom: auto;
+  display: block;
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg .card-when {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 1;
+  font-variant-numeric: tabular-nums;
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg .card-title {
+  font-family: var(--font-cim);
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.14;
+  margin: 8px 0 0;
+  color: var(--text);
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg .card-meta {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid var(--mono-vonal);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg .badge-top {
+  top: 12px; right: 12px; left: auto;
+  background: var(--mono-piros);
+  color: #fff;
+  border-radius: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 4px 7px;
+  line-height: 1;
+}
+html[data-dizajn="mono"] .h-scroll .card-poster.lg[data-ma="1"] .card-when { color: var(--brand); }
+
+/* ===================================================================
+   8. ESEMÉNY-OLDAL — alacsony szürke fej-sáv, alatta FEHÉR cím-blokk
+   =================================================================== */
+html[data-dizajn="mono"] .hero {
+  height: auto;
+  border-radius: 0;
+  background: #000;
+  overflow: hidden;
+}
+html[data-dizajn="mono"] .hero-img {
+  height: 30vh;
+  min-height: 190px;
+  max-height: 300px;
+  /* Sötét, kontrasztos szürkeárnyalat: nyomdai raszter-hatás a fotón. */
+  filter: grayscale(1) contrast(1.45) brightness(0.5);
+}
+html[data-dizajn="mono"] .hero-shade { display: none; }
+/* A cím nem a fotón ül, hanem alatta, saját sávban — de SÖTÉTEN: világos hátterű felületet
+   a tulaj nem kér (D-013). A nyomdai hatást a vastag fehér és piros vonal adja, nem a fehér papír. */
+html[data-dizajn="mono"] .hero-text {
+  position: static;
+  background: var(--bg-2);
+  padding: 16px var(--pad) 18px;
+  border-top: 2px solid var(--mono-vonal-vastag);
+  border-bottom: 4px solid var(--mono-piros);
+}
+html[data-dizajn="mono"] .hero-text h1 {
+  color: var(--text);
+  font-family: var(--font-cim);
+  font-size: 31px;
+  line-height: 1.08;
+  margin-top: 12px;
+}
+html[data-dizajn="mono"] .hero-text .chip {
+  background: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--muted);
+}
+html[data-dizajn="mono"] .hero-text .chip.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+html[data-dizajn="mono"] .hero-text .chip.gold { background: var(--mono-piros); border-color: var(--mono-piros); color: #fff; }
+html[data-dizajn="mono"] .back,
+html[data-dizajn="mono"] .share-btn {
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: none;
+}
+html[data-dizajn="mono"] .back.inline { background: none; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .share-btn.inline { background: none; border-color: var(--mono-vonal); }
+
+/* Adat-blokk: kártya helyett vonalas „impresszum”. */
+html[data-dizajn="mono"] .info-block {
+  background: none;
+  border: 0;
+  border-top: 2px solid var(--mono-vonal);
+  border-radius: 0;
+  padding: 0;
+  margin-top: 18px;
+}
+html[data-dizajn="mono"] .info-row { border-bottom-color: var(--line); gap: 12px; }
+html[data-dizajn="mono"] .info-ico {
+  width: 22px; height: 22px;
+  border-radius: 0;
+  background: none;
+  margin-top: 2px;
+}
+html[data-dizajn="mono"] .info-ico svg { width: 18px; height: 18px; fill: var(--faint); }
+/* Az ÁR sor (az utolsó) pirossal — ez a lap egyetlen ár-kiemelése. */
+html[data-dizajn="mono"] .info-row:last-child b { color: var(--brand); font-variant-numeric: tabular-nums; }
+
+html[data-dizajn="mono"] .lineup li {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+  font-family: var(--font-cim);
+  font-size: 18px;
+  font-weight: 700;
+}
+html[data-dizajn="mono"] .lineup { gap: 0; }
+html[data-dizajn="mono"] .lead { font-family: var(--font-cim); font-size: 18px; line-height: 1.5; color: var(--muted); }
+html[data-dizajn="mono"] .tag {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 9px;
+}
+html[data-dizajn="mono"] .venue-card {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 2px solid var(--mono-vonal);
+  padding: 16px 0 0;
+}
+html[data-dizajn="mono"] .mini-row {
+  border-radius: 0;
+  background: none;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+html[data-dizajn="mono"] .mini-when { color: var(--brand); font-variant-numeric: tabular-nums; }
+html[data-dizajn="mono"] .avatar { border-radius: 0; margin-left: 4px; border: 0; }
+html[data-dizajn="mono"] .avatar:first-child { margin-left: 0; }
+
+/* ===================================================================
+   9. GOMBOK — szögletes, nagybetűs; magasság AUTO, hogy a hosszú
+   magyar feliratok tördelhessenek (a fix 56 px-be nem férnének be)
+   =================================================================== */
+html[data-dizajn="mono"] .btn {
+  border-radius: 0;
+  height: auto;
+  min-height: var(--tap-l);
+  padding: 15px 20px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-align: center;
+}
+html[data-dizajn="mono"] .btn:active { transform: none; filter: brightness(0.9); }
+html[data-dizajn="mono"] .btn-primary {
+  background: var(--mono-piros);
+  color: #fff;
+  box-shadow: none;
+}
+html[data-dizajn="mono"] .btn-ghost {
+  background: none;
+  border: 1px solid var(--text);
+  color: var(--text);
+}
+html[data-dizajn="mono"] .btn-xl { min-height: 58px; font-size: 16px; }
+
+/* ===================================================================
+   10. ALSÓ CTA-SÁV + TAB-SÁV — éles felső vonal, minimál feliratok
+   =================================================================== */
+html[data-dizajn="mono"] .cta-bar {
+  border-top: 2px solid var(--mono-vonal-vastag);
+  backdrop-filter: none;
+  background: var(--bg);
+}
+html[data-dizajn="mono"] .cta-price b {
+  color: var(--brand);
+  font-size: 21px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+html[data-dizajn="mono"] .cta-price .muted { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+html[data-dizajn="mono"] .tabbar {
+  border-top: 2px solid var(--mono-vonal-vastag);
+  backdrop-filter: none;
+  background: var(--bg);
+}
+html[data-dizajn="mono"] .tab { position: relative; gap: 4px; }
+html[data-dizajn="mono"] .tab svg { width: 21px; height: 21px; }
+html[data-dizajn="mono"] .tab span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Aktív fül: piros jelölő-vonal a sáv tetején. */
+html[data-dizajn="mono"] .tab.on::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--mono-piros);
+}
+
+/* ===================================================================
+   11. ŰRLAP / ALSÓ LAP
+   =================================================================== */
+html[data-dizajn="mono"] .sheet-panel {
+  border-radius: 0;
+  border-top: 3px solid var(--mono-vonal-vastag);
+  box-shadow: none;
+  background: var(--bg-2);
+}
+html[data-dizajn="mono"] .sheet-grip { border-radius: 0; width: 40px; height: 3px; background: var(--mono-vonal); }
+html[data-dizajn="mono"] .sheet-panel h2 { font-family: var(--font-cim); font-size: 22px; text-transform: none; letter-spacing: -0.01em; }
+html[data-dizajn="mono"] .field input { border-radius: 0; background: none; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .field span { text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 800; }
+html[data-dizajn="mono"] .alert { border-radius: 0; }
+html[data-dizajn="mono"] .toast { border-radius: 0; font-weight: 800; letter-spacing: 0.06em; }
+html[data-dizajn="mono"] .demo-badge { border-radius: 0; }
+html[data-dizajn="mono"] .empty-emoji { filter: grayscale(1); opacity: 0.75; }
+
+/* ===================================================================
+   12. PASSZ (jegy) — fekete újság-fejléc fehér papíron
+   =================================================================== */
+html[data-dizajn="mono"] .hooray {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-left: 4px solid var(--mono-piros);
+  padding: 4px 0 4px 12px;
+}
+html[data-dizajn="mono"] .ticket { border-radius: 0; box-shadow: 0 0 0 1px var(--mono-vonal); }
+html[data-dizajn="mono"] .ticket-top {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 4px solid var(--mono-piros);
+}
+html[data-dizajn="mono"] .ticket-top h1 { color: var(--paper); font-family: var(--font-cim); }
+html[data-dizajn="mono"] .ticket-genre { letter-spacing: 0.2em; }
+html[data-dizajn="mono"] .stamp { border-radius: 0; }
+html[data-dizajn="mono"] .invite-link { border-radius: 0; background: none; border-color: var(--mono-vonal); }
+
+/* Jegyeim-lista: vonalas sorok, fordított (fehér) dátum-blokkal. */
+html[data-dizajn="mono"] .jegy-row {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--mono-vonal);
+  margin-bottom: 0;
+  padding: 14px 0;
+}
+html[data-dizajn="mono"] .jegy-when {
+  border-radius: 0;
+  background: var(--text);
+  color: var(--bg);
+  font-variant-numeric: tabular-nums;
+}
+html[data-dizajn="mono"] .jegy-status {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+}
+html[data-dizajn="mono"] .skeleton-row { border-radius: 0; }
+/* Lement buli: az alap 0,55 opacitása 3,0:1-et adna — enyhébb halványítás. */
+html[data-dizajn="mono"] .jegy-row.past { opacity: 0.8; }
+
+/* ===================================================================
+   13. HETI TOP OLDAL — tipográfiai RANGSOR nagy sorszámokkal, kép nélkül
+   =================================================================== */
+html[data-dizajn="mono"] .top-thumb { display: none; }
+html[data-dizajn="mono"] .top-row {
+  grid-template-columns: auto 1fr auto;      /* a bélyegkép oszlopa kiesett */
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--mono-vonal);
+  margin-bottom: 0;
+  padding: 15px 0;
+  gap: 14px;
+  align-items: center;
+}
+html[data-dizajn="mono"] .top-rank {
+  display: block;
+  width: 42px;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  text-align: right;
+  font-family: var(--font-cim);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+/* A sorszám a CÍM vonalára ül, nem a sor közepére. */
+html[data-dizajn="mono"] .top-row { align-items: start; }
+html[data-dizajn="mono"] .top-row .chev { align-self: center; }
+html[data-dizajn="mono"] .top-row:first-child .top-rank,
+html[data-dizajn="mono"] .top-rank.first { background: none; color: var(--brand); }
+html[data-dizajn="mono"] .top-body b { font-family: var(--font-cim); font-size: 19px; font-weight: 700; }
+html[data-dizajn="mono"] .top-body .muted { font-variant-numeric: tabular-nums; }
+html[data-dizajn="mono"] .pill {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+/* Az ár a rangsorban pirossal keretezve — ugyanaz a jelzés, mint a listában. */
+html[data-dizajn="mono"] .top-meta .pill { color: var(--brand); border-color: var(--brand-line); }
+html[data-dizajn="mono"] .chev { color: var(--faint); }
+
+html[data-dizajn="mono"] .promo-card {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 3px solid var(--mono-vonal-vastag);
+  padding: 16px 0 0;
+}
+html[data-dizajn="mono"] .promo-card h2 { font-family: var(--font-cim); }
+html[data-dizajn="mono"] .step {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+html[data-dizajn="mono"] .step-n {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--mono-vonal);
+  color: var(--text);
+  font-family: var(--font-cim);
+}
+html[data-dizajn="mono"] .price-card {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--mono-vonal);
+  padding: 16px 0;
+}
+html[data-dizajn="mono"] .price-card.hi { border-top: 3px solid var(--mono-piros); box-shadow: none; }
+html[data-dizajn="mono"] .price-big {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===================================================================
+   14. PROFIL
+   =================================================================== */
+html[data-dizajn="mono"] .profil-avatar {
+  border-radius: 0;
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: none;
+  width: 76px; height: 76px;
+  font-size: 30px;
+}
+html[data-dizajn="mono"] .profil-head h1 { font-family: var(--font-cim); }
+html[data-dizajn="mono"] .rank-pill {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--brand-line);
+  color: var(--brand);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 800;
+}
+html[data-dizajn="mono"] .rank-bar {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 2px solid var(--mono-vonal);
+  padding: 12px 0 0;
+}
+html[data-dizajn="mono"] .bar { border-radius: 0; background: var(--surface-2); height: 8px; }
+html[data-dizajn="mono"] .bar span { border-radius: 0; background: var(--text); }
+/* Csempék: kártya helyett vonal-fejezetű oszlopok (újság-táblázat). */
+html[data-dizajn="mono"] .tile {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 2px solid var(--mono-vonal-vastag);
+  padding: 8px 0 0;
+  text-align: left;
+  gap: 3px;
+}
+html[data-dizajn="mono"] .tile b { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+html[data-dizajn="mono"] .tile span {
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.25;
+}
+html[data-dizajn="mono"] .badge-card {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--mono-vonal);
+  padding: 12px 0 14px;
+}
+html[data-dizajn="mono"] .badge-card span { filter: grayscale(1); font-size: 24px; }
+/* A zárt jelvény az alapban 0,45 opacitású → a kis felirat 2,4:1 lenne. Mono-ban SZÍNNEL
+   halványítunk (nem opacitással), így 4,5:1 fölött marad, de látszik, hogy még nincs meg. */
+html[data-dizajn="mono"] .badge-card.locked { opacity: 1; filter: none; }
+html[data-dizajn="mono"] .badge-card.locked span { opacity: 0.5; }
+html[data-dizajn="mono"] .badge-card.locked b { color: var(--muted); }
+html[data-dizajn="mono"] .badge-card.locked small { color: var(--faint); }
+html[data-dizajn="mono"] .badge-card b { font-family: var(--font-cim); }
+html[data-dizajn="mono"] .switch-row input { border-radius: 0; background: var(--surface-2); }
+html[data-dizajn="mono"] .switch-row input::after { border-radius: 0; }
+html[data-dizajn="mono"] .switch-row input:checked { background: var(--mono-piros); }
+html[data-dizajn="mono"] .gb .bar span { background: var(--text); }
+
+/* ===================================================================
+   15. STAT-OLDAL (a helynek)
+   =================================================================== */
+html[data-dizajn="mono"] .stat-cim h1 { font-family: var(--font-cim); }
+html[data-dizajn="mono"] .live-pill {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--ok-line);
+  color: var(--ok-ink);
+}
+html[data-dizajn="mono"] .live-pill i { border-radius: 0; width: 7px; height: 7px; }
+html[data-dizajn="mono"] .stat-tiles-2x2 .tile {
+  border-radius: 0;
+  padding: 10px 0 0;
+  border-top: 2px solid var(--mono-vonal-vastag);
+}
+html[data-dizajn="mono"] .stat-tiles-2x2 .tile span { font-size: 10px; }
+html[data-dizajn="mono"] .tile-ok { border-top-color: var(--mono-piros); }
+html[data-dizajn="mono"] .tile-ok b { color: var(--text); }
+/* Az oszlopdiagram rúdjait a szerver `var(--brand)`-dal rajzolja. Mono-ban FEHÉREK:
+   a piros a lapon végig csak jelzés marad (ár, „Ma”, aktív fül, elsődleges gomb). */
+html[data-dizajn="mono"] .chart-card svg path { fill: var(--text); }
+html[data-dizajn="mono"] .chart-card {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--mono-vonal);
+  border-bottom: 1px solid var(--mono-vonal);
+  padding: 10px 0 4px;
+}
+html[data-dizajn="mono"] .stat-lista { gap: 0; }
+html[data-dizajn="mono"] .stat-row {
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+html[data-dizajn="mono"] .sr-ini {
+  border-radius: 0;
+  background: none;
+  border: 1px solid var(--line);
+}
+html[data-dizajn="mono"] .stat-row { align-items: center; }
+html[data-dizajn="mono"] .stat-row .top-rank { width: 32px; font-size: 24px; line-height: 1.15; }
+
+/* ===================================================================
+   16. CHAT
+   =================================================================== */
+html[data-dizajn="mono"] .msg-avatar { border-radius: 0; }
+html[data-dizajn="mono"] .msg-body { border-radius: 0; background: none; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .msg.own .msg-body { border-radius: 0; background: var(--own-msg); }
+html[data-dizajn="mono"] .tag-hely { border-radius: 0; background: var(--mono-piros); color: #fff; }
+html[data-dizajn="mono"] .chat-input input { border-radius: 0; background: none; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .chat-input .btn { border-radius: 0; min-height: var(--tap-l); padding: 0; }
+html[data-dizajn="mono"] .chat-head { backdrop-filter: none; background: var(--bg); border-bottom-color: var(--mono-vonal); }
+
+/* ===================================================================
+   17. KAPU-MÓD — a kidobó sötétben, egy kézzel használja.
+   Itt SZÁNDÉKOSAN csak visszafogott igazítás: éles sarkok, semmi más.
+   A ZÖLD/PIROS állapot-overlay VÁLTOZATLANUL teli szín, óriás betűvel.
+   =================================================================== */
+html[data-dizajn="mono"] .kapu-tag { letter-spacing: 0.2em; }
+html[data-dizajn="mono"] .kapu-title h1 { font-family: var(--font-cim); font-size: 21px; line-height: 1.12; }
+html[data-dizajn="mono"] .kc { border-radius: 0; background: none; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .kc b { font-variant-numeric: tabular-nums; }
+html[data-dizajn="mono"] .kc-bent { border-color: var(--text); }
+html[data-dizajn="mono"] .kapu-modes { border-radius: 0; background: none; border-color: var(--mono-vonal); padding: 0; }
+html[data-dizajn="mono"] .mode { border-radius: 0; height: 50px; text-transform: uppercase; letter-spacing: 0.1em; font-size: 13px; font-weight: 800; }
+html[data-dizajn="mono"] .mode.on { background: var(--text); color: var(--bg); box-shadow: none; }
+html[data-dizajn="mono"] .reader-wrap { border-radius: 0; border-color: var(--mono-vonal); }
+html[data-dizajn="mono"] .reader-frame i { border-radius: 0 !important; border-color: var(--brand); }
+html[data-dizajn="mono"] .reader-idle-ico { border-radius: 0; background: none; border: 1px solid var(--mono-vonal); }
+html[data-dizajn="mono"] .reader-idle-ico svg { fill: var(--text); }
+html[data-dizajn="mono"] .talalat { border-radius: 0; background: none; border-color: var(--mono-vonal); padding-left: 12px; }
+html[data-dizajn="mono"] .t-nev { font-family: var(--font-cim); }
+/* A kapu gombjai maradjanak a megszokott 48 px-esek (egykezes használat). */
+html[data-dizajn="mono"] .kapu .btn { min-height: 48px; padding: 0 16px; }
+html[data-dizajn="mono"] .t-btn { min-height: 48px; height: 48px; }
+html[data-dizajn="mono"] .kapu-link { border-radius: 0; }
+
+/* KÖTELEZŐ: a kapu-overlay teli ZÖLD / teli PIROS marad, óriás betűvel —
+   a kidobó sötétben, fél másodperc alatt kell hogy olvassa. Ez NEM mono. */
+html[data-dizajn="mono"] .kapu-overlay.ok { background: #22c55e; color: #06180d; }   /* 8,5:1 */
+html[data-dizajn="mono"] .kapu-overlay.err { background: #b81b1b; color: #fff; }     /* 7,0:1 */
+html[data-dizajn="mono"] .kapu-overlay.warn { background: #fafafa; color: #0d0d0d; }
+html[data-dizajn="mono"] .ov-ikon { border-radius: 0; }
+
+/* A jegy-állapot „rendben” jele mono lapon fehér (a zöld a kapunak van fenntartva). */
+html[data-dizajn="mono"] .jegy-status.ok,
+html[data-dizajn="mono"] .pill.ok,
+html[data-dizajn="mono"] .t-status.ok { color: var(--text); }
+
+/* ===================================================================
+   18. KÉP-KEZELÉS — a megmaradt kevés kép mind szürkeárnyalatos
+   =================================================================== */
+/* A .hero-img saját (erősebb) szűrője a 8. szakaszban van — ide NE kerüljön be újra,
+   mert azonos súllyal, később állva felülírná. */
+html[data-dizajn="mono"] .dv-kep { filter: grayscale(1) contrast(1.1); }
