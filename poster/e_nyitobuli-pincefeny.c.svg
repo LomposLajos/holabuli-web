@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Nyitóbuli: Fény a pincében">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.2" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.25"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  <g opacity="0.10" stroke="#ffffff" stroke-width="18"><line x1="-157" y1="900" x2="400" y2="-100"/><line x1="2" y1="900" x2="560" y2="-100"/><line x1="161" y1="900" x2="720" y2="-100"/><line x1="319" y1="900" x2="880" y2="-100"/><line x1="478" y1="900" x2="1040" y2="-100"/><line x1="637" y1="900" x2="1200" y2="-100"/><line x1="796" y1="900" x2="1360" y2="-100"/></g>
+  <circle cx="443" cy="748" r="19" fill="#ffffff" opacity="0.066"/><circle cx="431" cy="732" r="18" fill="#ffffff" opacity="0.065"/><circle cx="419" cy="716" r="16" fill="#ffffff" opacity="0.063"/><circle cx="407" cy="699" r="15" fill="#ffffff" opacity="0.061"/><circle cx="395" cy="683" r="14" fill="#ffffff" opacity="0.060"/><circle cx="383" cy="667" r="12" fill="#ffffff" opacity="0.058"/><circle cx="371" cy="651" r="11" fill="#ffffff" opacity="0.056"/><circle cx="359" cy="635" r="79" fill="#ffffff" opacity="0.055"/><circle cx="347" cy="619" r="78" fill="#ffffff" opacity="0.053"/><circle cx="335" cy="603" r="76" fill="#ffffff" opacity="0.052"/><circle cx="323" cy="587" r="75" fill="#ffffff" opacity="0.050"/><circle cx="311" cy="571" r="74" fill="#ffffff" opacity="0.048"/><circle cx="298" cy="555" r="72" fill="#ffffff" opacity="0.047"/><circle cx="286" cy="539" r="71" fill="#ffffff" opacity="0.045"/><circle cx="274" cy="523" r="69" fill="#ffffff" opacity="0.044"/><circle cx="262" cy="507" r="68" fill="#ffffff" opacity="0.042"/><circle cx="250" cy="490" r="67" fill="#ffffff" opacity="0.040"/><circle cx="238" cy="474" r="65" fill="#ffffff" opacity="0.119"/>
+  <text x="300" y="470" text-anchor="middle" font-size="420" fill="#ffffff" opacity="0.14" font-weight="900">●</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+  
+</svg>

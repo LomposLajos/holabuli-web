@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holabuli – Hol a buli?</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Holabuli">
+<link rel="manifest" href="/holabuli-web/manifest.webmanifest">
+<link rel="icon" href="/holabuli-web/img/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=47862d1">
+
+
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='47862d1';</script>
+<script src="/holabuli-web/js/data.js?v=47862d1"></script>
+
+</head>
+<body class="" data-build="47862d1">
+
+<main class="page">
+  <header class="topbar">
+    <div class="brand-row">
+      <a class="brand" href="/holabuli-web/"><span class="brand-mark" aria-hidden="true"></span>Holabuli</a>
+      <span class="city-pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>Budapest</span>
+    </div>
+    <h1 class="hero-title">Hol a buli?</h1>
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z"/></svg>
+      <input id="kereso" type="search" placeholder="Buli, hely, stílus…" autocomplete="off" aria-label="Keresés">
+    </label>
+  </header>
+
+  <section class="story-strip" aria-label="Sztorik a helyektől">
+    
+      <button class="story" type="button" data-story="0" data-nev="Pincefény Klub" data-szoveg="Kétszintes romkocsma-klub a bulinegyed szívében, pince-táncterem és tetőkert." data-kerulet="VII.">
+        <span class="ring" style="--i:0"><span class="ring-in">PK</span></span>
+        <span class="story-nev">Pincefény</span>
+      </button>
+    
+      <button class="story" type="button" data-story="1" data-nev="Rakpart 9" data-szoveg="Dunaparti hajóklub, nyitott fedélzet, napfelkelte-afterek." data-kerulet="IX.">
+        <span class="ring" style="--i:1"><span class="ring-in">R9</span></span>
+        <span class="story-nev">Rakpart</span>
+      </button>
+    
+      <button class="story" type="button" data-story="2" data-nev="Dobozgyár" data-szoveg="Ipari csarnok techno- és drum&amp;bass-esteknek, két terem, füst és lézer." data-kerulet="XIII.">
+        <span class="ring" style="--i:2"><span class="ring-in">D</span></span>
+        <span class="story-nev">Dobozgyár</span>
+      </button>
+    
+      <button class="story" type="button" data-story="3" data-nev="Neonkert" data-szoveg="Kertmozi-hangulatú nyári kert neon-fényekkel, csütörtöktől szombatig." data-kerulet="VI.">
+        <span class="ring" style="--i:3"><span class="ring-in">N</span></span>
+        <span class="story-nev">Neonkert</span>
+      </button>
+    
+      <button class="story" type="button" data-story="4" data-nev="Hídfő Terasz" data-szoveg="Tetőterasz panorámával, latin és house estek, koktélbár." data-kerulet="XI.">
+        <span class="ring" style="--i:4"><span class="ring-in">HT</span></span>
+        <span class="story-nev">Hídfő</span>
+      </button>
+    
+      <button class="story" type="button" data-story="5" data-nev="Campus Klub" data-szoveg="Egyetemi klub a kollégiumok közt, gólyabulik, karaoke, retro." data-kerulet="XI.">
+        <span class="ring" style="--i:5"><span class="ring-in">CK</span></span>
+        <span class="story-nev">Campus</span>
+      </button>
+    
+  </section>
+
+  <div class="chips" id="szurok" role="tablist" aria-label="Szűrők">
+    <button class="chip on" data-szuro="mind">Mind</button>
+    <button class="chip" data-szuro="ma">Ma</button>
+    <button class="chip" data-szuro="ingyen">Ingyenes</button>
+    
+      <button class="chip" data-szuro="mufaj:techno">Techno</button>
+    
+      <button class="chip" data-szuro="mufaj:house">House</button>
+    
+      <button class="chip" data-szuro="mufaj:retro">Retro</button>
+    
+      <button class="chip" data-szuro="mufaj:hiphop">Hip-hop</button>
+    
+      <button class="chip" data-szuro="mufaj:latin">Latin</button>
+    
+      <button class="chip" data-szuro="mufaj:indie">Indie / rock</button>
+    
+      <button class="chip" data-szuro="mufaj:egyetemi">Egyetemi buli</button>
+    
+      <button class="chip" data-szuro="mufaj:dnb">Drum &amp; bass</button>
+    
+  </div>
+
+  
+  <section class="section" id="heti-top-szekcio">
+    <div class="section-head">
+      <h2>Heti Top Bulik</h2>
+      <a class="link" href="/holabuli-web/heti-top">Mind →</a>
+    </div>
+    <div class="h-scroll">
+      
+        <a class="card-poster lg" href="/holabuli-web/e/e_nyitobuli-pincefeny" data-mufaj="house" data-ma="1" data-kezdes="2026-09-05T20:00:00.000Z" data-ingyen="1" data-kereso="nyitóbuli: fény a pincében pincefény klub house disco">
+          <img src="/holabuli-web/poster/e_nyitobuli-pincefeny.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★ Top</span>
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-05T20:00:00.000Z" data-fmt="when">Ma · 22:00</time></div>
+            <div class="card-title">Nyitóbuli: Fény a pincében</div>
+            <div class="card-meta">Pincefény Klub · Ingyen 23:30-ig</div>
+          </div>
+        </a>
+      
+        <a class="card-poster lg" href="/holabuli-web/e/e_techno-hajnal-dobozgyar" data-mufaj="techno" data-ma="0" data-kezdes="2026-09-06T21:00:00.000Z" data-ingyen="0" data-kereso="techno hajnal dobozgyár techno hard techno">
+          <img src="/holabuli-web/poster/e_techno-hajnal-dobozgyar.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★ Top</span>
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-06T21:00:00.000Z" data-fmt="when">Holnap · 23:00</time></div>
+            <div class="card-title">Techno Hajnal</div>
+            <div class="card-meta">Dobozgyár · 3500 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster lg" href="/holabuli-web/e/e_napfelkelte-after-rakpart" data-mufaj="house" data-ma="0" data-kezdes="2026-09-07T02:00:00.000Z" data-ingyen="0" data-kereso="napfelkelte after a hajón rakpart 9 deep house after">
+          <img src="/holabuli-web/poster/e_napfelkelte-after-rakpart.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★ Top</span>
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-07T02:00:00.000Z" data-fmt="when">hétfő · 04:00</time></div>
+            <div class="card-title">Napfelkelte After a hajón</div>
+            <div class="card-meta">Rakpart 9 · 2500 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster lg" href="/holabuli-web/e/e_golyabuli-campus" data-mufaj="egyetemi" data-ma="0" data-kezdes="2026-09-11T19:00:00.000Z" data-ingyen="0" data-kereso="gólyabuli 2026 campus klub egyetemi pop mainstream">
+          <img src="/holabuli-web/poster/e_golyabuli-campus.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★ Top</span>
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-11T19:00:00.000Z" data-fmt="when">péntek · 21:00</time></div>
+            <div class="card-title">Gólyabuli 2026</div>
+            <div class="card-meta">Campus Klub · 1500 Ft</div>
+          </div>
+        </a>
+      
+    </div>
+  </section>
+  
+
+  
+  <section class="section list-group" data-group="Ma">
+    <h2 class="group-title">Ma</h2>
+    <div class="grid">
+      
+        <a class="card-poster" href="/holabuli-web/e/e_retro-csutortok-campus" data-mufaj="retro" data-ma="1" data-kezdes="2026-09-05T19:00:00.000Z" data-ingyen="0" data-kereso="retro csütörtök campus klub retro 2000s karaoke">
+          <img src="/holabuli-web/poster/e_retro-csutortok-campus.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-05T19:00:00.000Z" data-fmt="when">Ma · 21:00</time></div>
+            <div class="card-title">Retro Csütörtök</div>
+            <div class="card-meta">Campus Klub · 1000 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_nyitobuli-pincefeny" data-mufaj="house" data-ma="1" data-kezdes="2026-09-05T20:00:00.000Z" data-ingyen="1" data-kereso="nyitóbuli: fény a pincében pincefény klub house disco">
+          <img src="/holabuli-web/poster/e_nyitobuli-pincefeny.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★</span>
+          <span class="going-pill">20 megy</span>
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-05T20:00:00.000Z" data-fmt="when">Ma · 22:00</time></div>
+            <div class="card-title">Nyitóbuli: Fény a pincében</div>
+            <div class="card-meta">Pincefény Klub · Ingyen 23:30-ig</div>
+          </div>
+        </a>
+      
+    </div>
+  </section>
+  
+  <section class="section list-group" data-group="Holnap">
+    <h2 class="group-title">Holnap</h2>
+    <div class="grid">
+      
+        <a class="card-poster" href="/holabuli-web/e/e_hiphop-blokk-neonkert" data-mufaj="hiphop" data-ma="0" data-kezdes="2026-09-06T19:00:00.000Z" data-ingyen="0" data-kereso="hip-hop blokk neonkert hip-hop trap rnb">
+          <img src="/holabuli-web/poster/e_hiphop-blokk-neonkert.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-06T19:00:00.000Z" data-fmt="when">Holnap · 21:00</time></div>
+            <div class="card-title">Hip-hop Blokk</div>
+            <div class="card-meta">Neonkert · 1500 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_techno-hajnal-dobozgyar" data-mufaj="techno" data-ma="0" data-kezdes="2026-09-06T21:00:00.000Z" data-ingyen="0" data-kereso="techno hajnal dobozgyár techno hard techno">
+          <img src="/holabuli-web/poster/e_techno-hajnal-dobozgyar.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★</span>
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-06T21:00:00.000Z" data-fmt="when">Holnap · 23:00</time></div>
+            <div class="card-title">Techno Hajnal</div>
+            <div class="card-meta">Dobozgyár · 3500 Ft</div>
+          </div>
+        </a>
+      
+    </div>
+  </section>
+  
+  <section class="section list-group" data-group="Ezen a héten">
+    <h2 class="group-title">Ezen a héten</h2>
+    <div class="grid">
+      
+        <a class="card-poster" href="/holabuli-web/e/e_napfelkelte-after-rakpart" data-mufaj="house" data-ma="0" data-kezdes="2026-09-07T02:00:00.000Z" data-ingyen="0" data-kereso="napfelkelte after a hajón rakpart 9 deep house after">
+          <img src="/holabuli-web/poster/e_napfelkelte-after-rakpart.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★</span>
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-07T02:00:00.000Z" data-fmt="when">hétfő · 04:00</time></div>
+            <div class="card-title">Napfelkelte After a hajón</div>
+            <div class="card-meta">Rakpart 9 · 2500 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_house-pince-szombat" data-mufaj="house" data-ma="0" data-kezdes="2026-09-07T20:00:00.000Z" data-ingyen="0" data-kereso="szombati house pince pincefény klub house tech house">
+          <img src="/holabuli-web/poster/e_house-pince-szombat.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-07T20:00:00.000Z" data-fmt="when">hétfő · 22:00</time></div>
+            <div class="card-title">Szombati House Pince</div>
+            <div class="card-meta">Pincefény Klub · 1800 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_salsa-terasz-hidfo" data-mufaj="latin" data-ma="0" data-kezdes="2026-09-08T18:00:00.000Z" data-ingyen="1" data-kereso="salsa a tetőn hídfő terasz salsa bachata reggaeton">
+          <img src="/holabuli-web/poster/e_salsa-terasz-hidfo.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-08T18:00:00.000Z" data-fmt="when">kedd · 20:00</time></div>
+            <div class="card-title">Salsa a Tetőn</div>
+            <div class="card-meta">Hídfő Terasz · Ingyen 21:00-ig</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_indie-este-neonkert" data-mufaj="indie" data-ma="0" data-kezdes="2026-09-09T18:00:00.000Z" data-ingyen="0" data-kereso="indie este élő zenével neonkert indie rock koncert">
+          <img src="/holabuli-web/poster/e_indie-este-neonkert.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-09T18:00:00.000Z" data-fmt="when">szerda · 20:00</time></div>
+            <div class="card-title">Indie Este élő zenével</div>
+            <div class="card-meta">Neonkert · 2200 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_golyabuli-campus" data-mufaj="egyetemi" data-ma="0" data-kezdes="2026-09-11T19:00:00.000Z" data-ingyen="0" data-kereso="gólyabuli 2026 campus klub egyetemi pop mainstream">
+          <img src="/holabuli-web/poster/e_golyabuli-campus.c.svg" alt="" loading="lazy">
+          <span class="badge-top">★</span>
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-11T19:00:00.000Z" data-fmt="when">péntek · 21:00</time></div>
+            <div class="card-title">Gólyabuli 2026</div>
+            <div class="card-meta">Campus Klub · 1500 Ft</div>
+          </div>
+        </a>
+      
+    </div>
+  </section>
+  
+  <section class="section list-group" data-group="Később">
+    <h2 class="group-title">Később</h2>
+    <div class="grid">
+      
+        <a class="card-poster" href="/holabuli-web/e/e_disco-hajo-rakpart" data-mufaj="retro" data-ma="0" data-kezdes="2026-09-12T19:00:00.000Z" data-ingyen="0" data-kereso="disco hajó rakpart 9 disco funk 80s">
+          <img src="/holabuli-web/poster/e_disco-hajo-rakpart.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-12T19:00:00.000Z" data-fmt="when">szept. 12. · 21:00</time></div>
+            <div class="card-title">Disco Hajó</div>
+            <div class="card-meta">Rakpart 9 · 3000 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_dnb-csarnok" data-mufaj="dnb" data-ma="0" data-kezdes="2026-09-13T20:00:00.000Z" data-ingyen="0" data-kereso="basszus csarnok dobozgyár drum &amp; bass jungle">
+          <img src="/holabuli-web/poster/e_dnb-csarnok.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-13T20:00:00.000Z" data-fmt="when">szept. 13. · 22:00</time></div>
+            <div class="card-title">Basszus Csarnok</div>
+            <div class="card-meta">Dobozgyár · 2900 Ft</div>
+          </div>
+        </a>
+      
+        <a class="card-poster" href="/holabuli-web/e/e_latin-night-hidfo" data-mufaj="latin" data-ma="0" data-kezdes="2026-09-14T19:00:00.000Z" data-ingyen="0" data-kereso="latin night hídfő terasz reggaeton latin pop">
+          <img src="/holabuli-web/poster/e_latin-night-hidfo.c.svg" alt="" loading="lazy">
+          
+          
+          <div class="card-body">
+            <div class="card-when"><time datetime="2026-09-14T19:00:00.000Z" data-fmt="when">szept. 14. · 21:00</time></div>
+            <div class="card-title">Latin Night</div>
+            <div class="card-meta">Hídfő Terasz · 1200 Ft</div>
+          </div>
+        </a>
+      
+    </div>
+  </section>
+  
+
+  <div class="empty hidden" id="ures">
+    <div class="empty-emoji">🪩</div>
+    <p>Erre a szűrésre most nincs buli.</p>
+    <button class="btn btn-ghost" type="button" id="szuro-torles">Szűrők törlése</button>
+  </div>
+
+  <footer class="page-foot">
+    <a class="link" href="/holabuli-web/hely">Helyet üzemeltetsz? Tedd fel a bulidat →</a>
+  </footer>
+</main>
+
+<div class="story-viewer hidden" id="story-viewer" role="dialog" aria-modal="true" aria-label="Sztori">
+  <div class="story-progress"><span></span></div>
+  <button class="story-close" type="button" aria-label="Bezárás">✕</button>
+  <div class="story-card">
+    <div class="story-head"><span class="ring sm"><span class="ring-in" id="sv-ini"></span></span><b id="sv-nev"></b><span class="muted" id="sv-kerulet"></span></div>
+    <p id="sv-szoveg"></p>
+    <div class="story-cta">Koppints a bezáráshoz</div>
+  </div>
+</div>
+
+<nav class="tabbar" aria-label="Fő navigáció">
+  <a class="tab on" href="/holabuli-web/" aria-label="Felfedezés">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3.7 6.3-1.9 5.2-5.2 1.9 1.9-5.2 5.2-1.9Z"/></svg>
+    <span>Felfedezés</span>
+  </a>
+  <a class="tab " href="/holabuli-web/heti-top" aria-label="Heti Top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3l-6 3.3 1.3-6.8-5-4.7 6.8-.8L12 2Z"/></svg>
+    <span>Heti Top</span>
+  </a>
+  <a class="tab " href="/holabuli-web/jegyeim" aria-label="Jegyeim">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V7Zm6 1v8h2V8H9Z"/></svg>
+    <span>Jegyeim</span>
+  </a>
+  <a class="tab " href="/holabuli-web/profil" aria-label="Profil">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.5-8 5.5V21h16v-1.5c0-3-3.6-5.5-8-5.5Z"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 47862d1">DEMÓ</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=47862d1" defer></script><script src="/holabuli-web/js/static-mode.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/app.js?v=47862d1" defer></script>
+
+</body>
+</html>
+

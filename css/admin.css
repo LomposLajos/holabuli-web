@@ -1,0 +1,124 @@
+/* Holabuli ADMIN: a közös tokenekre épül, sűrűbb. Telefonon kártyás, 900 px felett táblázatos. */
+
+/* Nincs tabbar az adminban: kisebb alsó térköz; széles oszlop asztali gépen a listás oldalakon. */
+.body-admin .page { padding-bottom: calc(48px + var(--safe-b)); }
+@media (min-width: 900px) {
+  .body-admin .page-wide { max-width: 1120px; }
+}
+
+/* ===== Fejléc, menü ===== */
+.admin-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-tag { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; background: var(--brand-grad); color: #fff; margin-left: 8px; }
+.admin-app-link { flex: none; display: inline-flex; align-items: center; height: 48px; padding: 0 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: var(--fs-s); color: var(--muted); white-space: nowrap; }
+.admin-nav { display: flex; gap: 8px; margin-top: 14px; overflow-x: auto; scrollbar-width: none; }
+.admin-nav::-webkit-scrollbar { display: none; }
+.admin-nav a { flex: none; display: inline-flex; align-items: center; height: 48px; padding: 0 18px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: var(--fs-s); color: var(--muted); }
+.admin-nav a.on { background: var(--text); color: var(--bg); border-color: transparent; }
+
+/* ===== Visszajelzés ===== */
+.flash { margin-top: 14px; padding: 12px 14px; border-radius: var(--r-m); background: rgba(163, 230, 53, 0.12); border: 1px solid rgba(163, 230, 53, 0.35); color: #d9f99d; font-weight: 600; font-size: var(--fs-s); }
+.alert ul { margin: 6px 0 0; padding-left: 18px; font-weight: 500; }
+.alert li + li { margin-top: 2px; }
+
+/* ===== Számok, fő műveletek ===== */
+.admin-tiles .tile small { font-size: 11px; color: var(--faint); font-weight: 600; }
+.admin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.admin-actions > * { flex: 1 1 180px; display: flex; }
+.admin-actions .btn { flex: 1; }
+.btn-danger { background: rgba(255, 92, 122, 0.12); border: 1px solid rgba(255, 92, 122, 0.4); color: #ffb3c2; }
+.btn-sm { height: 48px; padding: 0 14px; font-size: var(--fs-s); }
+.topbar.slim .btn-sm { flex: none; }
+
+/* ===== Eseménylista ===== */
+.ev-head { display: none; }
+.ev-list { display: grid; gap: 10px; }
+.ev-row { display: grid; gap: 10px; padding: 14px; border-radius: var(--r-l); background: var(--surface); border: 1px solid var(--line); }
+.ev-row.past { opacity: 0.5; }
+.ev-row.past:hover, .ev-row.past:focus-within { opacity: 1; }
+.ev-title { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-m); font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; }
+.ev-title a { display: inline-block; padding: 4px 0; margin: -4px 0; }
+.ev-star { color: #fbbf24; flex: none; }
+.ev-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; color: var(--muted); font-size: var(--fs-s); }
+.ev-genre { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text); }
+.ev-genre::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--brand)); box-shadow: 0 0 8px var(--c, var(--brand)); }
+.ev-past-tag { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: var(--surface-2); color: var(--faint); }
+.ev-when { font-size: var(--fs-s); }
+.ev-when b { font-weight: 700; }
+.ev-ar { font-size: var(--fs-s); color: var(--muted); }
+.ev-mid { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.ev-szamok { display: flex; gap: 6px; }
+.ev-szamok .pill { font-size: 13px; padding: 6px 10px; white-space: nowrap; }
+.pill.ok { background: rgba(163, 230, 53, 0.15); color: var(--ok); }
+.kiemelt-btn { height: 48px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); font-weight: 700; font-size: var(--fs-s); color: var(--muted); display: inline-flex; align-items: center; gap: 6px; transition: 0.15s; white-space: nowrap; }
+.kiemelt-btn.on { background: var(--gold-grad); color: #1a1033; border-color: transparent; }
+.kiemelt-btn:disabled { opacity: 0.6; }
+.ev-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.ev-actions .btn { height: 48px; padding: 0 10px; font-size: var(--fs-s); }
+
+/* Asztali szélesség: egy sor = egy buli, oszlopfejléccel. */
+@media (min-width: 900px) {
+  .ev-head, .ev-row { display: grid; grid-template-columns: minmax(220px, 2fr) minmax(150px, 1.2fr) minmax(120px, 1.1fr) auto auto minmax(330px, auto); gap: 14px; align-items: center; }
+  .ev-head { padding: 0 14px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); font-weight: 700; }
+  .ev-list { gap: 8px; }
+  .ev-row { padding: 12px 14px; border-radius: var(--r-m); }
+  .ev-mid { display: contents; }
+  .ev-when, .ev-ar { font-size: 14px; }
+  .ev-actions { grid-template-columns: repeat(4, auto); justify-content: end; gap: 6px; }
+  .ev-actions .btn { padding: 0 12px; font-size: 14px; }
+}
+
+/* ===== Űrlap ===== */
+.admin-form { margin-top: 6px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.form-grid .span2 { grid-column: 1 / -1; }
+.field select, .field textarea { width: 100%; border-radius: var(--r-m); border: 1px solid var(--line); background: var(--bg-2); padding: 0 14px; font-size: var(--fs-m); outline: 0; color: var(--text); }
+.field select { height: var(--tap-l); appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a5a5c0'><path d='M7 10l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; }
+.field textarea { min-height: 112px; padding: 12px 14px; resize: vertical; line-height: 1.4; display: block; }
+.field select:focus, .field textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255, 79, 163, 0.2); }
+.field small { display: block; margin-top: 6px; font-size: 13px; color: var(--faint); line-height: 1.35; }
+.field.dim { opacity: 0.45; }
+.field input[type="datetime-local"] { min-width: 0; }
+.form-grid .switch-row { margin-top: 18px; border-bottom: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); }
+.form-grid .switch-row small { color: var(--muted); }
+.form-actions { margin-top: 16px; }
+.form-actions .btn-block:first-child { margin-top: 0; }
+.danger-zone { border: 1px solid rgba(255, 92, 122, 0.25); border-radius: var(--r-l); padding: 16px; }
+.danger-zone h2 { color: #ffb3c2; }
+.danger-zone .muted { margin-top: 4px; }
+.danger-zone .btn-block { margin-top: 12px; }
+
+/* Telefonon az űrlap fő kettőse (kezdés, műfaj stb.) egy oszlopba esik, ha keskeny. */
+@media (max-width: 380px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Kapu-link lap ===== */
+.kapu-cim { margin-top: 10px; }
+.kapu-cim h1 { font-size: var(--fs-xl); }
+.kapu-cim .muted { margin-top: 4px; font-size: var(--fs-s); }
+.kapu-card { margin-top: 16px; background: #fff; color: #0b0b12; border-radius: var(--r-l); padding: 22px; text-align: center; box-shadow: var(--sh-2); }
+.kapu-card .qr { width: min(72vw, 320px); margin: 0 auto; }
+.kapu-card .qr svg { width: 100%; height: auto; }
+.kapu-hint { margin-top: 14px; font-size: 13px; color: #5b5b70; font-weight: 600; line-height: 1.4; }
+.kapu-token { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px; color: var(--faint); word-break: break-all; }
+.section .btn-row + .muted { margin-top: 10px; }
+
+/* ===== Helyek ===== */
+.helyek-layout { display: grid; gap: 0; }
+.hely-list { display: grid; gap: 10px; }
+.hely-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 14px; border-radius: var(--r-l); background: var(--surface); border: 1px solid var(--line); }
+.hely-body { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.hely-body b, .hely-body .muted { overflow: hidden; text-overflow: ellipsis; }
+.hely-body .muted { font-size: var(--fs-s); }
+.hely-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
+.hely-actions > * { flex: 1; display: flex; }
+.hely-actions .btn { flex: 1; }
+@media (min-width: 900px) {
+  .helyek-layout { grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: start; }
+  .hely-row { grid-template-columns: auto 1fr auto; }
+  .hely-actions { grid-column: auto; }
+  .hely-actions > * { flex: none; }
+}
+
+/* Érintés-mérce: a buli-cím link legalább 44 px magas legyen (QC-lelet 2026-09-05). */
+.ev-title a { display: inline-block; padding: 8px 0; margin: -8px 0; min-height: 44px; line-height: 28px; }

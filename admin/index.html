@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin · Holabuli</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Holabuli">
+<link rel="manifest" href="/holabuli-web/manifest.webmanifest">
+<link rel="icon" href="/holabuli-web/img/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/admin.css?v=47862d1">
+
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='47862d1';</script>
+<script src="/holabuli-web/js/data.js?v=47862d1"></script>
+
+</head>
+<body class="body-admin" data-build="47862d1">
+
+<main class="page page-wide">
+  <header class="topbar">
+    <div class="admin-head">
+      <a class="brand" href="/holabuli-web/admin"><span class="brand-mark" aria-hidden="true"></span>Holabuli<span class="admin-tag">Admin</span></a>
+      <a class="admin-app-link" href="/holabuli-web/" target="_blank" rel="noopener">App megnyitása ↗</a>
+    </div>
+    <nav class="admin-nav" aria-label="Admin menü">
+      <a class="on" href="/holabuli-web/admin">Bulik</a>
+      <a class="" href="/holabuli-web/admin/helyek">Helyek</a>
+    </nav>
+  </header>
+
+  
+  
+
+  <section class="section">
+    <div class="stat-tiles admin-tiles">
+      <div class="tile"><b>12</b><span>buli</span><small>12 jövő</small></div>
+      <div class="tile"><b>6</b><span>hely</span><small>&nbsp;</small></div>
+      <div class="tile"><b>20</b><span>passz</span><small>7 bent</small></div>
+      <div class="tile"><b>7</b><span>szkennelés</span><small>7 sikeres</small></div>
+    </div>
+    <div class="admin-actions">
+      <a class="btn btn-primary" href="/holabuli-web/admin/esemeny/uj">+ Új buli</a>
+      
+      <form method="post" action="/holabuli-web/admin/demo-reset" data-confirm="Minden buli, passz, szkennelés és chat-üzenet visszaáll a demó-alapra. Biztos?">
+        <button class="btn btn-ghost" type="submit">Demó visszaállítása</button>
+      </form>
+      
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Bulik</h2><span class="muted small">12 db · dátum szerint</span></div>
+
+    
+    <div class="ev-head" aria-hidden="true">
+      <span>Buli</span><span>Időpont</span><span>Ár</span><span>Megyek · Bent</span><span>Kiemelt</span><span></span>
+    </div>
+    
+
+    <div class="ev-list">
+      
+      <article class="ev-row " id="ev-e_retro-csutortok-campus">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_retro-csutortok-campus">Retro Csütörtök</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#facc15">Retro</span>
+            <span>Campus Klub</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>szombat, szept. 5. · 21:00</b></div>
+        <div class="ev-ar">1000 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_retro-csutortok-campus/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Retro Csütörtök">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_retro-csutortok-campus">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_retro-csutortok-campus/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_retro-csutortok-campus">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_retro-csutortok-campus/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_nyitobuli-pincefeny">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star " title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_nyitobuli-pincefeny">Nyitóbuli: Fény a pincében</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#f97316">House</span>
+            <span>Pincefény Klub</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>szombat, szept. 5. · 22:00</b></div>
+        <div class="ev-ar">Ingyen 23:30-ig, utána 2000 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">20 Megyek</span>
+            <span class="pill ok" title="Bent">7 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_nyitobuli-pincefeny/kiemelt">
+            <button class="kiemelt-btn on" type="submit" aria-pressed="true" aria-label="Kiemelés kapcsoló: Nyitóbuli: Fény a pincében">★ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_nyitobuli-pincefeny">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_nyitobuli-pincefeny/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_nyitobuli-pincefeny">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_nyitobuli-pincefeny/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_hiphop-blokk-neonkert">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_hiphop-blokk-neonkert">Hip-hop Blokk</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#ef4444">Hip-hop</span>
+            <span>Neonkert</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>vasárnap, szept. 6. · 21:00</b></div>
+        <div class="ev-ar">1500 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_hiphop-blokk-neonkert/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Hip-hop Blokk">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_hiphop-blokk-neonkert">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_hiphop-blokk-neonkert/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_hiphop-blokk-neonkert">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_hiphop-blokk-neonkert/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_techno-hajnal-dobozgyar">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star " title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_techno-hajnal-dobozgyar">Techno Hajnal</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#7c3aed">Techno</span>
+            <span>Dobozgyár</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>vasárnap, szept. 6. · 23:00</b></div>
+        <div class="ev-ar">3500 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_techno-hajnal-dobozgyar/kiemelt">
+            <button class="kiemelt-btn on" type="submit" aria-pressed="true" aria-label="Kiemelés kapcsoló: Techno Hajnal">★ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_techno-hajnal-dobozgyar">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_techno-hajnal-dobozgyar/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_techno-hajnal-dobozgyar">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_techno-hajnal-dobozgyar/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_napfelkelte-after-rakpart">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star " title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_napfelkelte-after-rakpart">Napfelkelte After a hajón</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#f97316">House</span>
+            <span>Rakpart 9</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>hétfő, szept. 7. · 04:00</b></div>
+        <div class="ev-ar">2500 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_napfelkelte-after-rakpart/kiemelt">
+            <button class="kiemelt-btn on" type="submit" aria-pressed="true" aria-label="Kiemelés kapcsoló: Napfelkelte After a hajón">★ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_napfelkelte-after-rakpart">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_napfelkelte-after-rakpart/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_napfelkelte-after-rakpart">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_napfelkelte-after-rakpart/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_house-pince-szombat">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_house-pince-szombat">Szombati House Pince</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#f97316">House</span>
+            <span>Pincefény Klub</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>hétfő, szept. 7. · 22:00</b></div>
+        <div class="ev-ar">1800 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_house-pince-szombat/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Szombati House Pince">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_house-pince-szombat">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_house-pince-szombat/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_house-pince-szombat">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_house-pince-szombat/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_salsa-terasz-hidfo">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo">Salsa a Tetőn</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#10b981">Latin</span>
+            <span>Hídfő Terasz</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>kedd, szept. 8. · 20:00</b></div>
+        <div class="ev-ar">Ingyen 21:00-ig, utána 1500 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Salsa a Tetőn">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_salsa-terasz-hidfo">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_indie-este-neonkert">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_indie-este-neonkert">Indie Este élő zenével</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#3b82f6">Indie / rock</span>
+            <span>Neonkert</span>
+            <span>16+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>szerda, szept. 9. · 20:00</b></div>
+        <div class="ev-ar">2200 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_indie-este-neonkert/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Indie Este élő zenével">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_indie-este-neonkert">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_indie-este-neonkert/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_indie-este-neonkert">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_indie-este-neonkert/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_golyabuli-campus">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star " title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_golyabuli-campus">Gólyabuli 2026</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#06b6d4">Egyetemi buli</span>
+            <span>Campus Klub</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>péntek, szept. 11. · 21:00</b></div>
+        <div class="ev-ar">1500 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_golyabuli-campus/kiemelt">
+            <button class="kiemelt-btn on" type="submit" aria-pressed="true" aria-label="Kiemelés kapcsoló: Gólyabuli 2026">★ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_golyabuli-campus">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_golyabuli-campus/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_golyabuli-campus">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_golyabuli-campus/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_disco-hajo-rakpart">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_disco-hajo-rakpart">Disco Hajó</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#facc15">Retro</span>
+            <span>Rakpart 9</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>szombat, szept. 12. · 21:00</b></div>
+        <div class="ev-ar">3000 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_disco-hajo-rakpart/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Disco Hajó">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_disco-hajo-rakpart">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_disco-hajo-rakpart/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_disco-hajo-rakpart">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_disco-hajo-rakpart/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_dnb-csarnok">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_dnb-csarnok">Basszus Csarnok</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#22c55e">Drum &amp; bass</span>
+            <span>Dobozgyár</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>vasárnap, szept. 13. · 22:00</b></div>
+        <div class="ev-ar">2900 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_dnb-csarnok/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Basszus Csarnok">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_dnb-csarnok">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_dnb-csarnok/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_dnb-csarnok">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_dnb-csarnok/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      <article class="ev-row " id="ev-e_latin-night-hidfo">
+        <div class="ev-main">
+          <div class="ev-title">
+            <span class="ev-star hidden" title="Kiemelt">★</span>
+            <a href="/holabuli-web/admin/esemeny/e_latin-night-hidfo">Latin Night</a>
+          </div>
+          <div class="ev-meta">
+            <span class="ev-genre" style="--c:#10b981">Latin</span>
+            <span>Hídfő Terasz</span>
+            <span>18+</span>
+            
+          </div>
+        </div>
+        <div class="ev-when"><b>hétfő, szept. 14. · 21:00</b></div>
+        <div class="ev-ar">1200 Ft</div>
+        <div class="ev-mid">
+          <div class="ev-szamok">
+            <span class="pill" title="Megyek">0 Megyek</span>
+            <span class="pill ok" title="Bent">0 Bent</span>
+          </div>
+          <form class="kiemelt-form" method="post" action="/holabuli-web/admin/esemeny/e_latin-night-hidfo/kiemelt">
+            <button class="kiemelt-btn " type="submit" aria-pressed="false" aria-label="Kiemelés kapcsoló: Latin Night">☆ Kiemelt</button>
+          </form>
+        </div>
+        <div class="ev-actions">
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_latin-night-hidfo">Szerkesztés</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_latin-night-hidfo/kapu">Kapu-link</a>
+          <a class="btn btn-ghost" href="/holabuli-web/stat/e_latin-night-hidfo">Stat</a>
+          <a class="btn btn-ghost" href="/holabuli-web/admin/esemeny/e_latin-night-hidfo/passzok.csv">CSV</a>
+        </div>
+      </article>
+      
+      
+    </div>
+  </section>
+</main>
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 47862d1">DEMÓ</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=47862d1" defer></script><script src="/holabuli-web/js/static-mode.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/app.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/admin.js?v=47862d1" defer></script>
+</body>
+</html>
+

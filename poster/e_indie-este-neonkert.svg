@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Indie Este élő zenével">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.2" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  
+  <circle cx="151" cy="146" r="18" fill="#ffffff" opacity="0.044"/><circle cx="255" cy="285" r="30" fill="#ffffff" opacity="0.057"/><circle cx="359" cy="424" r="42" fill="#ffffff" opacity="0.071"/><circle cx="463" cy="562" r="54" fill="#ffffff" opacity="0.085"/><circle cx="567" cy="701" r="66" fill="#ffffff" opacity="0.099"/><circle cx="71" cy="39" r="79" fill="#ffffff" opacity="0.113"/><circle cx="175" cy="178" r="21" fill="#ffffff" opacity="0.047"/><circle cx="279" cy="317" r="33" fill="#ffffff" opacity="0.061"/><circle cx="383" cy="455" r="45" fill="#ffffff" opacity="0.074"/><circle cx="487" cy="594" r="57" fill="#ffffff" opacity="0.088"/><circle cx="591" cy="732" r="69" fill="#ffffff" opacity="0.102"/><circle cx="95" cy="71" r="11" fill="#ffffff" opacity="0.116"/><circle cx="199" cy="210" r="23" fill="#ffffff" opacity="0.050"/><circle cx="303" cy="348" r="36" fill="#ffffff" opacity="0.064"/><circle cx="407" cy="487" r="48" fill="#ffffff" opacity="0.078"/><circle cx="511" cy="625" r="60" fill="#ffffff" opacity="0.091"/><circle cx="15" cy="764" r="72" fill="#ffffff" opacity="0.105"/><circle cx="119" cy="103" r="14" fill="#ffffff" opacity="0.119"/>
+  <text x="48" y="96" font-size="140" fill="#ffffff" opacity="0.18" font-weight="900">◼</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+  <g fill="#ffffff" font-family="Inter, 'Segoe UI', system-ui, sans-serif" style="letter-spacing:-0.02em">
+    <text x="48" y="330" font-size="26" font-weight="700" opacity="0.85" style="letter-spacing:0.18em">INDIE / ROCK</text>
+    <text x="48" y="430" font-size="76" font-weight="800">INDIE ESTE ÉLŐ</text><text x="48" y="507.52" font-size="76" font-weight="800">ZENÉVEL</text>
+    <text x="48" y="700" font-size="28" font-weight="600" opacity="0.92">SZER · 09.09. · 20:00</text>
+    <text x="48" y="744" font-size="28" font-weight="600" opacity="0.92">Neonkert</text>
+  </g>
+</svg>

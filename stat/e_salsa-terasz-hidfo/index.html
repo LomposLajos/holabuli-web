@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stat · Salsa a Tetőn · Holabuli</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Holabuli">
+<link rel="manifest" href="/holabuli-web/manifest.webmanifest">
+<link rel="icon" href="/holabuli-web/img/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/stat.css?v=47862d1">
+
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='47862d1';</script>
+<script src="/holabuli-web/js/data.js?v=47862d1"></script>
+
+</head>
+<body class="body-stat" data-build="47862d1">
+
+<main class="page page-stat" id="stat" data-event="e_salsa-terasz-hidfo">
+  <header class="topbar slim">
+    <a class="back" href="/holabuli-web/hely" aria-label="Vissza">‹</a>
+    <span class="topbar-title">Stat</span>
+    <span class="live-pill" id="live"><i></i>élő</span>
+  </header>
+  <div class="stat-cim">
+    <h1>Salsa a Tetőn</h1>
+    <p class="muted">Hídfő Terasz · <time datetime="2026-09-08T18:00:00.000Z" data-fmt="long">kedd, szept. 8. · 20:00</time></p>
+  </div>
+
+  <section class="section stat-hero">
+    <div class="stat-tiles stat-tiles-2x2">
+      <div class="tile"><b id="st-megyek">0</b><span>Megyek</span></div>
+      <div class="tile tile-ok"><b id="st-bent">0</b><span>Bent</span></div>
+      <div class="tile"><b id="st-arany">0%</b><span>Belépési arány</span></div>
+      <div class="tile"><b id="st-meghivo">0</b><span>Meghívóval jött</span></div>
+    </div>
+    <div class="arany-bar">
+      <div class="bar"><span id="st-bar" style="width:0%"></span></div>
+      <div class="arany-meta muted small"><span id="st-bar-text">0 / 0 beléptetve</span><span>kapacitás 250 fő</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Belépés óránként</h2><span class="muted small" id="chart-sum">0 belépés</span></div>
+    <div class="chart-card" id="chart"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 172" role="img" aria-label="Belépések óránként" font-family="Inter, 'Segoe UI', system-ui, sans-serif"><line x1="28" x2="352" y1="144.0" y2="144.0" stroke="var(--line)" stroke-width="1"/><text x="20" y="144.0" dy="4" text-anchor="end" font-size="11" fill="var(--faint)" style="font-variant-numeric:tabular-nums">0</text><line x1="28" x2="352" y1="24.0" y2="24.0" stroke="var(--line)" stroke-width="1"/><text x="20" y="24.0" dy="4" text-anchor="end" font-size="11" fill="var(--faint)" style="font-variant-numeric:tabular-nums">1</text><g><title>20:00–21:00 · 0 belépés</title><rect x="28.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="43.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="55.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">20</text></g><g><title>21:00–22:00 · 0 belépés</title><rect x="82.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="97.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="109.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">21</text></g><g><title>22:00–23:00 · 0 belépés</title><rect x="136.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="151.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="163.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">22</text></g><g><title>23:00–00:00 · 0 belépés</title><rect x="190.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="205.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="217.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">23</text></g><g><title>00:00–01:00 · 0 belépés</title><rect x="244.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="259.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="271.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">00</text></g><g><title>01:00–02:00 · 0 belépés</title><rect x="298.0" y="24" width="54.0" height="120" fill="transparent"/><rect x="313.0" y="142" width="24" height="2" fill="var(--surface-2)"/><text x="325.0" y="163" text-anchor="middle" font-size="11" font-weight="500" fill="var(--muted)">01</text></g></svg></div>
+  </section>
+
+  <section class="section">
+    <h2>Top meghívók</h2>
+    <p class="muted small stat-alcim">Ki hány embert hozott a meghívó-linkjével.</p>
+    <div id="top-lista" class="stat-lista">
+      <p class="muted stat-ures">Még senki nem hozott vendéget meghívó-linkkel.</p>
+      
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Utolsó belépések</h2>
+    <div id="utolso-lista" class="stat-lista">
+      <p class="muted stat-ures">Még nem lépett be senki. A kapu-módban olvasott QR-ek itt jelennek meg.</p>
+      
+    </div>
+  </section>
+
+  <section class="section">
+    <a class="btn btn-primary btn-block btn-xl" href="/holabuli-web/kapu/k_kw18aDCaCuJO_znk">Kapu-mód megnyitása</a>
+    <a class="btn btn-ghost btn-block" href="/holabuli-web/e/e_salsa-terasz-hidfo">A buli oldala</a>
+    <p class="muted small center stat-friss">Frissül 10 másodpercenként · <span id="frissitve">22:50:47</span></p>
+  </section>
+</main>
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 47862d1">DEMÓ</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=47862d1" defer></script><script src="/holabuli-web/js/static-mode.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/app.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/stat.js?v=47862d1" defer></script>
+</body>
+</html>
+

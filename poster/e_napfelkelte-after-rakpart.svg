@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Napfelkelte After a hajón">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.2" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  
+  <circle cx="176" cy="590" r="23" fill="#ffffff" opacity="0.090"/><circle cx="513" cy="238" r="62" fill="#ffffff" opacity="0.055"/><circle cx="250" cy="687" r="31" fill="#ffffff" opacity="0.100"/><circle cx="586" cy="336" r="70" fill="#ffffff" opacity="0.064"/><circle cx="323" cy="785" r="40" fill="#ffffff" opacity="0.109"/><circle cx="60" cy="434" r="79" fill="#ffffff" opacity="0.074"/><circle cx="396" cy="83" r="48" fill="#ffffff" opacity="0.119"/><circle cx="133" cy="532" r="18" fill="#ffffff" opacity="0.084"/><circle cx="470" cy="180" r="57" fill="#ffffff" opacity="0.049"/><circle cx="206" cy="629" r="26" fill="#ffffff" opacity="0.094"/><circle cx="543" cy="278" r="65" fill="#ffffff" opacity="0.059"/><circle cx="279" cy="727" r="35" fill="#ffffff" opacity="0.104"/><circle cx="16" cy="376" r="74" fill="#ffffff" opacity="0.068"/><circle cx="353" cy="25" r="43" fill="#ffffff" opacity="0.113"/><circle cx="89" cy="474" r="12" fill="#ffffff" opacity="0.078"/><circle cx="426" cy="122" r="52" fill="#ffffff" opacity="0.043"/><circle cx="163" cy="571" r="21" fill="#ffffff" opacity="0.088"/><circle cx="499" cy="220" r="60" fill="#ffffff" opacity="0.053"/>
+  <text x="48" y="96" font-size="140" fill="#ffffff" opacity="0.18" font-weight="900">●</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+  <g fill="#ffffff" font-family="Inter, 'Segoe UI', system-ui, sans-serif" style="letter-spacing:-0.02em">
+    <text x="48" y="330" font-size="26" font-weight="700" opacity="0.85" style="letter-spacing:0.18em">HOUSE</text>
+    <text x="48" y="430" font-size="76" font-weight="800">NAPFELKELTE</text><text x="48" y="507.52" font-size="76" font-weight="800">AFTER A HAJÓN</text>
+    <text x="48" y="700" font-size="28" font-weight="600" opacity="0.92">HÉT · 09.07. · 04:00</text>
+    <text x="48" y="744" font-size="28" font-weight="600" opacity="0.92">Rakpart 9</text>
+  </g>
+</svg>

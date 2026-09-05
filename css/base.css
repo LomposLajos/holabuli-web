@@ -1,0 +1,64 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  font-size: var(--fs-m);
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+input, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: var(--fs-2xl); font-weight: 800; }
+h2 { font-size: var(--fs-l); font-weight: 700; }
+h3 { font-size: var(--fs-m); font-weight: 700; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; }
+
+.muted { color: var(--muted); }
+.small { font-size: var(--fs-s); }
+.center { text-align: center; }
+.hidden { display: none !important; }
+/* Szöveges link: 44 px-es érintés-terület negatív margóval, a sortörés nem változik. */
+.link { color: var(--brand); font-weight: 600; display: inline-block; padding: 13px 6px; margin: -13px -6px; border-radius: 8px; }
+.lead { font-size: var(--fs-m); color: var(--text); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+
+/* Oldal-oszlop: telefonon teljes, asztali gépen 520 px-es „telefon” középen. */
+.page {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--pad) calc(var(--tabbar) + var(--safe-b) + 28px);
+  background:
+    radial-gradient(120% 50% at 50% -8%, rgba(139, 92, 246, 0.22), transparent 60%),
+    var(--bg);
+  min-height: 100dvh;
+}
+.section { margin-top: 28px; }
+.section > h2 { margin-bottom: 12px; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.topbar { padding-top: calc(30px + var(--safe-t)); } /* 30 px: a DEMÓ-szalag (≈20 px) alá */
+.topbar > h1 + .muted, .topbar > h1 + .lead { margin-top: 8px; }
+.page-foot { margin-top: 40px; text-align: center; }
+
+/* Vízszintes görgetők: scrollbar nélkül, lendülettel. */
+.h-scroll, .chips, .story-strip { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.h-scroll::-webkit-scrollbar, .chips::-webkit-scrollbar, .story-strip::-webkit-scrollbar { display: none; }
+
+@media (min-width: 720px) {
+  body { background: #07070c; }
+  .page { box-shadow: 0 0 0 1px var(--line), var(--sh-2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

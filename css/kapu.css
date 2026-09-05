@@ -1,0 +1,105 @@
+/* Kapu-mód: teljes képernyős, sötét, egy kézzel a kidobó telefonján. Nincs tabbar. */
+.body-kapu { background: #000; }
+.kapu {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(30px + var(--safe-t)) var(--pad) calc(14px + var(--safe-b));
+  background:
+    radial-gradient(120% 40% at 50% -10%, rgba(139, 92, 246, 0.26), transparent 60%),
+    var(--bg);
+}
+@media (min-width: 720px) { .kapu { box-shadow: 0 0 0 1px var(--line), var(--sh-2); } }
+
+/* ===== Fejléc: cím + élő számláló ===== */
+.kapu-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.kapu-title { min-width: 0; }
+.kapu-tag { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); }
+.kapu-title h1 { font-size: var(--fs-xl); margin-top: 4px; }
+.kapu-title .muted { font-size: var(--fs-s); margin-top: 4px; }
+.kapu-counter { display: flex; gap: 8px; flex: none; }
+.kc { min-width: 74px; padding: 10px 10px 8px; border-radius: var(--r-m); background: var(--surface); border: 1px solid var(--line); text-align: center; display: flex; flex-direction: column; }
+.kc b { font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.kc span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 5px; }
+.kc-bent { background: rgba(163, 230, 53, 0.12); border-color: rgba(163, 230, 53, 0.4); }
+.kc-bent b { color: var(--ok); }
+.kc b.bump { animation: bump 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+@keyframes bump { 40% { transform: scale(1.25); } }
+
+/* ===== Módváltó (szegmentált) ===== */
+.kapu-modes { display: flex; margin-top: 18px; padding: 4px; border-radius: var(--r-m); background: var(--surface); border: 1px solid var(--line); }
+.mode { flex: 1; height: 48px; border-radius: 12px; font-weight: 700; font-size: var(--fs-m); color: var(--muted); transition: 0.15s; }
+.mode.on { background: var(--surface-2); color: var(--text); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35); }
+
+/* ===== Olvasó ===== */
+.kapu-panel { margin-top: 16px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.reader-wrap { position: relative; width: 100%; aspect-ratio: 1; max-height: 52dvh; margin: 0 auto; border-radius: var(--r-l); overflow: hidden; background: #000; border: 1px solid var(--line); isolation: isolate; }
+#reader { position: absolute; inset: 0; }
+#reader video { display: block; width: 100% !important; height: 100% !important; object-fit: cover; }
+#reader img { display: none; }
+.reader-frame { position: absolute; inset: 15%; pointer-events: none; z-index: 2; }
+.reader-frame i { position: absolute; width: 36px; height: 36px; border: 4px solid var(--brand); border-radius: 6px; }
+.reader-frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.reader-frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+.reader-frame i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+.reader-frame i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+.reader-line { position: absolute; left: 8px; right: 8px; top: 0; height: 2px; background: var(--brand); box-shadow: 0 0 12px var(--brand); opacity: 0; }
+.kapu.scanning .reader-line { opacity: 0.9; animation: scanline 2.2s ease-in-out infinite; }
+@keyframes scanline { 0%, 100% { top: 4%; } 50% { top: 96%; } }
+.reader-idle { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; gap: 10px; background: radial-gradient(60% 60% at 50% 40%, rgba(139, 92, 246, 0.2), transparent 70%), var(--bg-2); }
+.reader-idle-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; margin-bottom: 4px; }
+.reader-idle-ico svg { width: 36px; height: 36px; fill: var(--brand); }
+.reader-idle p { color: var(--muted); font-size: var(--fs-s); max-width: 260px; }
+.reader-idle .btn { margin-top: 8px; max-width: 300px; }
+.kapu-hint { margin-top: 12px; text-align: center; font-size: var(--fs-s); }
+#cam-stop { margin-top: 12px; height: var(--tap); }
+
+/* ===== Kézi keresés ===== */
+.kapu-search { margin-top: 0; }
+.kapu-search input { font-size: var(--fs-l); height: 60px; padding-left: 18px; }
+.kapu-search input::placeholder { color: var(--faint); }
+.talalatok { margin-top: 12px; display: grid; gap: 8px; align-content: start; }
+.talalat-head { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 2px 0; }
+.talalat { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 10px 10px 10px 16px; border-radius: var(--r-m); background: var(--surface); border: 1px solid var(--line); }
+.talalat.bent { opacity: 0.7; }
+.t-body { display: flex; flex-direction: column; min-width: 0; }
+.t-nev { font-size: var(--fs-l); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t-status { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.t-status.ok { color: var(--ok); }
+.t-btn { height: 48px; padding: 0 16px; font-size: var(--fs-s); min-width: 118px; }
+.t-btn:disabled { opacity: 0.55; box-shadow: none; cursor: default; transform: none; }
+.kapu-empty { padding: 30px 10px; text-align: center; color: var(--muted); font-size: var(--fs-s); }
+
+/* ===== Lábléc ===== */
+.kapu-foot { margin-top: auto; padding-top: 16px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+.kapu-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--muted); font-weight: 600; font-size: var(--fs-s); border-radius: 8px; }
+.kapu-link:active { background: var(--surface); }
+.kapu-dot { color: var(--faint); }
+
+/* ===== ÓRIÁS állapot-overlay (a demó wow-pillanata) ===== */
+.kapu-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 32px; gap: 6px;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity 0.12s ease, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+.kapu-overlay.show { opacity: 1; transform: none; }
+.kapu-overlay.ok { background: var(--ok); color: #0b1a05; }
+.kapu-overlay.err { background: var(--err); background: color-mix(in srgb, var(--err) 78%, #000); color: #fff; }
+.kapu-overlay.warn { background: var(--warn); color: #1a1033; }
+.ov-ikon { width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; font-size: 96px; font-weight: 900; line-height: 1; border: 6px solid currentColor; margin-bottom: 20px; padding-bottom: 6px; animation: ov-pop 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.ov-cim { font-size: clamp(34px, 10.5vw, 46px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.05; text-wrap: balance; }
+.ov-nev { font-size: var(--fs-2xl); font-weight: 800; margin-top: 10px; line-height: 1.15; overflow-wrap: anywhere; }
+.ov-sub { font-size: var(--fs-l); font-weight: 600; opacity: 0.85; margin-top: 2px; }
+.ov-sub:empty, .ov-nev:empty { display: none; }
+@keyframes ov-pop { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (max-height: 700px) {
+  .reader-wrap { max-height: 44dvh; }
+  .ov-ikon { width: 120px; height: 120px; font-size: 76px; }
+}

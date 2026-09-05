@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Passz · Holabuli</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Holabuli">
+<link rel="manifest" href="/holabuli-web/manifest.webmanifest">
+<link rel="icon" href="/holabuli-web/img/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=47862d1">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=47862d1">
+
+
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='47862d1';</script>
+<script src="/holabuli-web/js/data.js?v=47862d1"></script>
+
+</head>
+<body class="body-pass" data-build="47862d1">
+
+
+<main class="page page-pass" id="pass-static" data-token="" data-event="" data-nev="">
+  <header class="topbar slim">
+    <a class="back" href="/holabuli-web/jegyeim" aria-label="Jegyeim">‹</a>
+    <span class="topbar-title">Passz</span>
+    <button class="share-btn inline" type="button" id="ps-share" data-share-title="Holabuli passz" data-share-text="" data-share-url="" aria-label="Passz megosztása">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.4l-7.3 7.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"/></svg>
+    </button>
+  </header>
+
+  <div class="hooray hidden" id="ps-hooray">🎉 Rajta vagy a listán!</div>
+  <div class="empty hidden" id="ps-hiba"><div class="empty-emoji">🫥</div><h1>Érvénytelen passz</h1><p class="muted">Ez a link nem tartalmaz olvasható passzt.</p><a class="btn btn-primary" href="/holabuli-web/">A bulikhoz</a></div>
+
+  <article class="ticket" id="ps-ticket">
+    <div class="ticket-top">
+      <div class="ticket-genre" id="ps-genre"></div>
+      <h1 id="ps-cim">…</h1>
+      <div class="ticket-meta" id="ps-date"></div>
+      <div class="ticket-meta" id="ps-venue"></div>
+    </div>
+    <div class="ticket-notch" aria-hidden="true"></div>
+    <div class="ticket-qr">
+      <div class="qr" id="ps-qr"></div>
+      <div class="qr-hint" id="ps-hint">A kapuban mutasd fel. Tekerd fel a fényerőt.</div>
+      <div class="ticket-name" id="ps-nev"></div>
+      <div class="ticket-kind" id="ps-kind"></div>
+    </div>
+  </article>
+
+  <section class="section invite">
+    <h2>Hozd a barátaidat</h2>
+    <p class="muted">Ha a linkeddel jönnek, a stat mutatja, hogy te hoztad őket. Így méri a hely, ki a jó promóter.</p>
+    <div class="invite-row">
+      <input class="invite-link" id="ps-invite" type="text" readonly value="" aria-label="Meghívó link">
+      <button class="btn btn-primary" type="button" id="ps-copy" data-copy="">Másol</button>
+    </div>
+    <button class="btn btn-ghost btn-block" type="button" id="ps-invite-share" data-share-title="" data-share-text="" data-share-url="">Megosztás</button>
+  </section>
+
+  <section class="section">
+    <a class="btn btn-ghost btn-block" id="ps-chat" href="/holabuli-web/">Buli-chat megnyitása</a>
+    <a class="btn btn-ghost btn-block" id="ps-event" href="/holabuli-web/">Vissza a bulihoz</a>
+  </section>
+  <p class="muted small center" id="ps-id"></p>
+</main>
+<nav class="tabbar" aria-label="Fő navigáció">
+  <a class="tab " href="/holabuli-web/" aria-label="Felfedezés">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3.7 6.3-1.9 5.2-5.2 1.9 1.9-5.2 5.2-1.9Z"/></svg>
+    <span>Felfedezés</span>
+  </a>
+  <a class="tab " href="/holabuli-web/heti-top" aria-label="Heti Top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3l-6 3.3 1.3-6.8-5-4.7 6.8-.8L12 2Z"/></svg>
+    <span>Heti Top</span>
+  </a>
+  <a class="tab " href="/holabuli-web/jegyeim" aria-label="Jegyeim">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V7Zm6 1v8h2V8H9Z"/></svg>
+    <span>Jegyeim</span>
+  </a>
+  <a class="tab " href="/holabuli-web/profil" aria-label="Profil">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.5-8 5.5V21h16v-1.5c0-3-3.6-5.5-8-5.5Z"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 47862d1">DEMÓ</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=47862d1" defer></script><script src="/holabuli-web/js/static-mode.js?v=47862d1" defer></script>
+<script src="/holabuli-web/js/app.js?v=47862d1" defer></script>
+
+</body>
+</html>
+

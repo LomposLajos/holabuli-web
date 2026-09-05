@@ -1,0 +1,51 @@
+/* Holabuli dizájn-tokenek — egy helyen a paletta, tipó, távolságok, érintés-mérce. */
+:root {
+  --bg: #0b0b12;
+  --bg-2: #101019;
+  --surface: #161624;
+  --surface-2: #1f1f31;
+  --line: rgba(255, 255, 255, 0.08);
+
+  --text: #f6f6fb;
+  --muted: #a5a5c0;
+  --faint: #6f6f8a;
+
+  --brand: #ff4fa3;
+  --brand-2: #8b5cf6;
+  --brand-grad: linear-gradient(135deg, #ff4fa3 0%, #8b5cf6 100%);
+  --gold-grad: linear-gradient(135deg, #fbbf24, #f97316);
+
+  --ok: #a3e635;
+  --warn: #fbbf24;
+  --err: #ff5c7a;
+  --info: #38bdf8;
+
+  --r-s: 10px;
+  --r-m: 16px;
+  --r-l: 24px;
+  --r-xl: 32px;
+
+  --sh-1: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --sh-2: 0 14px 44px rgba(0, 0, 0, 0.55);
+
+  --fs-xs: 12px;
+  --fs-s: 15px;
+  --fs-m: 17px;
+  --fs-l: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 30px;
+  --fs-3xl: 36px;
+
+  /* Mobil érintés-mérce: minden gomb ≥ 48 px, elsődleges 56 px. */
+  --tap: 48px;
+  --tap-l: 56px;
+  --gap: 16px;
+  --pad: 20px;
+  --maxw: 520px;
+
+  --tabbar: 64px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  color-scheme: dark;
+}

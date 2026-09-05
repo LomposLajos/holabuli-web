@@ -1,0 +1,30 @@
+{
+  "name": "Holabuli – Hol a buli?",
+  "short_name": "Holabuli",
+  "description": "Minden buli egy helyen: vendéglista QR-passzal, chat, Heti Top.",
+  "start_url": "/holabuli-web/",
+  "scope": "/holabuli-web/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0b12",
+  "theme_color": "#0b0b12",
+  "lang": "hu",
+  "icons": [
+    {
+      "src": "/holabuli-web/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/holabuli-web/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/holabuli-web/img/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Szombati House Pince">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.2" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  
+  <circle cx="324" cy="347" r="33" fill="#ffffff" opacity="0.058"/><circle cx="488" cy="565" r="52" fill="#ffffff" opacity="0.080"/><circle cx="51" cy="783" r="71" fill="#ffffff" opacity="0.101"/><circle cx="214" cy="201" r="20" fill="#ffffff" opacity="0.043"/><circle cx="378" cy="419" r="39" fill="#ffffff" opacity="0.065"/><circle cx="541" cy="637" r="58" fill="#ffffff" opacity="0.087"/><circle cx="105" cy="55" r="77" fill="#ffffff" opacity="0.108"/><circle cx="268" cy="272" r="26" fill="#ffffff" opacity="0.050"/><circle cx="432" cy="490" r="45" fill="#ffffff" opacity="0.072"/><circle cx="595" cy="708" r="65" fill="#ffffff" opacity="0.094"/><circle cx="158" cy="126" r="14" fill="#ffffff" opacity="0.116"/><circle cx="322" cy="344" r="33" fill="#ffffff" opacity="0.057"/><circle cx="485" cy="562" r="52" fill="#ffffff" opacity="0.079"/><circle cx="49" cy="780" r="71" fill="#ffffff" opacity="0.101"/><circle cx="212" cy="198" r="20" fill="#ffffff" opacity="0.043"/><circle cx="375" cy="415" r="39" fill="#ffffff" opacity="0.065"/><circle cx="539" cy="633" r="58" fill="#ffffff" opacity="0.086"/><circle cx="102" cy="51" r="77" fill="#ffffff" opacity="0.108"/>
+  <text x="48" y="96" font-size="140" fill="#ffffff" opacity="0.18" font-weight="900">●</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+  <g fill="#ffffff" font-family="Inter, 'Segoe UI', system-ui, sans-serif" style="letter-spacing:-0.02em">
+    <text x="48" y="330" font-size="26" font-weight="700" opacity="0.85" style="letter-spacing:0.18em">HOUSE</text>
+    <text x="48" y="430" font-size="76" font-weight="800">SZOMBATI HOUSE</text><text x="48" y="507.52" font-size="76" font-weight="800">PINCE</text>
+    <text x="48" y="700" font-size="28" font-weight="600" opacity="0.92">HÉT · 09.07. · 22:00</text>
+    <text x="48" y="744" font-size="28" font-weight="600" opacity="0.92">Pincefény Klub</text>
+  </g>
+</svg>

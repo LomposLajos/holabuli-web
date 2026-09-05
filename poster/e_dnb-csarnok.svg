@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Basszus Csarnok">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.2" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  
+  <circle cx="25" cy="629" r="47" fill="#04121a" opacity="0.062"/><circle cx="396" cy="324" r="20" fill="#04121a" opacity="0.111"/><circle cx="167" cy="19" r="64" fill="#04121a" opacity="0.081"/><circle cx="539" cy="514" r="37" fill="#04121a" opacity="0.050"/><circle cx="310" cy="208" r="10" fill="#04121a" opacity="0.100"/><circle cx="81" cy="703" r="54" fill="#04121a" opacity="0.069"/><circle cx="452" cy="398" r="27" fill="#04121a" opacity="0.119"/><circle cx="223" cy="93" r="70" fill="#04121a" opacity="0.088"/><circle cx="594" cy="588" r="44" fill="#04121a" opacity="0.058"/><circle cx="366" cy="283" r="17" fill="#04121a" opacity="0.107"/><circle cx="137" cy="778" r="60" fill="#04121a" opacity="0.077"/><circle cx="508" cy="473" r="33" fill="#04121a" opacity="0.046"/><circle cx="279" cy="168" r="77" fill="#04121a" opacity="0.096"/><circle cx="50" cy="662" r="50" fill="#04121a" opacity="0.065"/><circle cx="421" cy="357" r="23" fill="#04121a" opacity="0.115"/><circle cx="193" cy="52" r="67" fill="#04121a" opacity="0.084"/><circle cx="564" cy="547" r="40" fill="#04121a" opacity="0.054"/><circle cx="335" cy="242" r="13" fill="#04121a" opacity="0.103"/>
+  <text x="48" y="96" font-size="140" fill="#04121a" opacity="0.18" font-weight="900">⟁</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+  <g fill="#04121a" font-family="Inter, 'Segoe UI', system-ui, sans-serif" style="letter-spacing:-0.02em">
+    <text x="48" y="330" font-size="26" font-weight="700" opacity="0.85" style="letter-spacing:0.18em">DRUM &amp; BASS</text>
+    <text x="48" y="430" font-size="76" font-weight="800">BASSZUS</text><text x="48" y="507.52" font-size="76" font-weight="800">CSARNOK</text>
+    <text x="48" y="700" font-size="28" font-weight="600" opacity="0.92">VAS · 09.13. · 22:00</text>
+    <text x="48" y="744" font-size="28" font-weight="600" opacity="0.92">Dobozgyár</text>
+  </g>
+</svg>
