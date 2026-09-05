@@ -306,9 +306,12 @@
     if (!location.pathname.replace(BASE, '').startsWith('/admin')) return;
     const h = document.querySelector('.topbar');
     if (!h) return;
-    const n = document.createElement('div'); n.className = 'alert'; n.style.marginTop = '10px';
-    n.textContent = 'Bemutató-nézet: az admin itt megtekinthető, a mentések csak ezen az eszközön látszanak (nincs szerver).';
-    h.appendChild(n);
+    const n = document.createElement('div');
+    n.className = 'alert';
+    n.style.cssText = 'margin:12px 0 0';
+    n.textContent = 'Bemutató-nézet: az admin megtekinthető, a mentések csak ezen az eszközön látszanak (nincs szerver).';
+    // A fejléc UTÁN, teljes szélességben — a fejléc belsejében a cím mellé szorulna.
+    h.insertAdjacentElement('afterend', n);
   }
 
   // FONTOS: azonnal futunk (defer-sorrend: static-mode.js → app.js → DOMContentLoaded), hogy a passz-oldal
