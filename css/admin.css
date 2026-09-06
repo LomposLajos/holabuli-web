@@ -122,3 +122,21 @@
 
 /* Érintés-mérce: a buli-cím link legalább 44 px magas legyen (QC-lelet 2026-09-05). */
 .ev-title a { display: inline-block; padding: 8px 0; margin: -8px 0; min-height: 44px; line-height: 28px; }
+
+/* ===== Kitöltés linkből (D-016) ===== */
+.link-doboz { margin-top: 16px; padding: 16px; border: 1px dashed var(--brand-line); border-radius: var(--r-l); background: var(--surface); }
+.link-doboz h2 { font-size: var(--fs-l); }
+.link-doboz p { margin-top: 4px; }
+.link-sor { display: flex; gap: 8px; margin-top: 12px; }
+.link-sor input { flex: 1; min-width: 0; height: var(--tap-l); border-radius: var(--r-m); border: 1px solid var(--line); background: var(--bg-2); padding: 0 14px; font-size: var(--fs-m); outline: 0; }
+.link-sor input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--focus-ring); }
+.link-sor .btn { flex: none; }
+.link-uzenet:empty { display: none; }
+.link-uzenet { margin-top: 12px; padding: 12px 14px; border-radius: var(--r-m); font-size: var(--fs-s); line-height: 1.45; }
+.link-uzenet p { margin-top: 6px; color: var(--muted); }
+.link-uzenet.ok { background: var(--ok-soft); border: 1px solid var(--ok-line); }
+.link-uzenet.hiba { background: var(--err-soft); border: 1px solid var(--err-line); color: var(--err-ink); }
+/* A linkből jött mezőt megjelöljük, hogy tudd, mit érdemes átnézni. */
+.field.linkbol > span { display: flex; align-items: center; gap: 8px; }
+.linkbol-jel { font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: var(--brand); color: var(--on-brand); }
+.field.linkbol input, .field.linkbol select, .field.linkbol textarea { border-color: var(--brand-line); }

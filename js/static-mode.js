@@ -163,6 +163,22 @@
     },
   };
 
+  // ---------- link-beolvasás példák (valódi oldalakról kiolvasva, a szerver nélküli bemutatóhoz) ----------
+  const LINK_PELDAK = {
+    'tixa.hu/jhz260907': {
+      url: 'https://www.tixa.hu/jhz260907', talaltEsemeny: true,
+      mezok: { cim: 'Hétfői társasozás a Dürer Kertben // Játszóház Projekt', kezdes: '2026-09-07T17:00', helyNev: 'Dürer Kert', helyCim: '1117 Budapest Öböl utca 1.', ar: '1000', korhatar: '16', kepUrl: 'https://www.tixa.hu/kepek/0045/45057-1_20260831223227.jpg' },
+      forras: { cim: 'JSON-LD', kezdes: 'az oldalon kiírt időpont', helyNev: 'JSON-LD', helyCim: 'JSON-LD', ar: 'JSON-LD (2 jegytípus, a legolcsóbb)', korhatar: 'JSON-LD', kepUrl: 'JSON-LD' },
+      hianyzo: ['mufaj', 'leiras'], hely: { allapot: 'nincs', nev: 'Dürer Kert', cim: '1117 Budapest Öböl utca 1.' },
+    },
+    'cooltix.hu/event/6957970ee341f7d6129ff8bb': {
+      url: 'https://cooltix.hu/event/6957970ee341f7d6129ff8bb', talaltEsemeny: true,
+      mezok: { cim: 'NECC PARTY @ NagyHall 2026.01.31.', kezdes: '2026-01-31T23:30', helyNev: 'Akvárium Klub', helyCim: '1051 Budapest Erzsébet tér 12', kepUrl: 'https://images.cdn.cooltix.com/4c86c621bc684d77a4f9f7ed8827b63c.png' },
+      forras: { cim: 'JSON-LD', kezdes: 'az oldalon kiírt időpont', helyNev: 'JSON-LD', helyCim: 'JSON-LD', kepUrl: 'JSON-LD' },
+      hianyzo: ['ar', 'mufaj', 'leiras'], hely: { allapot: 'nincs', nev: 'Akvárium Klub', cim: '1051 Budapest Erzsébet tér 12' },
+    },
+  };
+
   // ---------- fetch-elfogás: az /api/… hívások helyben ----------
   const realFetch = window.fetch.bind(window);
   const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -195,6 +211,16 @@
       return json(scan(mm ? mm[1] : body.token.trim(), body.eventId));
     }
     if ((m = path.match(/^\/api\/stat\/(.+)$/))) { const ev = evById(decodeURIComponent(m[1])); return ev ? json({ ok: true, ...statData(ev) }) : json({ ok: false, reason: 'unknown_event' }, 404); }
+    // Link-beolvasás: a valódi olvasás szervert igényel (idegen oldalt kell letölteni).
+    // A bemutatóhoz két VALÓDI oldalról előre kiolvasott példa van beépítve, jelölve.
+    if (path === '/admin/esemeny/beolvas') {
+      let url = '';
+      try { url = String(JSON.parse((init && init.body) || '{}').url || '').trim(); } catch { /* */ }
+      const kulcs = url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/+$/, '').toLowerCase();
+      const p = Object.keys(LINK_PELDAK).find((k) => kulcs.startsWith(k));
+      if (p) return json({ ...LINK_PELDAK[p], ok: true, figyelmeztetes: 'Bemutató: ez a válasz egy valódi oldalról előre kiolvasott példa. Élesben a szerver olvassa be a linket.' });
+      return json({ ok: false, hiba: 'A link-beolvasás szervert igényel, a bemutató-oldal viszont szerver nélkül fut. Próbáld a beépített példákkal: tixa.hu/jhz260907 vagy cooltix.hu/event/6957970ee341f7d6129ff8bb — élesben bármilyen link megy.' });
+    }
     if (path.startsWith('/admin')) { setTimeout(() => window.HB && window.HB.toast && window.HB.toast('Bemutató: a mentés csak ezen az eszközön'), 50); return json({ ok: true, static: true }); }
     return null;
   }

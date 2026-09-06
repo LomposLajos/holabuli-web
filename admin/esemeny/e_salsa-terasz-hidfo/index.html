@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hola!Buli">
 <link rel="manifest" href="/holabuli-web/manifest.webmanifest">
-<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=c754190-hqyu5" sizes="32x32" type="image/png">
-<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=c754190-hqyu5" sizes="48x48" type="image/png">
-<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=c754190-hqyu5">
+<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=e988d71-hqyzs" sizes="32x32" type="image/png">
+<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=e988d71-hqyzs" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=e988d71-hqyzs">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,22 +19,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap">
 
 <script>try{var t=localStorage.getItem('holabuli.dizajn');var q=new URLSearchParams(location.search).get('dizajn');if(q!==null)t=q==='alap'?'':q;if(t)document.documentElement.dataset.dizajn=t;}catch(e){}</script>
-<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/base.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/components.css?v=c754190-hqyu5">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=e988d71-hqyzs">
 
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=c754190-hqyu5">
-<link rel="stylesheet" href="/holabuli-web/css/admin.css?v=c754190-hqyu5">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=e988d71-hqyzs">
+<link rel="stylesheet" href="/holabuli-web/css/admin.css?v=e988d71-hqyzs">
 
-<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='c754190-hqyu5';</script>
-<script src="/holabuli-web/js/data.js?v=c754190-hqyu5"></script>
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='e988d71-hqyzs';</script>
+<script src="/holabuli-web/js/data.js?v=e988d71-hqyzs"></script>
 
 </head>
-<body class="body-admin" data-build="c754190-hqyu5">
+<body class="body-admin" data-build="e988d71-hqyzs">
 
 <main class="page">
   <header class="topbar slim">
@@ -44,6 +44,17 @@
   </header>
 
   
+
+  
+  <section class="link-doboz" id="link-doboz">
+    <h2>Kitöltés linkből</h2>
+    <p class="muted small">Illeszd be a buli meglévő linkjét (jegyoldal, esemény-oldal), és kitöltöm, amit találok. Utána mindent átírhatsz.</p>
+    <div class="link-sor">
+      <input id="link-url" type="url" inputmode="url" placeholder="https://…" autocomplete="off" aria-label="A buli linkje">
+      <button class="btn btn-primary" type="button" id="link-gomb">Kitöltés</button>
+    </div>
+    <div id="link-uzenet" class="link-uzenet" role="status" aria-live="polite"></div>
+  </section>
 
   <form class="admin-form" method="post" action="/holabuli-web/admin/esemeny/e_salsa-terasz-hidfo" autocomplete="off">
     <div class="form-grid">
@@ -115,12 +126,12 @@ DJ Camilo</textarea><small>Soronként egy, legfeljebb 12.</small></label>
   <p class="muted small center">Azonosító: e_salsa-terasz-hidfo</p>
   
 </main>
-<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build c754190-hqyu5">DEMÓ</div>
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build e988d71-hqyzs">DEMÓ</div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/holabuli-web/vendor/qrcode-gen.js?v=c754190-hqyu5" defer></script><script src="/holabuli-web/js/static-mode.js?v=c754190-hqyu5" defer></script>
-<script src="/holabuli-web/js/app.js?v=c754190-hqyu5" defer></script>
-<script src="/holabuli-web/js/dizajn.js?v=c754190-hqyu5" defer></script>
-<script src="/holabuli-web/js/admin.js?v=c754190-hqyu5" defer></script>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=e988d71-hqyzs" defer></script><script src="/holabuli-web/js/static-mode.js?v=e988d71-hqyzs" defer></script>
+<script src="/holabuli-web/js/app.js?v=e988d71-hqyzs" defer></script>
+<script src="/holabuli-web/js/dizajn.js?v=e988d71-hqyzs" defer></script>
+<script src="/holabuli-web/js/admin.js?v=e988d71-hqyzs" defer></script>
 </body>
 </html>
 
