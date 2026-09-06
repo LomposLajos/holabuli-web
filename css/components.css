@@ -2,6 +2,16 @@
 .brand-row { display: flex; justify-content: space-between; align-items: center; }
 .brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; min-height: 44px; }
 .brand-mark { width: 14px; height: 14px; border-radius: 50%; background: var(--brand-grad); box-shadow: 0 0 18px var(--brand-halo); }
+
+/* ===== Szó-jel (logó) — a felkiáltójel helyén a térkép-tű, D-015 =====
+   A logó MINDEN dizájn-változatban ugyanaz: saját betű, saját betűköz, sosem nagybetűs.
+   Csak a MÉRETE követi a fejléc betűméretét, ezért a jel magassága em-ben van megadva. */
+.markanev {
+  display: inline-flex; align-items: baseline; line-height: 1; white-space: nowrap;
+  font-family: Outfit, Inter, "Segoe UI", system-ui, sans-serif;
+  font-weight: 700; letter-spacing: -0.028em; text-transform: none;
+}
+.markanev-jel { display: block; flex: none; height: 0.707em; width: auto; margin: 0 0.035em; }
 .city-pill { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: var(--fs-s); font-weight: 600; }
 .city-pill svg { width: 16px; height: 16px; fill: var(--brand); }
 .hero-title { font-size: var(--fs-3xl); margin: 18px 0 14px; background: var(--brand-grad); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
