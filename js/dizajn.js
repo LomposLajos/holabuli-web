@@ -62,29 +62,24 @@
 
   if (document.getElementById('dv-sheet')) return;
 
-  // A kapcsoló maga a DEMÓ-szalag: nem foglal külön helyet, nem úszik a tartalom fölé.
-  // Ha nincs szalag (nem demó nézet), tartalékként egy apró pirula.
-  const szalag = document.querySelector('.demo-badge');
-  let trigger;
-  if (szalag) {
-    trigger = szalag;
-    szalag.classList.add('dv-kapcsolo');
-    szalag.setAttribute('role', 'button');
-    szalag.setAttribute('tabindex', '0');
-    szalag.setAttribute('aria-label', 'Dizájn-változat váltása (bemutató-eszköz)');
-    szalag.title = 'Koppints: másik dizájn-változat';
-    szalag.dataset.tapOk = '44'; // az érintési terület a ::after-rel 44 px (a QC ezt tudja)
-    const cimke = document.createElement('span');
-    cimke.className = 'dv-cimke';
-    cimke.id = 'dv-nev';
-    szalag.appendChild(cimke);
-    szalag.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); szalag.click(); } });
-  } else {
-    trigger = document.createElement('button');
-    trigger.type = 'button';
-    trigger.className = 'dv-pill';
-    trigger.setAttribute('aria-label', 'Dizájn-változat váltása (bemutató-eszköz)');
-    trigger.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h8v16H3V4Zm10 0h8v7h-8V4Zm0 9h8v7h-8v-7Z"/></svg>Dizájn: <span id="dv-nev"></span>';
+  // A váltó EGYETLEN helyen érhető el: a Profil → Beállítások szakaszában, sima beállítás-sorként (D-014).
+  // Más oldalon nincs kapcsoló (nem úszik semmi a tartalom fölé), a DEMÓ-szalag megint csak jelzés.
+  const beallitasok = Array.from(document.querySelectorAll('.page-profil .section'))
+    .find((s) => /Beállítások/.test((s.querySelector('h2') || {}).textContent || ''));
+  if (!beallitasok) return;
+
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'dv-sor-beallitas';
+  trigger.innerHTML = '<span class="dv-szoveg"><b>Téma</b><small class="muted">Az app megjelenése. Jelenlegi: <span id="dv-nev"></span></small></span>'
+    + '<span class="dv-minta" aria-hidden="true"></span><span class="dv-chev">›</span>';
+  trigger.setAttribute('aria-label', 'Téma választása');
+  const mintaDoboz = trigger.querySelector('.dv-minta');
+  const torles = beallitasok.querySelector('#pf-torles');
+  if (torles) beallitasok.insertBefore(trigger, torles); else beallitasok.appendChild(trigger);
+  function mintaFrissit() {
+    const v = VALTOZATOK.find((x) => x.id === jelenlegi()) || VALTOZATOK[0];
+    mintaDoboz.innerHTML = v.minta.map((c) => `<i style="background:${c}"></i>`).join('');
   }
 
   const sheet = document.createElement('div');
@@ -119,8 +114,10 @@
   sheet.appendChild(panel);
 
   trigger.addEventListener('click', () => { sheet.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
-  if (trigger !== szalag) document.body.appendChild(trigger);
   document.body.appendChild(sheet);
   const c = document.getElementById('dv-nev');
   if (c) c.textContent = nevOf(jelenlegi());
+  mintaFrissit();
+  // A választás után a beállítás-sor mintája és felirata is kövesse a témát.
+  lista.addEventListener('click', () => setTimeout(mintaFrissit, 0));
 })();

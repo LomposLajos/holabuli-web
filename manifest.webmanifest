@@ -1,6 +1,6 @@
 {
-  "name": "Holabuli – Hol a buli?",
-  "short_name": "Holabuli",
+  "name": "Hola!Buli – Hol a buli?",
+  "short_name": "Hola!Buli",
   "description": "Minden buli egy helyen: vendéglista QR-passzal, chat, Heti Top.",
   "start_url": "/holabuli-web/",
   "scope": "/holabuli-web/",

@@ -1,25 +1,18 @@
 /* A dizájn-váltó: BEMUTATÓ-ESZKÖZ, nem termék-funkció (D-013).
    Csak demó módban kerül az oldalra, szándékosan apró és semleges, hogy ne úgy nézzen ki,
    mint egy felhasználói beállítás. A megrendelő ezzel tud a változatok közt lépkedni. */
-/* A váltó NEM foglal külön helyet: maga a DEMÓ-szalag a kapcsoló (felül, középen).
-   Így semmi nem úszik a tartalom fölé, és a kész appból a szalaggal együtt eltűnik. */
-.demo-badge.dv-kapcsolo {
-  pointer-events: auto; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-  padding-right: 8px; border: 0;
+/* A váltó EGYETLEN helye: Profil → Beállítások, sima beállítás-sorként (D-014).
+   Nincs lebegő gomb, nincs kapcsoló a DEMÓ-szalagban: semmi nem úszik a tartalom fölé. */
+.dv-sor-beallitas {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 14px 0; border-bottom: 1px solid var(--line); text-align: left; min-height: 56px;
 }
-.demo-badge.dv-kapcsolo .dv-cimke { font-weight: 800; opacity: 0.85; }
-.demo-badge.dv-kapcsolo .dv-cimke::before { content: "·"; margin: 0 5px 0 2px; opacity: 0.6; }
-/* Az érintési terület nagyobb, mint a látható szalag (44 px magas), hogy telefonon is
-   könnyen eltalálható legyen — a látvány közben apró marad. */
-.demo-badge.dv-kapcsolo::after { content: ""; position: absolute; inset: -6px -14px -24px; }
-/* Tartalék, ha valamiért nincs DEMÓ-szalag: apró pirula bal alul. */
-.dv-pill {
-  position: fixed; left: 10px; bottom: calc(var(--tabbar) + var(--safe-b) + 10px); z-index: 46;
-  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px;
-  border-radius: 999px; background: rgba(20, 20, 30, 0.72); border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff; font-size: 11px; font-weight: 700; backdrop-filter: blur(8px);
-}
-.dv-pill svg { width: 13px; height: 13px; fill: currentColor; opacity: 0.8; }
+.dv-sor-beallitas .dv-szoveg { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dv-sor-beallitas small { display: block; font-size: 13px; }
+.dv-sor-beallitas .dv-minta { display: flex; gap: 3px; flex: none; }
+/* Vékony keret, különben a sötét minta beleolvad a háttérbe. */
+.dv-sor-beallitas .dv-minta i { width: 12px; height: 24px; border-radius: 3px; display: block; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); }
+.dv-chev { color: var(--faint); font-size: 22px; line-height: 1; flex: none; }
 
 /* A lista: egyszerű sorok, nem termékes kártyák. */
 .dv-lista { display: grid; gap: 8px; margin-top: 12px; }
