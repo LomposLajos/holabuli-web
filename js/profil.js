@@ -35,7 +35,7 @@
   document.getElementById('pf-rang-kov').textContent = kov ? `Következő rang: ${kov[1]}` : 'Legmagasabb rang';
   document.getElementById('pf-rang-szam').textContent = kov ? `${bulik} / ${kov[0]}` : `${bulik} buli`;
   document.getElementById('pf-rang-bar').style.width = kov ? Math.min(100, Math.round((bulik / kov[0]) * 100)) + '%' : '100%';
-  document.getElementById('pf-alcim').textContent = bulik ? (demo ? 'Demó-adatokkal feltöltött profil.' : `${bulik} buli ezen a telefonon.`) : 'Kérj egy passzt, és elindul a statisztikád.';
+  document.getElementById('pf-alcim').textContent = bulik ? (demo ? 'Demó-adatokkal feltöltött profil.' : `${bulik} buli ezen a telefonon.`) : 'Válts egy jegyet, és elindul a statisztikád.';
 
   document.getElementById('st-bulik').textContent = bulik;
   document.getElementById('st-helyek').textContent = helyek.size;
@@ -62,7 +62,7 @@
   demoBtn.textContent = demo ? 'Demó-adatok kikapcsolása' : 'Demó-adatok betöltése a profilba';
   demoBtn.addEventListener('click', () => { localStorage.setItem(DEMO_KEY, demo ? '0' : '1'); location.reload(); });
   torles.parentNode.insertBefore(demoBtn, torles);
-  torles.addEventListener('click', () => { if (confirm('Törlöd a passzokat erről a telefonról? A QR-kódok a linkjükön továbbra is élnek.')) { HB.savePasses([]); localStorage.removeItem('holabuli.meghivo'); location.reload(); } });
+  torles.addEventListener('click', () => { if (confirm('Törlöd a jegyeket erről a telefonról? A QR-kódok a linkjükön továbbra is élnek.')) { HB.savePasses([]); localStorage.removeItem('holabuli.meghivo'); location.reload(); } });
   document.getElementById('pf-rejt').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Profilod rejtve' : 'Profilod látható'));
   document.getElementById('pf-push').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Emlékeztető be' : 'Emlékeztető ki'));
 })();

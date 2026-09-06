@@ -269,3 +269,101 @@
 .prose p, .prose li { color: var(--muted); font-size: var(--fs-s); margin-top: 8px; }
 .prose h2 { margin-top: 22px; }
 .prose ul { padding-left: 18px; }
+
+/* ===================================================================
+   JEGY-VÁLASZTÓ, PÉNZTÁR, JEGY-EXTRÁK
+   Csak tokenek — beégetett szín ide sem kerülhet, mert mind az 5 dizájn-változat ezt örökli.
+   =================================================================== */
+
+/* --- jegy-választó a buli alsó lapján --- */
+.jegy-lista { list-style: none; margin: 0 0 var(--gap); padding: 0; display: grid; gap: 10px; }
+.jegy-sor {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px;
+  padding: 14px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surface);
+}
+.jegy-sor.valasztott { border-color: var(--brand-line); background: var(--brand-tint); }
+.jegy-info { min-width: 0; display: grid; gap: 2px; }
+.jegy-info b { font-size: var(--fs-s); }
+.jegy-info .muted { font-size: var(--fs-xs); line-height: 1.35; }
+.jegy-ar { grid-column: 1; font-size: var(--fs-s); font-weight: 700; color: var(--text); }
+.stepper { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; gap: 2px; }
+.stepper-btn {
+  width: 44px; height: 44px; flex: none; border-radius: var(--r-s);
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+  font-size: var(--fs-l); line-height: 1; cursor: pointer;
+}
+.stepper-btn:disabled { opacity: 0.35; cursor: default; }
+.stepper-db { min-width: 28px; text-align: center; font-size: var(--fs-m); font-weight: 700; font-variant-numeric: tabular-nums; }
+.jegy-osszeg {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  padding: 14px 4px; border-top: 1px solid var(--line); margin-bottom: 12px; font-size: var(--fs-m);
+}
+.jegy-osszeg b { font-size: var(--fs-l); }
+.btn.disabled, .btn[aria-disabled="true"] { opacity: 0.5; }
+.btn[disabled], .btn[aria-busy="true"] { opacity: 0.6; pointer-events: none; }
+
+/* --- „már van jegyed” --- */
+.van-jegyed {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+  margin: 12px var(--pad) 0; padding: 12px 14px;
+  border: 1px solid var(--ok-line); background: var(--ok-soft); border-radius: var(--r-m);
+}
+.van-jegyed-cim { font-weight: 700; color: var(--ok-ink); font-size: var(--fs-s); }
+.van-jegyed .link { min-height: 44px; display: inline-flex; align-items: center; }
+.jegy-jel {
+  position: absolute; left: 10px; top: 10px; z-index: 2;
+  padding: 4px 9px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 700;
+  background: var(--ok-soft); color: var(--ok-ink); border: 1px solid var(--ok-line);
+  backdrop-filter: blur(6px);
+}
+
+/* --- pénztár --- */
+.demo-fizetes {
+  margin: 12px var(--pad) 0; padding: 12px 14px; border-radius: var(--r-m);
+  border: 1px solid var(--brand-line); background: var(--brand-tint);
+  display: grid; gap: 4px; font-size: var(--fs-xs); line-height: 1.45;
+}
+.demo-fizetes b { font-size: var(--fs-s); color: var(--text); }
+.demo-fizetes span { color: var(--muted); }
+.penztar-buli-fej { display: grid; gap: 8px; justify-items: start; margin-bottom: 6px; }
+.penztar-buli-fej h1 { font-size: var(--fs-xl); margin: 0; }
+.szakasz-fej { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.szakasz-fej h2 { margin: 0; }
+.szakasz-fej .link { min-height: 44px; display: inline-flex; align-items: center; }
+.rendeles-lista { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.rendeles-sor { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 10px; font-size: var(--fs-s); }
+.rendeles-db { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); }
+.rendeles-nev { min-width: 0; }
+.rendeles-ar { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rendeles-osszeg {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: var(--fs-m);
+}
+.rendeles-osszeg b { font-size: var(--fs-l); }
+.penztar-urlap h2 { margin-top: var(--gap); }
+.field-sugo { display: block; margin-top: 6px; color: var(--faint); font-size: var(--fs-xs); line-height: 1.4; }
+.fizetes-modok { display: grid; gap: 8px; margin: 10px 0 12px; }
+.fizetes-mod {
+  display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surface); cursor: pointer;
+  font-size: var(--fs-s);
+}
+.fizetes-mod:has(input:checked) { border-color: var(--brand-line); background: var(--brand-tint); }
+.fizetes-mod input { width: 20px; height: 20px; accent-color: var(--brand); flex: none; }
+.fizetes-ikon { font-size: var(--fs-l); line-height: 1; }
+
+/* --- jegy-oldal extrák --- */
+.ticket-sorszam { margin-top: 6px; font-size: var(--fs-xs); letter-spacing: 0.08em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.helyszin .btn-row { margin-top: 12px; }
+.topbar-spacer { width: 44px; height: 44px; flex: none; }
+
+/* --- chat: becenév-kérés a lapon belül (natív prompt helyett) --- */
+/* A chat beviteli sávja sticky bottom:0 — a név-kérő EFÖLÉ tapad, különben alácsúszik. */
+.nev-kero {
+  position: sticky; z-index: 4;
+  bottom: calc(var(--tap-l) + 20px + var(--safe-b));
+  margin: 0 0 10px; padding: 14px; border: 1px solid var(--brand-line);
+  border-radius: var(--r-m); background: var(--surface); box-shadow: var(--sh-2);
+}
+.nev-kero .btn-row { margin-top: 10px; }
+.nev-kero .btn-row .btn { flex: 1; }

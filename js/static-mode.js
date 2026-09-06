@@ -17,7 +17,10 @@
   // ---------- helyi adattár ----------
   let db = null;
   try { db = JSON.parse(localStorage.getItem(KEY)); } catch { db = null; }
-  if (!db || db.seed !== SEED_ID) db = { seed: SEED_ID, passes: [], scanned: {}, scans: [], messages: [], kiemelt: {} };
+  // ⚠️ Új build NEM dobja el a látogató saját jegyeit: a buli-azonosítók (e_<slug>) buildek közt
+  // állandók, tehát a helyi adat érvényes marad. Korábban minden publikálás némán kiürítette.
+  if (!db) db = { seed: SEED_ID, passes: [], scanned: {}, scans: [], messages: [], kiemelt: {} };
+  else { db.seed = SEED_ID; db.passes = db.passes || []; db.scanned = db.scanned || {}; db.scans = db.scans || []; db.messages = db.messages || []; db.kiemelt = db.kiemelt || {}; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* privát mód */ } }
 
   const events = SEED.events || [];
@@ -42,7 +45,23 @@
   const price = (ev) => (!ev.ar ? (ev.ingyenEddig ? `Ingyen ${ev.ingyenEddig}-ig, utána ${huf(ev.arUtana)}` : 'Ingyenes') : huf(ev.ar));
   const isPast = (iso) => d(iso).getTime() < Date.now() - 6 * 3600 * 1000;
   const initials = (n) => { const p = String(n || '').trim().split(/\s+/).filter(Boolean); return p.length ? (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() : '?'; };
-  const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+  const norm = (s) => String(s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim();
+  const keresztnev = (n) => { const p = String(n || '').trim().split(/\s+/).filter(Boolean); return p.length ? p[p.length - 1] : ''; };
+  // A jegytípusok a buli adatába vannak sütve (lib/jegy.js), így itt csak olvasni kell őket.
+  const tipusokOf = (ev) => (Array.isArray(ev.jegytipusok) && ev.jegytipusok.length ? ev.jegytipusok : [{ id: 'vendeglista', nev: 'Vendéglista', ar: ev.ar || 0, leiras: '' }]);
+  function rendelesBol(ev, s) {
+    const out = [];
+    String(s || '').split(',').slice(0, 6).forEach((resz) => {
+      const [id, dbs] = String(resz).split(':');
+      const t = tipusokOf(ev).find((x) => x.id === String(id || '').trim());
+      const n = Math.min(10, Math.max(0, parseInt(dbs, 10) || 0));
+      if (t && n > 0 && !out.some((x) => x.tipusId === t.id)) out.push({ tipusId: t.id, nev: t.nev, ar: t.ar || 0, db: n });
+    });
+    return out;
+  }
+  const osszegOf = (t) => (t || []).reduce((s, x) => s + (x.ar || 0) * (x.db || 0), 0);
+  const darabOf = (t) => (t || []).reduce((s, x) => s + (x.db || 0), 0);
+  const tetelSor = (t) => (t || []).map((x) => `${x.db}× ${x.nev}`).join(', ');
   const GENRE_NEV = { techno: 'Techno', house: 'House', retro: 'Retro', hiphop: 'Hip-hop', latin: 'Latin', indie: 'Indie / rock', egyetemi: 'Egyetemi buli', dnb: 'Drum & bass' };
 
   // ---------- önleíró passz-token: hs.<payload>.<aláírás> ----------
@@ -50,7 +69,9 @@
   function b64u(s) { return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
   function unb64u(s) { try { return decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/')))); } catch { return null; } }
   function fnv(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
-  function tokenOf(p) { const payload = b64u(JSON.stringify({ i: p.id, e: p.eventId, n: p.nev, k: p.kind || 'vendeglista', t: p.createdAt, r: p.ref || null })); return `hs.${payload}.${fnv(payload + '|holabuli-static')}`; }
+  // A payloadban a fő-szám (f) és a sorszám (s) is utazik, hogy a MÁSIK telefon kapu-módja
+  // ki tudja írni, hány embert enged be ez az egy jegy.
+  function tokenOf(p) { const payload = b64u(JSON.stringify({ i: p.id, e: p.eventId, n: p.nev, k: p.kind || 'vendeglista', t: p.createdAt, r: p.ref || null, f: p.fo || 1, s: p.sorszam || '' })); return `hs.${payload}.${fnv(payload + '|holabuli-static')}`; }
   function decode(token) {
     if (typeof token !== 'string') return null;
     const parts = token.split('.');
@@ -58,7 +79,7 @@
     if (fnv(parts[1] + '|holabuli-static') !== parts[2]) return null;
     const raw = unb64u(parts[1]);
     if (!raw) return null;
-    try { const o = JSON.parse(raw); return { id: o.i, eventId: o.e, nev: o.n, kind: o.k || 'vendeglista', createdAt: o.t, ref: o.r || null }; } catch { return null; }
+    try { const o = JSON.parse(raw); return { id: o.i, eventId: o.e, nev: o.n, kind: o.k || 'vendeglista', createdAt: o.t, ref: o.r || null, fo: o.f || 1, sorszam: o.s || '' }; } catch { return null; }
   }
   // A sütött demó-adatban 7 passz már „bent” van: azt meg kell tartani, különben a stat nullázódik.
   function status(p) { return db.scanned[p.id] ? 'scanned' : (p.status || 'issued'); }
@@ -77,28 +98,41 @@
   function allapot(eventId) { const ps = passesOf(eventId); return { megyek: ps.length, bent: ps.filter((p) => p.status === 'scanned').length }; }
   const newId = (pre) => pre + Math.random().toString(36).slice(2, 10);
 
-  HBS.issuePass = function ({ eventId, nev, kapcsolat, ref }) {
-    const p = { id: newId('p_'), eventId, nev: String(nev || '').trim().slice(0, 60), kapcsolat: String(kapcsolat || '').trim().slice(0, 80), ref: ref || null, kind: 'vendeglista', status: 'issued', createdAt: new Date().toISOString(), scannedAt: null };
+  HBS.issuePass = function ({ eventId, nev, kapcsolat, ref, tetelek }) {
+    const items = (tetelek || []).filter((t) => t && t.db > 0);
+    const amountHuf = osszegOf(items);
+    const id = newId('p_');
+    const p = {
+      id, eventId,
+      nev: String(nev || '').trim().slice(0, 60),
+      kapcsolat: String(kapcsolat || '').trim().slice(0, 80),
+      ref: ref || null,
+      kind: amountHuf > 0 ? 'jegy' : 'vendeglista',
+      tetelek: items, fo: darabOf(items) || 1,
+      sorszam: 'HB-' + id.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(-4),
+      amountHuf,
+      status: 'issued', createdAt: new Date().toISOString(), scannedAt: null,
+    };
     db.passes.push(p); save();
     return { pass: p, token: tokenOf(p) };
   };
   // Beolvasáskor az idegen passzt is felvesszük a helyi listába (hogy a stat és a kézi kereső lássa).
   function rememberForeign(pd) {
     if (!db.passes.some((p) => p.id === pd.id) && !(SEED.passes || []).some((p) => p.id === pd.id)) {
-      db.passes.push({ id: pd.id, eventId: pd.eventId, nev: pd.nev, kapcsolat: '', ref: pd.ref, kind: pd.kind, status: 'issued', createdAt: pd.createdAt || new Date().toISOString(), scannedAt: null, foreign: true });
+      db.passes.push({ id: pd.id, eventId: pd.eventId, nev: pd.nev, kapcsolat: '', ref: pd.ref, kind: pd.kind, fo: pd.fo || 1, sorszam: pd.sorszam || '', tetelek: [], amountHuf: 0, status: 'issued', createdAt: pd.createdAt || new Date().toISOString(), scannedAt: null, foreign: true });
     }
   }
   function scan(token, eventId) {
     const pd = decode(token);
     const now = new Date().toISOString();
-    if (!pd) return { ok: false, reason: 'format', nev: null, kind: null, scannedAt: null, allapot: allapot(eventId) };
-    if (pd.eventId !== eventId) return { ok: false, reason: 'wrong_event', nev: pd.nev, kind: pd.kind, scannedAt: null, allapot: allapot(eventId) };
-    if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, scannedAt: db.scanned[pd.id], allapot: allapot(eventId) };
+    if (!pd) return { ok: false, reason: 'format', nev: null, kind: null, fo: null, scannedAt: null, allapot: allapot(eventId) };
+    if (pd.eventId !== eventId) return { ok: false, reason: 'wrong_event', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: null, allapot: allapot(eventId) };
+    if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: db.scanned[pd.id], allapot: allapot(eventId) };
     rememberForeign(pd);
     db.scanned[pd.id] = now;
     db.scans.push({ id: newId('s_'), eventId, passId: pd.id, result: 'ok', at: now });
     save();
-    return { ok: true, reason: null, nev: pd.nev, kind: pd.kind, scannedAt: now, allapot: allapot(eventId) };
+    return { ok: true, reason: null, nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, sorszam: pd.sorszam || null, scannedAt: now, allapot: allapot(eventId) };
   }
 
   // ---------- stat (a routes/kapu.js statData párja) ----------
@@ -159,7 +193,7 @@
     autoReply(eventId, render) {
       if (db.messages.some((m) => m.eventId === eventId && m.hely)) return;
       const ev = evById(eventId), v = ev && venueById(ev.venueId);
-      setTimeout(() => { const m = { id: newId('m_'), eventId, nev: v ? v.nev : 'Szervező', szoveg: 'Köszi, felírtuk! A QR-passzt a kapuban mutassátok, este találkozunk. 🎧', hely: true, at: new Date().toISOString() }; db.messages.push(m); save(); render(m); }, 1500);
+      setTimeout(() => { const m = { id: newId('m_'), eventId, nev: v ? v.nev : 'Szervező', szoveg: 'Köszi, felírtuk! A jegyet a bejáratnál mutassátok, este találkozunk. 🎧', hely: true, at: new Date().toISOString() }; db.messages.push(m); save(); render(m); }, 1500);
     },
   };
 
@@ -193,7 +227,8 @@
       const ev = evById(pd.eventId); if (!ev) return json({ ok: false }, 404);
       const v = venueById(ev.venueId);
       const p = passesOf(ev.id).find((x) => x.id === pd.id) || { ...pd, status: status(pd), scannedAt: scannedAt(pd) };
-      return json({ ok: true, pass: { id: pd.id, nev: pd.nev, status: db.scanned[pd.id] ? 'scanned' : (p.status || 'issued'), createdAt: pd.createdAt, scannedAt: db.scanned[pd.id] || null }, event: { id: ev.id, cim: ev.cim, kezdes: ev.kezdes, mufaj: ev.mufaj, ar: ev.ar, korhatar: ev.korhatar, when: when(ev.kezdes), longDate: longDate(ev.kezdes), price: price(ev), past: isPast(ev.kezdes) }, venue: v && { id: v.id, nev: v.nev, kerulet: v.kerulet }, token: decodeURIComponent(m[1]) });
+      const sajat = db.passes.find((x) => x.id === pd.id) || null;
+      return json({ ok: true, pass: { id: pd.id, nev: pd.nev, status: db.scanned[pd.id] ? 'scanned' : (p.status || 'issued'), createdAt: pd.createdAt, scannedAt: db.scanned[pd.id] || null, kind: pd.kind, tetelek: (sajat && sajat.tetelek) || [], fo: (sajat && sajat.fo) || pd.fo || 1, sorszam: pd.sorszam || (sajat && sajat.sorszam) || '', amountHuf: (sajat && sajat.amountHuf) || 0 }, event: { id: ev.id, cim: ev.cim, kezdes: ev.kezdes, mufaj: ev.mufaj, ar: ev.ar, korhatar: ev.korhatar, when: when(ev.kezdes), longDate: longDate(ev.kezdes), price: price(ev), past: isPast(ev.kezdes) }, venue: v && { id: v.id, nev: v.nev, kerulet: v.kerulet, cim: v.cim }, token: decodeURIComponent(m[1]) });
     }
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/allapot$/))) { const ev = evByKapu(decodeURIComponent(m[1])); return ev ? json({ ok: true, ...allapot(ev.id) }) : json({ ok: false, reason: 'unknown_kapu' }, 404); }
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/kereses$/))) {
@@ -225,18 +260,19 @@
     return null;
   }
   window.fetch = function (input, init) {
+    let path = null, params = null;
     try {
       const url = typeof input === 'string' ? input : input.url;
       const u = new URL(url, location.href);
       if (u.origin === location.origin) {
-        const path = stripBase(u.pathname);
-        if (path.startsWith('/api/') || path.startsWith('/admin') || path === '/megyek') {
-          const r = local(path, u.searchParams, init);
-          if (r) return r;
-        }
+        const p = stripBase(u.pathname);
+        if (p.startsWith('/api/') || p.startsWith('/admin')) { path = p; params = u.searchParams; }
       }
     } catch { /* eredeti fetch */ }
-    return realFetch(input, init);
+    if (path === null) return realFetch(input, init);
+    // A local() async, ezért a „nem kezeltem” jelzést AWAIT UTÁN kell megnézni — különben
+    // egy le nem fedett hívás null-lal térne vissza a Response helyett (néma hiba).
+    return local(path, params, init).then((r) => r || realFetch(input, init));
   };
 
   // ---------- űrlapok: Megyek → passz; admin → jelzés ----------
@@ -246,20 +282,44 @@
     const action = stripBase(new URL(f.getAttribute('action') || location.href, location.href).pathname);
     if (action === '/megyek') {
       e.preventDefault();
+      if (f.dataset.kuldes === '1') return; // dupla koppintás: egy jegy, nem kettő
       const fd = new FormData(f);
-      if (fd.get('weboldal')) return;
+      if (fd.get('weboldal')) { window.HB && HB.toast('Az űrlapot nem sikerült elküldeni. Ha automatikus kitöltőt használsz, kapcsold ki.'); return; }
       const nev = String(fd.get('nev') || '').trim(), k = String(fd.get('kapcsolat') || '').trim();
       const okK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(k) || k.replace(/\D/g, '').length >= 7;
-      if (nev.length < 2 || !okK) { window.HB && HB.toast('Név és e-mail vagy telefonszám kell.'); return; }
-      const { token } = HBS.issuePass({ eventId: fd.get('eventId'), nev, kapcsolat: k, ref: fd.get('ref') || null });
+      if (nev.length < 2) { window.HB && HB.toast('Add meg a neved (legalább 2 betű).'); return; }
+      if (!okK) { window.HB && HB.toast('E-mail-cím vagy telefonszám kell, hogy a jegy a tiéd legyen.'); return; }
+      const ev = evById(fd.get('eventId'));
+      if (!ev) { window.HB && HB.toast('Ez a buli nem található.'); return; }
+      let tetelek = rendelesBol(ev, fd.get('t'));
+      if (!tetelek.length) { const t0 = tipusokOf(ev)[0]; tetelek = t0 ? [{ tipusId: t0.id, nev: t0.nev, ar: t0.ar || 0, db: 1 }] : []; }
+      f.dataset.kuldes = '1';
+      const gomb = f.querySelector('button[type="submit"]');
+      if (gomb) { gomb.disabled = true; gomb.setAttribute('aria-busy', 'true'); gomb.textContent = 'Jegy készül…'; }
+      const { token } = HBS.issuePass({ eventId: ev.id, nev, kapcsolat: k, ref: fd.get('ref') || null, tetelek });
       location.href = `${BASE}/p/?uj=1#${token}`;
       return;
     }
     if (action.startsWith('/admin')) {
       e.preventDefault();
+      // A saját kezelőnk elvégzi a megerősítést — az admin.js bubble-kezelőjét NE engedjük utána
+      // futni, mert akkor két megerősítő ablak jön egymás után.
+      e.stopImmediatePropagation();
       if (f.dataset.confirm && !confirm(f.dataset.confirm)) return;
-      if (action.endsWith('/kiemelt')) { const b = f.querySelector('button'); if (b) { const on = !b.classList.contains('on'); b.classList.toggle('on', on); b.textContent = (on ? '★' : '☆') + ' Kiemelt'; } }
-      window.HB && HB.toast('Bemutató: a mentés csak ezen az eszközön látszik');
+      if (action.endsWith('/kiemelt')) {
+        const b = f.querySelector('button');
+        if (b) {
+          const on = !b.classList.contains('on');
+          b.classList.toggle('on', on);
+          b.textContent = (on ? '★' : '☆') + ' Kiemelt';
+          // Jegyezzük meg, hogy újratöltés után se ugorjon vissza.
+          const id = (f.getAttribute('action') || '').split('/').filter(Boolean)[2] || '';
+          if (id) { db.kiemelt[id] = on; save(); }
+        }
+        window.HB && HB.toast(`Bemutató: a kiemelés csak ezen az eszközön látszik`);
+        return;
+      }
+      window.HB && HB.toast('Bemutató-nézet: itt nincs szerver, ezért a mentés nem történik meg.');
     }
   }, true);
 
@@ -270,17 +330,32 @@
     const token = decodeURIComponent((location.hash || '').replace(/^#/, ''));
     const pd = decode(token);
     const $ = (id) => document.getElementById(id);
-    if (!pd || !evById(pd.eventId)) { $('ps-ticket').classList.add('hidden'); document.querySelector('.invite').classList.add('hidden'); $('ps-hiba').classList.remove('hidden'); return; }
+    // Érvénytelen jegynél a TELJES tartalom eltűnik — korábban ott maradt két értelmetlen gomb.
+    if (!pd || !evById(pd.eventId)) { $('ps-tartalom').classList.add('hidden'); $('ps-hiba').classList.remove('hidden'); return; }
     const ev = evById(pd.eventId), v = venueById(ev.venueId);
+    const sajat = db.passes.find((p) => p.id === pd.id) || null; // a saját eszközön a tételek is megvannak
     root.dataset.token = token; root.dataset.event = ev.id; root.dataset.nev = pd.nev; // az app.js ebből menti a Jegyeimbe
-    if (new URLSearchParams(location.search).get('uj') === '1') { $('ps-hooray').textContent = `🎉 Rajta vagy a listán, ${pd.nev.split(' ')[0]}!`; $('ps-hooray').classList.remove('hidden'); }
+    if (new URLSearchParams(location.search).get('uj') === '1') { $('ps-hooray').textContent = `🎉 Megvan a jegyed, ${keresztnev(pd.nev)}!`; $('ps-hooray').classList.remove('hidden'); }
     $('ps-genre').textContent = (GENRE_NEV[ev.mufaj] || ev.mufaj || '').toUpperCase();
     $('ps-cim').textContent = ev.cim;
     $('ps-date').textContent = longDate(ev.kezdes);
     $('ps-venue').textContent = v ? `${v.nev} · ${v.kerulet} kerület` : '';
     $('ps-nev').textContent = pd.nev;
-    $('ps-kind').textContent = `${pd.kind === 'jegy' ? 'Jegy' : 'Vendéglista'} · ${price(ev)} · ${ev.korhatar}+`;
-    $('ps-id').textContent = `Passz-azonosító: ${pd.id}`;
+    const tetelek = (sajat && sajat.tetelek) || [];
+    const osszeg = sajat ? (sajat.amountHuf || 0) : 0;
+    $('ps-kind').textContent = `${tetelek.length ? tetelSor(tetelek) : (pd.kind === 'jegy' ? 'Jegy' : 'Vendéglista')} · ${osszeg > 0 ? huf(osszeg) : 'Ingyenes'} · ${ev.korhatar}+`;
+    const fo = (sajat && sajat.fo) || pd.fo || 1;
+    $('ps-sorszam').textContent = (pd.sorszam || (sajat && sajat.sorszam) || '') + (fo > 1 ? ` · ${fo} fő` : '');
+    $('ps-id').textContent = `Jegyazonosító: ${pd.sorszam || pd.id}`;
+    // Helyszín: cím, útvonal, naptár
+    $('ps-hely-nev').textContent = v ? v.nev : '';
+    $('ps-hely-cim').textContent = v ? `${v.kerulet} kerület, ${v.cim}` : '';
+    $('ps-utvonal').href = 'https://www.google.com/maps/search/' + encodeURIComponent((v ? `${v.nev}, ${v.cim}` : '') + ', Budapest');
+    const ics = $('ps-ics');
+    ics.dataset.icsCim = ev.cim;
+    ics.dataset.icsKezdes = ev.kezdes;
+    ics.dataset.icsHely = v ? `${v.nev}, ${v.cim}, Budapest` : 'Budapest';
+    ics.dataset.icsLeiras = `${pd.sorszam || ''} · ${window.HB_APP_NAME || 'Hola!Buli'}`;
     const passUrl = `${location.origin}${BASE}/p/#${token}`;
     const invite = `${location.origin}${BASE}/e/${ev.id}/?ref=${pd.id}`;
     $('ps-invite').value = invite; $('ps-copy').dataset.copy = invite;
@@ -292,6 +367,77 @@
       const q = window.qrcode(0, 'M'); q.addData(passUrl); q.make();
       $('ps-qr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
     } catch (e) { $('ps-qr').textContent = 'QR nem rajzolható: ' + e.message; }
+  }
+
+  // ---------- statikus pénztár (?e=&t=) ----------
+  function fillPenztar() {
+    const root = document.getElementById('penztar-static');
+    if (!root) return;
+    const $ = (id) => document.getElementById(id);
+    const q = new URLSearchParams(location.search);
+    const ev = evById(q.get('e'));
+    if (!ev) { $('pz-tartalom').classList.add('hidden'); $('pz-hiba').classList.remove('hidden'); return; }
+    const v = venueById(ev.venueId);
+    let tetelek = rendelesBol(ev, q.get('t'));
+    if (!tetelek.length) { const t0 = tipusokOf(ev)[0]; tetelek = t0 ? [{ tipusId: t0.id, nev: t0.nev, ar: t0.ar || 0, db: 1 }] : []; }
+    const osszeg = osszegOf(tetelek), fo = darabOf(tetelek);
+
+    root.dataset.event = ev.id;
+    const evUrl = `${BASE}/e/${ev.id}/`;
+    $('pz-vissza').href = evUrl + '#jegyek';
+    $('pz-modosit').href = evUrl + '#jegyek';
+    $('pz-megse').href = evUrl;
+    $('pz-mufaj').textContent = GENRE_NEV[ev.mufaj] || ev.mufaj || '';
+    $('pz-cim').textContent = ev.cim;
+    $('pz-datum').textContent = longDate(ev.kezdes);
+    $('pz-hely').textContent = v ? `${v.nev} · ${v.kerulet} kerület` : '';
+
+    const lista = $('pz-tetelek');
+    lista.innerHTML = '';
+    tetelek.forEach((t) => {
+      const li = document.createElement('li');
+      li.className = 'rendeles-sor';
+      const a = document.createElement('span'); a.className = 'rendeles-db'; a.textContent = t.db + '×';
+      const b = document.createElement('span'); b.className = 'rendeles-nev'; b.textContent = t.nev;
+      const c = document.createElement('span'); c.className = 'rendeles-ar'; c.textContent = t.ar ? huf(t.ar * t.db) : 'Ingyenes';
+      li.appendChild(a); li.appendChild(b); li.appendChild(c);
+      lista.appendChild(li);
+    });
+    $('pz-fo').textContent = ` · ${fo} fő`;
+    $('pz-osszeg').textContent = osszeg > 0 ? huf(osszeg) : 'Ingyenes';
+    $('pz-eventid').value = ev.id;
+    $('pz-rendeles').value = tetelek.map((t) => `${t.tipusId}:${t.db}`).join(',');
+    $('pz-ref').value = (q.get('ref') || '').slice(0, 40);
+    $('pz-korhatar').textContent = `Elmúltam ${ev.korhatar} éves.`;
+    if (osszeg > 0) {
+      $('pz-demo').classList.remove('hidden');
+      $('pz-fizetes-blokk').classList.remove('hidden');
+      $('pz-teljes-ar').classList.remove('hidden');
+      $('pz-kuld').textContent = `Fizetés · ${huf(osszeg)}`;
+    } else {
+      $('pz-kuld').textContent = 'Ingyenes jegy igénylése';
+    }
+  }
+
+  // ---------- a demó-adat sose járjon le ----------
+  // A statikus oldal a BUILD napjához képest relatív dátumokat süt be. Néhány hét múlva minden buli
+  // „lement” volna, és az ügyfél egy ÜRES főoldalt kapott volna, magyarázat nélkül. Ha már nincs élő
+  // buli, egész hetekkel előre toljuk a demó-adatot — így a hétköznap-ritmus is megmarad.
+  function frissitDatumok() {
+    if (!events.length) return;
+    const legkesobb = Math.max(...events.map((e) => new Date(e.kezdes).getTime()));
+    if (legkesobb > Date.now() - 6 * 3600 * 1000) return; // van még élő buli
+    const legkorabbi = Math.min(...events.map((e) => new Date(e.kezdes).getTime()));
+    const HET = 7 * 86400000;
+    const eltolas = Math.ceil((Date.now() - legkorabbi) / HET) * HET;
+    if (eltolas <= 0) return;
+    const told = (iso) => { const t = new Date(iso).getTime(); return isNaN(t) ? iso : new Date(t + eltolas).toISOString(); };
+    events.forEach((e) => { e.kezdes = told(e.kezdes); });
+    (SEED.passes || []).forEach((p) => { p.createdAt = told(p.createdAt); if (p.scannedAt) p.scannedAt = told(p.scannedAt); });
+    (SEED.scans || []).forEach((s) => { s.at = told(s.at); });
+    (SEED.messages || []).forEach((m) => { m.at = told(m.at); });
+    document.querySelectorAll('[data-kezdes]').forEach((c) => { c.dataset.kezdes = told(c.dataset.kezdes); });
+    document.querySelectorAll('time[datetime]').forEach((t) => t.setAttribute('datetime', told(t.getAttribute('datetime'))));
   }
 
   // ---------- dátum-címkék, lement bulik, újracsoportosítás ----------
@@ -321,8 +467,11 @@
         byGroup[name].sort((a, b) => new Date(a.dataset.kezdes) - new Date(b.dataset.kezdes)).forEach((c) => grid.appendChild(c));
         sec.appendChild(h); sec.appendChild(grid); parent.insertBefore(sec, anchor);
       });
+      // A Heti Top az ELSŐ csoport UTÁN áll (hogy az első képernyőn valódi bulik legyenek);
+      // a csoportok újraépítése után vissza kell tenni oda, különben a lista elé ugrik.
       const top = document.getElementById('heti-top-szekcio');
       if (top && !top.querySelector('.card-poster')) top.remove();
+      else if (top) { const elso = parent.querySelector('.list-group'); if (elso) elso.after(top); }
     }
     document.querySelectorAll('.top-list .top-row').forEach((r, i) => { const rank = r.querySelector('.top-rank'); if (rank) rank.textContent = i + 1; });
   }
@@ -343,7 +492,7 @@
   // FONTOS: azonnal futunk (defer-sorrend: static-mode.js → app.js → DOMContentLoaded), hogy a passz-oldal
   // data-nev/data-token attribútuma már kész legyen, amikor az app.js elmenti a Jegyeimbe és a becenevet.
   // (Enélkül a chat névre kérdez egy blokkoló ablakban.)
-  function init() { relabel(); fillPassPage(); adminNote(); }
-  if (document.readyState === 'loading' && !document.getElementById('pass-static')) document.addEventListener('DOMContentLoaded', init);
+  function init() { frissitDatumok(); relabel(); fillPassPage(); fillPenztar(); adminNote(); }
+  if (document.readyState === 'loading' && !document.getElementById('pass-static') && !document.getElementById('penztar-static')) document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

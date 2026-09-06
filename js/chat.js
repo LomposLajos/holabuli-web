@@ -15,7 +15,31 @@
   let nick = HB.nev();
   function showNick() { if (nick) { nickLabel.textContent = nick; nickBox.classList.remove('hidden'); } }
   showNick();
-  document.getElementById('nick-edit').addEventListener('click', () => { const n = prompt('Milyen néven írsz?', nick || ''); if (n && n.trim()) { nick = n.trim().slice(0, 40); HB.setNev(nick); showNick(); } });
+
+  // Becenév-kérés a lapon belül (nem natív prompt): ígéretet ad vissza, hogy a küldés megvárhassa.
+  const nevKero = document.getElementById('nev-kero');
+  const nevMezo = document.getElementById('nev-kero-mezo');
+  let nevFeloldo = null;
+  function kerdNev(alap) {
+    nevMezo.value = alap || nick || '';
+    nevKero.classList.remove('hidden');
+    setTimeout(() => { nevKero.scrollIntoView({ block: 'end', behavior: 'smooth' }); nevMezo.focus(); }, 50);
+    return new Promise((resolve) => { nevFeloldo = resolve; });
+  }
+  function zarNev(ertek) {
+    nevKero.classList.add('hidden');
+    const f = nevFeloldo; nevFeloldo = null;
+    if (f) f(ertek);
+  }
+  nevKero.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const n = nevMezo.value.trim().slice(0, 40);
+    if (!n) return;
+    nick = n; HB.setNev(nick); showNick();
+    zarNev(nick);
+  });
+  document.getElementById('nev-kero-megse').addEventListener('click', () => zarNev(null));
+  document.getElementById('nick-edit').addEventListener('click', () => kerdNev(nick));
 
   const hhmm = (iso) => { const d = new Date(iso); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
   const ini = (n) => n.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || '?';
@@ -49,11 +73,11 @@
     note.style.paddingBottom = '10px';
     note.textContent = 'Bemutató: az üzenetek csak ezen az eszközön látszanak.';
     form.after(note);
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const szoveg = input.value.trim();
       if (!szoveg) return;
-      if (!nick) { const n = prompt('Milyen néven írsz?', ''); if (!n || !n.trim()) return; nick = n.trim().slice(0, 40); HB.setNev(nick); showNick(); }
+      if (!nick && !(await kerdNev(''))) return;
       const msg = S.send(eventId, nick, szoveg);
       if (msg) render(msg);
       input.value = '';
@@ -71,11 +95,11 @@
   socket.on('presence', ({ online: n }) => { online.textContent = n; });
   socket.on('disconnect', () => { online.textContent = '–'; });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const szoveg = input.value.trim();
     if (!szoveg) return;
-    if (!nick) { const n = prompt('Milyen néven írsz?', ''); if (!n || !n.trim()) return; nick = n.trim().slice(0, 40); HB.setNev(nick); showNick(); }
+    if (!nick && !(await kerdNev(''))) return;
     socket.emit('message', { eventId, nev: nick, szoveg });
     input.value = '';
     input.focus();

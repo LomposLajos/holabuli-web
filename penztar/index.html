@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pénztár · Hola!Buli</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hola!Buli">
+<link rel="manifest" href="/holabuli-web/manifest.webmanifest">
+<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=fc4a0ba-hqzaw" sizes="32x32" type="image/png">
+<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=fc4a0ba-hqzaw" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=fc4a0ba-hqzaw">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap">
+
+<script>try{var t=localStorage.getItem('holabuli.dizajn');var q=new URLSearchParams(location.search).get('dizajn');if(q!==null)t=q==='alap'?'':q;if(t)document.documentElement.dataset.dizajn=t;}catch(e){}</script>
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=fc4a0ba-hqzaw">
+
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=fc4a0ba-hqzaw">
+
+
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='fc4a0ba-hqzaw';</script>
+<script src="/holabuli-web/js/data.js?v=fc4a0ba-hqzaw"></script>
+
+</head>
+<body class="" data-build="fc4a0ba-hqzaw">
+
+
+<main class="page page-penztar" id="penztar-static" data-event="">
+  <header class="topbar slim">
+    <a class="back" id="pz-vissza" href="/holabuli-web/" aria-label="Vissza a bulihoz">‹</a>
+    <span class="topbar-title">Pénztár</span>
+    <span class="topbar-spacer" aria-hidden="true"></span>
+  </header>
+
+  <div class="empty hidden" id="pz-hiba"><div class="empty-emoji">🫥</div><h1>Nincs ilyen buli</h1><p class="muted">Ez a link nem mutat érvényes bulira.</p><a class="btn btn-primary" href="/holabuli-web/">A bulikhoz</a></div>
+
+  <div class="demo-fizetes hidden" id="pz-demo" role="note">
+    <b>DEMÓ — valódi fizetés nem történik.</b>
+    <span>Ez egy bemutató: pénz nem mozdul, és kártyaadatot sehol nem kérünk. A jegyet a „fizetés” után ugyanúgy megkapod.</span>
+  </div>
+
+  <div id="pz-tartalom">
+    <section class="section penztar-buli">
+      <div class="penztar-buli-fej">
+        <span class="chip on sm" id="pz-mufaj"></span>
+        <h1 id="pz-cim">…</h1>
+      </div>
+      <div class="muted" id="pz-datum"></div>
+      <div class="muted" id="pz-hely"></div>
+    </section>
+
+    <section class="section">
+      <div class="szakasz-fej"><h2>A rendelésed</h2><a class="link" id="pz-modosit" href="/holabuli-web/">Módosítás</a></div>
+      <ul class="rendeles-lista" id="pz-tetelek"></ul>
+      <div class="rendeles-osszeg">
+        <span>Összesen<span class="muted" id="pz-fo"></span></span>
+        <b id="pz-osszeg">…</b>
+      </div>
+      <p class="muted small hidden" id="pz-teljes-ar">Teljes ár, rejtett díj nélkül. A jegy egy QR-kód, amit a bejáratnál olvasnak be.</p>
+    </section>
+
+    <form class="section penztar-urlap" method="post" action="/holabuli-web/megyek" autocomplete="on" id="penztar-form">
+      <h2>Kire szóljon?</h2>
+      <input type="hidden" name="eventId" id="pz-eventid" value="">
+      <input type="hidden" name="t" id="pz-rendeles" value="">
+      <input type="hidden" name="ref" id="pz-ref" value="">
+      <input class="hp" type="text" name="weboldal" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <label class="field">
+        <span>Neved</span>
+        <input name="nev" type="text" required minlength="2" maxlength="60" placeholder="pl. Kovács Anna" autocomplete="name">
+      </label>
+      <label class="field">
+        <span>E-mail vagy telefonszám</span>
+        <input name="kapcsolat" type="text" required maxlength="80" placeholder="anna@pelda.hu vagy +36 30 …" autocomplete="email" inputmode="email">
+        <small class="field-sugo">Ide szól a jegy. A demóban levelet még nem küldünk — a jegy ezen a telefonon és a linkjén marad.</small>
+      </label>
+
+      <label class="check"><input type="checkbox" name="korhatar" value="1" required><span id="pz-korhatar">Elmúltam 18 éves.</span></label>
+      <label class="check"><input type="checkbox" name="adat" value="1" required><span>Elfogadom az <a class="link" href="/holabuli-web/adatkezeles" target="_blank">adatkezelési tájékoztatót</a> (név, elérhetőség, belépés ideje; 90 nap).</span></label>
+
+      <div class="hidden" id="pz-fizetes-blokk">
+        <h2>Fizetés</h2>
+        <div class="fizetes-modok" role="radiogroup" aria-label="Fizetési mód">
+          <label class="fizetes-mod"><input type="radio" name="fizmod" value="kartya" checked><span class="fizetes-ikon" aria-hidden="true">💳</span><span>Bankkártya</span></label>
+          <label class="fizetes-mod"><input type="radio" name="fizmod" value="apple"><span class="fizetes-ikon" aria-hidden="true">📱</span><span>Apple&nbsp;Pay</span></label>
+          <label class="fizetes-mod"><input type="radio" name="fizmod" value="google"><span class="fizetes-ikon" aria-hidden="true">🅖</span><span>Google&nbsp;Pay</span></label>
+        </div>
+        <p class="muted small">A bemutatóban egyik mód sem kér adatot, és nem indít tranzakciót. Élesben a pénz közvetlenül a helyhez menne, mi csak jutalékot számolnánk el.</p>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-xl" type="submit" id="pz-kuld">Jegy igénylése</button>
+      <a class="btn btn-ghost btn-block" id="pz-megse" href="/holabuli-web/">Mégse</a>
+    </form>
+  </div>
+</main>
+<nav class="tabbar" aria-label="Fő navigáció">
+  <a class="tab " href="/holabuli-web/" aria-label="Felfedezés">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3.7 6.3-1.9 5.2-5.2 1.9 1.9-5.2 5.2-1.9Z"/></svg>
+    <span>Felfedezés</span>
+  </a>
+  <a class="tab " href="/holabuli-web/heti-top" aria-label="Heti Top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3l-6 3.3 1.3-6.8-5-4.7 6.8-.8L12 2Z"/></svg>
+    <span>Heti Top</span>
+  </a>
+  <a class="tab " href="/holabuli-web/jegyeim" aria-label="Jegyeim">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V7Zm6 1v8h2V8H9Z"/></svg>
+    <span>Jegyeim</span>
+  </a>
+  <a class="tab " href="/holabuli-web/profil" aria-label="Profil">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.5-8 5.5V21h16v-1.5c0-3-3.6-5.5-8-5.5Z"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build fc4a0ba-hqzaw">DEMÓ</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=fc4a0ba-hqzaw" defer></script><script src="/holabuli-web/js/static-mode.js?v=fc4a0ba-hqzaw" defer></script>
+<script src="/holabuli-web/js/app.js?v=fc4a0ba-hqzaw" defer></script>
+<script src="/holabuli-web/js/dizajn.js?v=fc4a0ba-hqzaw" defer></script>
+
+</body>
+</html>
+

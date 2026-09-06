@@ -72,12 +72,12 @@
   // ---------- Overlay ----------
   const TEXT = {
     ok: { ikon: '✓', cim: 'BEENGEDVE', cls: 'ok' },
-    duplicate: { ikon: '✕', cim: 'MÁR BENT VOLT', cls: 'err', sub: 'Ezzel a passzal már beléptek' },
+    duplicate: { ikon: '✕', cim: 'MÁR BENT VOLT', cls: 'err', sub: 'Ezzel a jeggyel már beléptek' },
     wrong_event: { ikon: '✕', cim: 'MÁSIK BULIRA SZÓL', cls: 'err', sub: 'Nem erre a bulira váltotta' },
-    void: { ikon: '✕', cim: 'VISSZAVONT PASSZ', cls: 'err', sub: 'A hely visszavonta' },
-    unknown: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Nem a mi passzunk' },
+    void: { ikon: '✕', cim: 'VISSZAVONT JEGY', cls: 'err', sub: 'A hely visszavonta' },
+    unknown: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Nem a mi jegyünk' },
     signature: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Hamis vagy sérült kód' },
-    format: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Ez nem passz-kód' },
+    format: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Ez nem jegy-kód' },
     unknown_event: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Ismeretlen buli' },
     network: { ikon: '!', cim: 'NINCS KAPCSOLAT', cls: 'warn', sub: 'Próbáld újra pár másodperc múlva' },
   };
@@ -92,7 +92,9 @@
     ovIkon.textContent = t.ikon;
     ovCim.textContent = key === 'duplicate' && r.scannedAt ? `${t.cim} ${hhmm(r.scannedAt)}` : t.cim;
     ovNev.textContent = (r && r.nev) || '';
-    ovSub.textContent = key === 'ok' ? (KIND[r.kind] || 'Vendéglista') : (t.sub || '');
+    // Egy jegy több emberre is szólhat — a kidobónak ezt LÁTNIA kell, mielőtt beengedi őket.
+    const fo = r && r.fo > 1 ? ` · ${r.fo} fő` : '';
+    ovSub.textContent = key === 'ok' ? (KIND[r.kind] || 'Vendéglista') + fo : (t.sub || '');
     overlay.classList.remove('hidden');
     void overlay.offsetWidth;
     overlay.classList.add('show');
@@ -220,7 +222,12 @@
     }
     const head = document.createElement('p');
     head.className = 'talalat-head muted';
-    head.textContent = q ? `${d.osszes} találat` : 'Legutóbb jelentkeztek';
+    // Ha a lista hosszabb, mint amennyit visszaadunk, MONDJUK KI — különben a 21. embert
+    // hiába keresi a kidobó, azt hiszi, nincs a listán.
+    const osszes = (d && d.osszes) || list.length;
+    head.textContent = q
+      ? (osszes > list.length ? `${osszes} találat · az első ${list.length} látszik, szűkíts` : `${osszes} találat`)
+      : (osszes > list.length ? `Legutóbb jelentkeztek · ${list.length} / ${osszes}` : 'Legutóbb jelentkeztek');
     talalatok.appendChild(head);
     list.forEach((p) => {
       const node = tpl.content.firstElementChild.cloneNode(true);
