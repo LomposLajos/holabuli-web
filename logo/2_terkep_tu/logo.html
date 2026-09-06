@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hola!Buli — Térkép-tű koncepció</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b12;
+  --brand:#ff4fa3;
+  --brand2:#8b5cf6;
+  --ink:#f6f6fb;
+  --muted:rgba(246,246,251,.60);
+  --line:rgba(246,246,251,.10);
+  --panel:#12121c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:56px 40px 90px}
+
+/* ---------- fejléc ---------- */
+.kicker{
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--brand);font-weight:600;margin:0 0 14px
+}
+h1{
+  font-family:"Outfit",system-ui,sans-serif;font-weight:800;
+  font-size:44px;line-height:1.05;letter-spacing:-.025em;margin:0 0 18px
+}
+.lead{font-size:16.5px;line-height:1.62;color:rgba(246,246,251,.74);max-width:76ch;margin:0}
+.lead b{color:var(--ink);font-weight:600}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 0}
+.chip{
+  display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.04em;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px 6px 7px
+}
+.sw{width:14px;height:14px;border-radius:50%;display:block}
+
+/* ---------- szekciók ---------- */
+section{margin-top:64px}
+h2{
+  font-family:"Outfit",system-ui,sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  margin:0 0 4px;padding-bottom:12px;border-bottom:1px solid var(--line)
+}
+.h2note{font-size:13px;line-height:1.55;color:rgba(246,246,251,.45);margin:12px 0 0;max-width:74ch}
+
+/* ---------- szó-jel ---------- */
+.wm{
+  font-family:"Outfit",system-ui,sans-serif;font-weight:700;
+  letter-spacing:-.028em;display:inline-flex;align-items:baseline;
+  line-height:1;white-space:nowrap;
+}
+.wm svg{display:block;flex:none;margin:0 .035em}
+.wm .gA,.wm .gC{height:.707em}   /* viewBox 101 magas → 100 egység = .70em cap */
+.wm .gB{height:.7105em}          /* viewBox 101.5 magas */
+
+.sub{
+  font-family:"Inter",system-ui,sans-serif;font-weight:600;
+  text-transform:uppercase;letter-spacing:.24em;
+}
+
+.card{
+  border:1px solid var(--line);border-radius:20px;padding:44px 46px 34px;
+  margin-top:22px;background:linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.008));
+}
+.card .lock{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.card .wm{font-size:96px}
+.card .sub{font-size:15px;color:rgba(246,246,251,.62);padding-left:.16em}
+.vname{
+  font-family:"Outfit",sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--brand);margin:0 0 26px
+}
+.cap{
+  margin:30px 0 0;padding-top:20px;border-top:1px solid var(--line);
+  font-size:14.5px;line-height:1.6;color:rgba(246,246,251,.68);max-width:70ch
+}
+.cap b{color:var(--ink);font-weight:600}
+
+/* ---------- felépítés-ábra ---------- */
+.build{
+  display:flex;align-items:center;gap:44px;margin-top:24px;
+  border:1px solid var(--line);border-radius:20px;padding:34px 40px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.006))
+}
+.bsketch svg{height:290px;display:block;flex:none}
+.bfacts{flex:1}
+.bfacts ul{margin:0;padding-left:19px}
+.bfacts li{font-size:13.5px;line-height:1.62;color:rgba(246,246,251,.66);margin-bottom:9px}
+.bfacts li:last-child{margin-bottom:0}
+.bfacts li b{color:var(--ink);font-weight:600}
+
+.signrow{
+  display:flex;align-items:flex-end;margin-top:18px;
+  border:1px solid var(--line);border-radius:20px;padding:34px 20px 28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.006))
+}
+.signcell{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;
+  padding:0 16px;border-right:1px solid var(--line)
+}
+.signcell:last-child{border-right:0}
+.signcell svg{height:186px;display:block}
+.signcell b{
+  font-family:"Outfit",sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--brand)
+}
+.signcell small{font-size:12.5px;line-height:1.55;color:rgba(246,246,251,.55);text-align:center;max-width:28ch}
+
+/* ---------- világos ---------- */
+.lightpanel{
+  background:#fdfdff;border-radius:20px;padding:8px 0 0;margin-top:22px;
+  color:#0b0b12;border:1px solid rgba(11,11,18,.08)
+}
+.lightpanel .lcard{padding:36px 46px 30px;border-bottom:1px solid rgba(11,11,18,.08)}
+.lightpanel .lcard:last-child{border-bottom:0}
+.lightpanel .wm{font-size:72px;color:#141420}
+.lightpanel .sub{font-size:12.5px;color:rgba(11,11,18,.50);padding-left:.16em}
+.lightpanel .vname{color:#a3319e;margin-bottom:20px}
+.lightpanel .lock{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+
+/* ---------- fejléc-teszt ---------- */
+.bars{display:flex;flex-direction:column;gap:6px;margin-top:24px}
+.bar{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  height:60px;display:flex;align-items:center;padding:0 20px;gap:14px
+}
+.bar .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.pillbtn{
+  font-size:11.5px;font-weight:600;color:rgba(246,246,251,.42);
+  border:1px solid var(--line);border-radius:999px;padding:6px 12px
+}
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#ff4fa3,#8b5cf6);opacity:.85}
+.barlabel{
+  font-size:12px;line-height:1.55;color:rgba(246,246,251,.42);
+  margin:2px 0 18px 4px;letter-spacing:.01em;max-width:82ch
+}
+.barlabel b{color:rgba(246,246,251,.72);font-weight:600}
+.h22 .wm{font-size:31.4px}          /* cap-height = 22 px */
+.h22b .wm{font-size:20px}           /* cap-height = 14 px */
+.h22b .sub{font-size:6.5px;letter-spacing:.20em;color:rgba(246,246,251,.55)}
+.stack{display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.markonly{height:22px;display:block}
+.markonly use{fill:url(#gp)}
+
+/* ---------- ikonok ---------- */
+.tile{
+  border-radius:22.4%;display:grid;place-items:center;flex:none;position:relative;
+  overflow:hidden;background:linear-gradient(135deg,#ff4fa3 0%,#b053c9 52%,#8b5cf6 100%);
+}
+.tile::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(120% 90% at 26% 12%,rgba(255,255,255,.24),transparent 58%);
+  pointer-events:none
+}
+.tile.dark{background:#14141f;box-shadow:inset 0 0 0 1px rgba(246,246,251,.10)}
+.tile.dark::after{background:radial-gradient(110% 80% at 50% 120%,rgba(255,79,163,.32),transparent 62%)}
+.tile svg{display:block;position:relative;z-index:1}
+.tile .gB{height:60%}
+.tile .gA,.tile .gC{height:64%}
+/* FONTOS: a <use> árnyék-fáját kívülről csak magán a <use>-on lehet festeni */
+.tile:not(.dark) svg use{fill:#fff}
+.tile.dark svg use{fill:url(#gp)}
+
+.iconrow{
+  display:flex;align-items:flex-end;gap:34px;margin-top:22px;
+  border:1px solid var(--line);border-radius:20px;padding:32px 34px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.006))
+}
+.iconrow .steps{display:flex;align-items:flex-end;gap:24px}
+.isz{display:flex;flex-direction:column;align-items:center;gap:9px}
+.isz span{font-size:10.5px;color:rgba(246,246,251,.40);letter-spacing:.06em;white-space:nowrap}
+.inote{
+  font-size:12.5px;line-height:1.55;color:rgba(246,246,251,.52);
+  margin:0 0 4px auto;max-width:22ch;padding-left:10px
+}
+.inote b{color:var(--ink);font-weight:600}
+
+.finalgrid{display:flex;gap:14px;align-items:flex-end;margin-top:24px;flex-wrap:wrap}
+.px48{
+  padding:20px 20px 16px;border:1px solid var(--line);border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--panel)
+}
+.px48 span{font-size:10.5px;color:rgba(246,246,251,.42);letter-spacing:.05em;white-space:nowrap}
+.px48.light{background:#fdfdff;border-color:rgba(11,11,18,.10)}
+.px48.light span{color:rgba(11,11,18,.48)}
+#ikon48{width:48px;height:48px;border-radius:11px}
+.shotwrap{margin-top:26px}
+
+/* ---------- záró ajánlás ---------- */
+.verdict{
+  margin-top:30px;border:1px solid rgba(255,79,163,.34);border-radius:20px;
+  padding:30px 34px;background:linear-gradient(135deg,rgba(255,79,163,.10),rgba(139,92,246,.07))
+}
+.verdict h3{
+  font-family:"Outfit",sans-serif;font-weight:700;font-size:16px;margin:0 0 12px;letter-spacing:-.01em
+}
+.verdict ul{margin:0;padding-left:20px}
+.verdict li{font-size:14.5px;line-height:1.7;color:rgba(246,246,251,.76);margin-bottom:6px}
+.verdict li b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ====== rejtett SVG könyvtár: a jel MINDEN példánya innen jön ====== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gp" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="46" y2="100">
+      <stop offset="0" stop-color="#ff4fa3"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+
+    <!-- A) klasszikus tű + külön pont -->
+    <symbol id="mA" viewBox="0 0 40 101">
+      <path fill-rule="evenodd" d="M20 70L4.17 21.88A16.67 16.67 0 1 1 35.83 21.88ZM27.6 16.67A7.6 7.6 0 1 0 12.4 16.67A7.6 7.6 0 1 0 27.6 16.67ZM31.7 89A11.7 11.7 0 1 0 8.3 89A11.7 11.7 0 1 0 31.7 89Z"/>
+    </symbol>
+
+    <!-- B) egyetlen csepp: a lyuk a pont -->
+    <symbol id="mB" viewBox="0 0 46 101.5">
+      <path fill-rule="evenodd" d="M23 101.5L0.34 31.11A23.81 23.81 0 1 1 45.66 31.11ZM33 23.81A10 10 0 1 0 13 23.81A10 10 0 1 0 33 23.81Z"/>
+    </symbol>
+
+    <!-- C) lebegő tű + fénykör a földön -->
+    <symbol id="mC" viewBox="0 0 40 101">
+      <circle cx="20" cy="87.5" r="13.5" opacity=".26"/>
+      <circle cx="20" cy="87.5" r="9.5"/>
+      <path d="M20 66L5.08 20.62A15.71 15.71 0 1 1 34.92 20.62Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+
+<div class="wrap">
+
+  <p class="kicker">Logó-ötlet · 2. koncepció</p>
+  <h1>Térkép-tű<br>— a felkiáltójel egy helyjelölő</h1>
+  <p class="lead">
+    A felkiáltójel itt nem írásjel, hanem <b>térkép-tű</b>: a lefelé keskenyedő csepp pontosan úgy áll a
+    „Hola” és a „Buli” között, mint egy „!”, a benne lévő lyuk viszont egy pillanat alatt helyjelölővé teszi.
+    Így a <b>„Hol a buli?”</b> kérdés nem csak az alcímben van kimondva — benne van magában a jelben, ami a
+    térképen odamutat, és mert a tű 48 képpontos ikonként is az egyik legkorábban felismerhető forma,
+    a poén a telefon indítóképernyőjéig kitart.
+  </p>
+
+  <div class="chips">
+    <div class="chip"><span class="sw" style="background:#0b0b12;box-shadow:inset 0 0 0 1px rgba(246,246,251,.2)"></span>#0b0b12 háttér</div>
+    <div class="chip"><span class="sw" style="background:#ff4fa3"></span>#ff4fa3 márka</div>
+    <div class="chip"><span class="sw" style="background:#8b5cf6"></span>#8b5cf6 második</div>
+    <div class="chip"><span class="sw" style="background:linear-gradient(135deg,#ff4fa3,#8b5cf6)"></span>135° gradiens</div>
+    <div class="chip"><span class="sw" style="background:#f6f6fb"></span>#f6f6fb szöveg</div>
+    <div class="chip">Outfit 700 · Inter 600</div>
+  </div>
+
+
+  <!-- ================= 1. NAGYBAN, SÖTÉTEN ================= -->
+  <section>
+    <h2>1 — A szó-jel nagyban, sötét háttéren</h2>
+
+    <div class="card">
+      <p class="vname">A változat · Klasszikus tű</p>
+      <div class="lock">
+        <div class="wm">Hola<svg class="gA" viewBox="0 0 40 101"><use href="#mA" fill="url(#gp)"/></svg>Buli</div>
+        <div class="sub">Hol a buli?</div>
+      </div>
+      <p class="cap"><b>Mit visz a poénból:</b> a tű és a pont külön áll, ezért a jel elsőre tiszta felkiáltójel,
+      másodikra térkép-tű — a „hol?” kérdés a szó közepén ül, anélkül hogy a felirat ritmusát megtörné.</p>
+    </div>
+
+    <div class="card">
+      <p class="vname">B változat · Egy jel (a lyuk a pont)</p>
+      <div class="lock">
+        <div class="wm">Hola<svg class="gB" viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>Buli</div>
+        <div class="sub">Hol a buli?</div>
+      </div>
+      <p class="cap"><b>Mit visz a poénból:</b> egyetlen tömör csepp viszi az egész jelet — a lekeskenyedő test a
+      felkiáltójel, a kilyukasztott fej a térkép-tű —, és mert nincs mit elveszíteni belőle, ez marad meg
+      épségben a legkisebb méretben is.</p>
+    </div>
+
+    <div class="card">
+      <p class="vname">C változat · Fénykör</p>
+      <div class="lock">
+        <div class="wm">Hola<svg class="gC" viewBox="0 0 40 101"><use href="#mC" fill="url(#gp)"/></svg>Buli</div>
+        <div class="sub">Hol a buli?</div>
+      </div>
+      <p class="cap"><b>Mit visz a poénból:</b> a tű a levegőben lebeg, és a földön ragyogó fénykör a felkiáltójel
+      pontja — a jel nem egy címet mutat, hanem egy reflektorfénybe állított helyszínt: ott van a buli.</p>
+    </div>
+  </section>
+
+
+  <!-- ================= FELÉPÍTÉS ================= -->
+  <section>
+    <h2>A jel felépítése — miért olvasható felkiáltójelnek</h2>
+    <p class="h2note">A tű aránya nem szabadon választott. A test hossza és a fej sugara közti viszony dönti el,
+    hogy a szem felkiáltójelet lát-e vagy csak egy lufit: rövidebb testnél lufi, hosszabbnál varrótű. Az alábbi
+    szerkesztés minden változatnál ugyanaz, ezért látszanak egy családnak.</p>
+
+    <div class="build">
+      <div class="bsketch">
+        <svg viewBox="-15 -13 76 130">
+          <!-- alapvonal + betűmagasság-vonal -->
+          <line x1="-13" y1="0" x2="59" y2="0" stroke="rgba(246,246,251,.20)" stroke-width=".7" stroke-dasharray="3 3"/>
+          <line x1="-13" y1="100" x2="59" y2="100" stroke="rgba(246,246,251,.20)" stroke-width=".7" stroke-dasharray="3 3"/>
+          <line x1="23" y1="-11" x2="23" y2="112" stroke="rgba(246,246,251,.14)" stroke-width=".7" stroke-dasharray="3 3"/>
+          <!-- a fej szerkesztő-köre -->
+          <circle cx="23" cy="23.81" r="23.81" fill="none" stroke="rgba(255,79,163,.55)" stroke-width=".8" stroke-dasharray="3.5 2.5"/>
+          <!-- sugár-jelölés -->
+          <line x1="23" y1="23.81" x2="46.81" y2="23.81" stroke="rgba(255,79,163,.55)" stroke-width=".8"/>
+          <circle cx="23" cy="23.81" r="1.5" fill="rgba(255,79,163,.9)"/>
+          <!-- a kész tű -->
+          <path fill-rule="evenodd" fill="url(#gp)" opacity=".92"
+                d="M23 101.5L0.34 31.11A23.81 23.81 0 1 1 45.66 31.11ZM33 23.81A10 10 0 1 0 13 23.81A10 10 0 1 0 33 23.81Z"/>
+          <!-- érintők, amik a testet adják -->
+          <line x1="23" y1="101.5" x2="0.34" y2="31.11" stroke="rgba(246,246,251,.55)" stroke-width=".7"/>
+          <line x1="23" y1="101.5" x2="45.66" y2="31.11" stroke="rgba(246,246,251,.55)" stroke-width=".7"/>
+          <circle cx="23" cy="101.5" r="1.7" fill="#f6f6fb"/>
+          <!-- feliratok -->
+          <text x="34" y="21" font-family="Inter,sans-serif" font-size="5.6" fill="rgba(246,246,251,.72)">r</text>
+          <text x="-13" y="-4" font-family="Inter,sans-serif" font-size="5.2" fill="rgba(246,246,251,.42)">betűmagasság</text>
+          <text x="-13" y="107.5" font-family="Inter,sans-serif" font-size="5.2" fill="rgba(246,246,251,.42)">alapvonal</text>
+          <text x="26.5" y="112" font-family="Inter,sans-serif" font-size="5.2" fill="rgba(246,246,251,.42)">1,5% túllógás</text>
+        </svg>
+      </div>
+      <div class="bfacts">
+        <ul>
+          <li><b>Fej:</b> egy kör, sugara a betűmagasság 23,8%-a. Ez adja a tű felismerhető gömbölyű fejét.</li>
+          <li><b>Test:</b> a hegy a fej középpontjától <b>3,26 sugárnyira</b> van. Ez az arány a koncepció
+          sarokköve — ennél zömökebb formát lufinak, nyúlánkabbat varrótűnek olvas a szem.</li>
+          <li><b>Oldalak:</b> nem szabadkézi ívek, hanem a fej köréhez húzott <b>érintők</b>, ezért nincs
+          törés ott, ahol a fej a testbe megy át.</li>
+          <li><b>Lyuk:</b> a fej átmérőjének 42%-a. Ennél kisebb lyuk 48 px-en összezáródik, és a tű
+          elveszti a térkép-jelentését.</li>
+          <li><b>Talp:</b> a hegy 1,5%-kal az alapvonal alá lóg, mert a hegyes forma optikailag rövidebbnek
+          látszik — ugyanaz a kiegyenlítés, amit az „A” betű csúcsánál is használ a betűtervező.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="signrow">
+      <div class="signcell">
+        <svg viewBox="0 0 40 101"><use href="#mA" fill="url(#gp)"/></svg>
+        <b>A · klasszikus tű</b>
+        <small>Tű + különálló pont. A leghangosabb „!” olvasat.</small>
+      </div>
+      <div class="signcell">
+        <svg viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>
+        <b>B · egy jel</b>
+        <small>Egyetlen csepp, a lyuk viszi a pont szerepét. A legszívósabb kicsiben.</small>
+      </div>
+      <div class="signcell">
+        <svg viewBox="0 0 40 101"><use href="#mC" fill="url(#gp)"/></svg>
+        <b>C · fénykör</b>
+        <small>Lebegő tű, alatta reflektorfény a földön. A leghangulatosabb.</small>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= 2. VILÁGOS HÁTTÉR ================= -->
+  <section>
+    <h2>2 — Ugyanaz világos háttéren (deck, nyomtatás)</h2>
+    <p class="h2note">A gradiens papíron is megtartja az erejét; a felirat grafitfekete (#141420), nem tiszta
+    fekete, hogy ne vágjon élesen a tű mellé. Az A és a B világos alapon is teljes értékű; a <b>C fényköre
+    viszont fehéren elhalványul</b> — a ragyogás sötét háttérre való, nyomtatásban a C pontját tömörre kell venni.</p>
+
+    <div class="lightpanel">
+      <div class="lcard">
+        <p class="vname">A változat · Klasszikus tű</p>
+        <div class="lock">
+          <div class="wm">Hola<svg class="gA" viewBox="0 0 40 101"><use href="#mA" fill="url(#gp)"/></svg>Buli</div>
+          <div class="sub">Hol a buli?</div>
+        </div>
+      </div>
+      <div class="lcard">
+        <p class="vname">B változat · Egy jel</p>
+        <div class="lock">
+          <div class="wm">Hola<svg class="gB" viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>Buli</div>
+          <div class="sub">Hol a buli?</div>
+        </div>
+      </div>
+      <div class="lcard">
+        <p class="vname">C változat · Fénykör</p>
+        <div class="lock">
+          <div class="wm">Hola<svg class="gC" viewBox="0 0 40 101"><use href="#mC" fill="url(#gp)"/></svg>Buli</div>
+          <div class="sub">Hol a buli?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= 3. FEJLÉC 22 px ================= -->
+  <section>
+    <h2>3 — Fejléc-változat: 22 px magas, bal felső sarok</h2>
+    <p class="h2note">Valódi méret, ahogy az appban ül. A tű teste 22 px-en még kitart; az alcím viszont nem —
+    lásd a második sort.</p>
+
+    <div class="bars">
+      <div class="bar h22">
+        <div class="wm">Hola<svg class="gB" viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>Buli</div>
+        <div class="right"><span class="pillbtn">Ma este</span><span class="avatar"></span></div>
+      </div>
+      <p class="barlabel"><b>Ajánlott:</b> csak a szó-jel, 22 px betűmagasság. A tű lyuka itt 4,4 px — még nyitva marad.</p>
+
+      <div class="bar h22b">
+        <div class="stack">
+          <div class="wm">Hola<svg class="gB" viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>Buli</div>
+          <div class="sub">Hol a buli?</div>
+        </div>
+        <div class="right"><span class="pillbtn">Ma este</span><span class="avatar"></span></div>
+      </div>
+      <p class="barlabel"><b>Nem ajánlott:</b> alcímmel együtt 22 px-be zsúfolva a „Hol a buli?” 6,5 px-en
+      olvashatatlan, a tű lyuka pedig 2,8 px-re szűkül és elmosódik. Az alcím a splash-re és a deckre
+      való, a fejlécbe nem.</p>
+
+      <div class="bar h22">
+        <svg class="markonly" viewBox="0 0 46 101.5"><use href="#mB"/></svg>
+        <div class="wm">Hola<svg class="gB" viewBox="0 0 46 101.5"><use href="#mB" fill="url(#gp)"/></svg>Buli</div>
+        <div class="right"><span class="pillbtn">Ma este</span><span class="avatar"></span></div>
+      </div>
+      <p class="barlabel"><b>Nem ajánlott:</b> külön jel + felirat — a tű kétszer szerepel egymás mellett.
+      Ebben a koncepcióban a jel a feliratban él, nem előtte.</p>
+    </div>
+  </section>
+
+
+  <!-- ================= 4. APP-IKON ================= -->
+  <section>
+    <h2>4 — App-ikon: csak a jel</h2>
+    <p class="h2note">A teljes felirat nem fér el, ezért az ikon magja a tű. Balra a valódi 512×512, jobbra a
+    lekicsinyítés-lánc egészen a 48 px-es indítóikonig.</p>
+
+    <div class="iconrow">
+      <div class="isz">
+        <div class="tile" style="width:512px;height:512px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div>
+        <span>B · 512 × 512</span>
+      </div>
+      <div class="steps">
+        <div class="isz"><div class="tile" style="width:128px;height:128px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>128</span></div>
+        <div class="isz"><div class="tile" style="width:64px;height:64px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>64</span></div>
+        <div class="isz"><div class="tile" style="width:48px;height:48px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>48</span></div>
+        <div class="isz"><div class="tile dark" style="width:48px;height:48px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>48 sötét</span></div>
+      </div>
+    </div>
+
+    <div class="iconrow">
+      <div class="isz">
+        <div class="tile" style="width:256px;height:256px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div>
+        <span>A · 256 (az 512-ből)</span>
+      </div>
+      <div class="steps">
+        <div class="isz"><div class="tile" style="width:128px;height:128px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div><span>128</span></div>
+        <div class="isz"><div class="tile" style="width:64px;height:64px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div><span>64</span></div>
+        <div class="isz"><div class="tile" style="width:48px;height:48px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div><span>48</span></div>
+        <div class="isz"><div class="tile dark" style="width:48px;height:48px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div><span>48 sötét</span></div>
+      </div>
+      <p class="inote"><b>A:</b> a lyuk 48 px-en is nyitva marad, a pont is megvan — ikonként ez viszi
+      egyedül mindkét olvasatot, de a szem itt előbb lát „!”-et, mint tűt.</p>
+    </div>
+
+    <div class="iconrow">
+      <div class="isz">
+        <div class="tile" style="width:256px;height:256px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div>
+        <span>C · 256 (az 512-ből)</span>
+      </div>
+      <div class="steps">
+        <div class="isz"><div class="tile" style="width:128px;height:128px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div><span>128</span></div>
+        <div class="isz"><div class="tile" style="width:64px;height:64px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div><span>64</span></div>
+        <div class="isz"><div class="tile" style="width:48px;height:48px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div><span>48</span></div>
+        <div class="isz"><div class="tile dark" style="width:48px;height:48px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div><span>48 sötét</span></div>
+      </div>
+      <p class="inote"><b>C:</b> 48 px-en a fénykör eltűnik, és mert a C tűjén nincs lyuk, a jel sima
+      felkiáltójellé esik össze — a térkép-olvasat elvész. Nagy méretben viszont ez a legszebb.</p>
+    </div>
+  </section>
+
+
+  <!-- ================= 5. A 48 px PRÓBA ================= -->
+  <section>
+    <h2>5 — A döntő próba: 48 × 48, valódi méret</h2>
+    <p class="h2note">Ez az a méret, amit a telefon indítóképernyőjén lát az ember — és ez döntötte el a
+    sorrendet. Valódi 48 px-es kirenderelést pixelre nagyítva mérve: a <b>B</b> lyuka 5 px-es nyílás marad,
+    az <b>A</b>-é 3–4 px-re szűkül de nyitva marad, a <b>C</b>-nek pedig nincs lyuka, ezért sima
+    felkiáltójellé esik össze.</p>
+
+    <div class="shotwrap">
+      <div class="tile" id="ikon48"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div>
+    </div>
+
+    <div class="finalgrid">
+      <div class="px48"><div class="tile" style="width:48px;height:48px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>B — gradiens csempe</span></div>
+      <div class="px48"><div class="tile dark" style="width:48px;height:48px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>B — sötét csempe</span></div>
+      <div class="px48 light"><div class="tile" style="width:48px;height:48px"><svg class="gB" viewBox="0 0 46 101.5"><use href="#mB"/></svg></div><span>B — világos háttéren</span></div>
+      <div class="px48"><div class="tile" style="width:48px;height:48px"><svg class="gA" viewBox="0 0 40 101"><use href="#mA"/></svg></div><span>A — összevetésül</span></div>
+      <div class="px48"><div class="tile" style="width:48px;height:48px"><svg class="gC" viewBox="0 0 40 101"><use href="#mC"/></svg></div><span>C — összevetésül</span></div>
+    </div>
+
+    <div class="verdict">
+      <h3>Amit a próbák mutatnak</h3>
+      <ul>
+        <li><b>Feliratban az A a legerősebb:</b> a különálló pont miatt a szem először felkiáltójelet lát,
+        és csak utána veszi észre, hogy tű — ez a kettős olvasat maga a poén.</li>
+        <li><b>Ikonként a B a legbiztosabb:</b> egyetlen tömör forma, 5 px-es nyitott lyukkal, ami 48 px-en
+        egyértelműen tű marad. Cserébe ikonként a „!” olvasat halkabb, és a tiszta tű önmagában
+        térkép-appra is hasonlíthat — ez a változat egyedisége ellen dolgozik.</li>
+        <li><b>Az A ikonként is versenyben van:</b> a mérés cáfolta az előzetes várakozást — a lyuka
+        48 px-en sem záródik be. Ez az egyetlen ikon, amelyik ilyen kicsiben is egyszerre mutat
+        felkiáltójelet és tűt, csak épp „!”-ként szólal meg először.</li>
+        <li><b>A C a látvány-változat:</b> nagy méretben, plakáton és a splash-képernyőn a legszebb,
+        48 px-en viszont — lyuk híján — sima felkiáltójellé esik össze.</li>
+        <li><b>Vegyes lockup is járható:</b> a feliratban az A tűje, ikonként a B tűje — a két forma
+        ugyanazon a szerkesztésen áll (azonos fej-arány, azonos érintős test), ezért egy családnak látszik.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

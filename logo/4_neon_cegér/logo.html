@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hola!Buli — Neon-cégér</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07070c; --panel:#101019; --line:rgba(255,255,255,.09);
+    --text:#f6f6fb; --muted:#a5a5c0; --faint:#797994;
+    --marka:#ff4fa3; --marka2:#8b5cf6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .lap{max-width:1000px;margin:0 auto;padding:52px 26px 96px}
+
+  /* ---------- fejrész ---------- */
+  .kalap{border-bottom:1px solid var(--line);padding-bottom:30px}
+  .kicsicimke{font-family:'Space Grotesk',sans-serif;font-size:11.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--marka);margin:0 0 12px}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:42px;line-height:1.05;
+    letter-spacing:-.025em;margin:0 0 14px}
+  .bevezeto{color:var(--muted);font-size:16.5px;line-height:1.62;max-width:66ch;margin:0}
+  .bevezeto b{color:var(--text);font-weight:600}
+  .paletta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+  .chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;
+    padding:5px 11px 5px 6px;font-size:11.5px;color:var(--muted)}
+  .pott{width:13px;height:13px;border-radius:50%}
+
+  /* ---------- szekciók ---------- */
+  .szekcio{margin-top:60px}
+  .szekcio > h2{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--marka);margin:0 0 6px}
+  .szekcio > .vezeto{color:var(--faint);font-size:14px;line-height:1.55;margin:0 0 24px;max-width:70ch}
+
+  /* ---------- kártya ---------- */
+  .kartya{border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    background:var(--panel);margin-bottom:24px}
+  .fejlec{display:flex;align-items:center;gap:11px;padding:17px 22px 15px}
+  .betujel{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;
+    width:23px;height:23px;flex:none;border-radius:7px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#ff4fa3,#8b5cf6);color:#fff}
+  .nev{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:16px;letter-spacing:-.01em}
+  .hol{margin-left:auto;font-size:11.5px;color:var(--faint);letter-spacing:.06em}
+  .megj{padding:15px 22px 19px;color:var(--muted);font-size:14.5px;line-height:1.58;
+    border-top:1px solid rgba(255,255,255,.06)}
+  .megj b{color:var(--text);font-weight:600}
+
+  /* ---------- a „fal” (sötét) ---------- */
+  .fal{position:relative;padding:56px 40px 44px;overflow:hidden;
+    background:
+      radial-gradient(115% 85% at 50% 34%, rgba(255,79,163,.12), rgba(255,79,163,0) 62%),
+      radial-gradient(95% 80% at 50% 62%, rgba(139,92,246,.11), rgba(139,92,246,0) 66%),
+      linear-gradient(#0d0d17, #08080f 72%, #06060b);
+  }
+  .fal::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px)}
+  .fal::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;pointer-events:none;
+    background:radial-gradient(58% 100% at 50% 118%, rgba(255,79,163,.16), rgba(255,79,163,0) 72%)}
+  .fal > *{position:relative;z-index:1}
+
+  /* ---------- a „papír” (világos) ---------- */
+  .papir{position:relative;padding:56px 40px 44px;overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 50% 20%, #ffffff, rgba(255,255,255,0) 60%),
+      linear-gradient(#faf8fd, #f0ecf6);
+  }
+  .papir::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+    background:repeating-linear-gradient(180deg, rgba(23,18,37,.016) 0 1px, transparent 1px 4px)}
+  .papir > *{position:relative;z-index:1}
+
+  /* ---------- szó-jel ---------- */
+  .wm{display:block;width:100%;max-width:620px;height:auto;margin:0 auto}
+  .wm.kicsi{max-width:352px}
+  .alcim{margin:2px auto 0;text-align:center;font-family:'Space Grotesk',sans-serif;
+    font-weight:500;font-size:14.5px;letter-spacing:.44em;text-indent:.44em;text-transform:uppercase}
+  .alcim.vilagit{color:#ffd0e7;text-shadow:0 0 4px rgba(255,79,163,.9),0 0 16px rgba(255,79,163,.55),0 0 34px rgba(139,92,246,.4)}
+  .alcim.tinta{color:#7b6b93}
+  .alcim.tomor{color:#8b5cf6}
+  .alcim.kis{font-size:11px;letter-spacing:.4em;text-indent:.4em;margin-top:0}
+
+  @keyframes pulzal{0%,100%{opacity:.68}50%{opacity:1}}
+  .pulzal{animation:pulzal 2.8s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){.pulzal{animation:none;opacity:1}}
+
+  /* ---------- kereszt-próba rács ---------- */
+  .racs2{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line)}
+  .racs2 > div{padding:34px 26px 26px;min-width:0}
+  .racs2 > div + div{border-left:1px solid var(--line)}
+  .cellacim{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;margin:0 0 18px;text-align:center}
+  .cellacim.vil{color:rgba(255,255,255,.42)}
+  .cellacim.sot{color:rgba(23,18,37,.42)}
+  .verdikt{display:inline-block;margin-top:16px;font-size:11.5px;letter-spacing:.05em;
+    border-radius:99px;padding:4px 10px;font-weight:500}
+  .jo{background:rgba(163,230,53,.14);color:#bef264;border:1px solid rgba(163,230,53,.3)}
+  .rossz{background:rgba(255,92,122,.12);color:#b03050;border:1px solid rgba(255,92,122,.4)}
+
+  /* ---------- fejléc-próba ---------- */
+  .appvaz{width:326px;border-radius:16px 16px 8px 8px;overflow:hidden;
+    border:1px solid var(--line);background:#0b0b12}
+  .appsav{display:flex;align-items:center;gap:12px;height:54px;padding:0 15px;
+    border-bottom:1px solid rgba(255,255,255,.07)}
+  .appsav svg{height:22px;width:auto;display:block;flex:none}
+  .appsav .terkitolto{flex:1}
+  .avatar{width:26px;height:26px;border-radius:50%;flex:none;
+    background:linear-gradient(135deg,#ff4fa3,#8b5cf6)}
+  .apptest{padding:14px 15px 20px}
+  .sor{height:9px;border-radius:5px;background:rgba(255,255,255,.07);margin-bottom:9px}
+  .sor.r2{width:72%} .sor.r3{width:52%}
+  .appvaz.vil{background:#fff;border-color:rgba(23,18,37,.12)}
+  .appvaz.vil .appsav{border-bottom-color:rgba(23,18,37,.1)}
+  .appvaz.vil .sor{background:rgba(23,18,37,.08)}
+
+  .fejsor{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;padding:26px 22px 26px}
+  .minicim{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 10px}
+  .nagyito{border:1px dashed rgba(255,255,255,.16);border-radius:12px;padding:14px 16px;
+    background:rgba(255,255,255,.02)}
+  .zoom3{transform:scale(3);transform-origin:left top}
+  .zoomdoboz{height:70px;width:340px;overflow:hidden}
+
+  /* ---------- ikon ---------- */
+  .ikonlap{padding:34px 26px 30px;
+    background:linear-gradient(150deg,#3a3550,#2a2740 45%,#4a4560)}
+  .ikonsor{display:flex;gap:34px;align-items:flex-end;flex-wrap:wrap}
+  .ikontetel{text-align:center}
+  .ikontetel .cimke{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(255,255,255,.6);margin:11px 0 0}
+  .kezdolap{border-radius:20px;padding:24px 28px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+  .kezdolap.sotet{background:linear-gradient(160deg,#1b1230,#0a0a12)}
+  .kezdolap.vilagos{background:linear-gradient(160deg,#eef0f7,#dfe3ee)}
+  .ikonrolvasat{font-size:13.5px;line-height:1.55;color:var(--muted);max-width:36ch}
+  .kezdolap.vilagos .ikonrolvasat{color:#5c5170}
+
+  /* ---------- összegzés ---------- */
+  .kettoszlop{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .doboz{border:1px solid var(--line);border-radius:18px;padding:20px 22px;background:var(--panel)}
+  .doboz h3{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.2em;
+    text-transform:uppercase;margin:0 0 12px}
+  .doboz.plusz h3{color:#a3e635} .doboz.minusz h3{color:#ff5c7a}
+  .doboz ul{margin:0;padding-left:18px;color:var(--muted);font-size:14.5px;line-height:1.62}
+  .doboz li{margin-bottom:7px}
+  @media (max-width:760px){.kettoszlop,.racs2{grid-template-columns:1fr}
+    .racs2 > div + div{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+
+<!-- ====== GEOMETRIA: a neoncső egyetlen vonalból hajlítva (nem betűtípus-kontúr) ====== -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;overflow:hidden">
+<defs>
+  <!-- A térközök optikailag kiegyenlítve: a kerek betűknek (o, a, u) nincs oldal-
+       tere, a függőlegeseknek (l, i, H) van — ezért NEM egyenletes az eltolás.
+       Cél-hézagok cső-széltől cső-szélig: kerek↔egyenes 12, egyenes↔egyenes 14,
+       a felkiáltójel körül 22. -->
+  <!-- A két szó KÜLÖN cső-csoport: így a „Hola” és a „Buli” önálló színt kaphat,
+       ahogy egy valódi több-színű cégérnél is külön csövek égnek. -->
+  <g id="geo-hola" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="0" y="0" width="243" height="110" fill="none" stroke="none"/>
+    <path d="M6,10 V100 M56,10 V100 M6,57 H56"/>
+    <path transform="translate(78,0)"  d="M1,71 a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0"/>
+    <path transform="translate(147,0)" d="M11,10 V100"/>
+    <path transform="translate(180,0)" d="M57,44 V100 M1,71 a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0"/>
+  </g>
+  <g id="geo-buli" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="297" y="0" width="193" height="110" fill="none" stroke="none"/>
+    <path transform="translate(297,0)" d="M6,10 V100 M6,10 H33 a23.5,23.5 0 0,1 0,47 H6 M6,57 H35 a21.5,21.5 0 0,1 0,43 H6"/>
+    <path transform="translate(375,0)" d="M57,44 V100 M1,44 V72 a28,28 0 0,0 56,0"/>
+    <path transform="translate(446,0)" d="M11,10 V100"/>
+    <path transform="translate(471,0)" d="M11,44 V100 M11,20 V21"/>
+  </g>
+  <g id="geo-betuk"><use href="#geo-hola"/><use href="#geo-buli"/></g>
+  <g id="geo-jel" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="0" y="0" width="26" height="100" fill="none" stroke="none"/>
+    <path d="M13,10 V72 M13,92 V93"/>
+  </g>
+  <g id="geo-jel-sz"><use href="#geo-jel" transform="translate(257,0)"/></g>
+  <g id="geo-all"><use href="#geo-betuk"/><use href="#geo-jel-sz"/></g>
+
+  <!-- ⚠ A CSÖVEKEN NINCS SZÍNÁTMENET, és ez szándékos, két okból:
+       1) Valódi cégéren egy cső egy gázszínnel ég — az átmenet nyomdai hatás, nem neon.
+       2) Mérve két renderelési csapda is van rajta: a userSpaceOnUse-os átmenet a
+          <use> árnyék-fájában összeomlik (az egész felirat az első stop színét kapta),
+          az objectBoundingBox-os pedig KIHAGYJA a nulla szélességű útvonalakat —
+          az „l”, az „i” és a felkiáltójel függőleges vonalak, így a felirat
+          „Ho a Bu”-ra csonkult. Tömör színnel egyik sem fordulhat elő.
+       Átmenet ezért csak valódi <rect>-en van (ikon-háttér), sosem a csövön. -->
+  <linearGradient id="g-ikonhat" gradientUnits="userSpaceOnUse" x1="-67" y1="-29" x2="93" y2="131">
+    <stop offset="0" stop-color="#ff4fa3"/><stop offset="1" stop-color="#8b5cf6"/>
+  </linearGradient>
+  <radialGradient id="g-ikonfal" gradientUnits="userSpaceOnUse" cx="13" cy="44" r="104">
+    <stop offset="0" stop-color="#301641"/><stop offset=".5" stop-color="#150e23"/><stop offset="1" stop-color="#0b0b12"/>
+  </radialGradient>
+
+  <filter id="f-nagy"  x="-30%" y="-70%" width="160%" height="240%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="11"/></filter>
+  <filter id="f-kozep" x="-20%" y="-50%" width="140%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="f-kicsi" x="-15%" y="-40%" width="130%" height="180%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="1.7"/></filter>
+  <filter id="f-jel-nagy"  x="-260%" y="-45%" width="620%" height="190%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="13"/></filter>
+  <filter id="f-jel-kozep" x="-160%" y="-30%" width="420%" height="160%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="f-jel-kicsi" x="-80%"  y="-16%" width="260%" height="132%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="2.4"/></filter>
+
+  <clipPath id="cp-ikon"><rect x="-67" y="-29" width="160" height="160" rx="36"/></clipPath>
+</defs>
+</svg>
+
+<div class="lap">
+
+  <div class="kalap">
+    <p class="kicsicimke">Logó-ötlet · 4. koncepció</p>
+    <h1>Neon-cégér</h1>
+    <p class="bevezeto">
+      A teljes név <b>hajlított neoncsőből</b> készül: fehér izzó maggal és pink–lila ragyogással,
+      sötét falon — pontosan úgy, ahogy egy klub bejárata fölött világít a kiírás. A <b>felkiáltójel</b>
+      nem írásjel, hanem a cégér legfényesebb csöve: ez tartja a „Hola” + „buli” = <b>„Hol a buli?”</b>
+      poént, és ez marad egyedül az app-ikonban. A valódi cégéreknél minden cső egy gázszínnel ég,
+      ezért itt is <b>tömör színek</b> vannak, nem átmenet — a két szó pedig kaphat két külön csövet.
+    </p>
+    <div class="paletta">
+      <span class="chip"><span class="pott" style="background:#ff4fa3"></span>#ff4fa3 márka</span>
+      <span class="chip"><span class="pott" style="background:#8b5cf6"></span>#8b5cf6 második</span>
+      <span class="chip"><span class="pott" style="background:#0b0b12;border:1px solid rgba(255,255,255,.2)"></span>#0b0b12 fal</span>
+      <span class="chip"><span class="pott" style="background:#f6f6fb"></span>#f6f6fb izzó mag</span>
+    </div>
+  </div>
+
+  <!-- ================= NAGYBAN ================= -->
+  <section class="szekcio">
+    <h2>1 · A szó-jel nagyban</h2>
+    <p class="vezeto">A betűk nem betűtípus-kontúrok: minden karakter egyetlen hajlított vonal (SVG-path),
+      kerek cső-véggel — így viselkedik igazi neoncsőként bármilyen méretben. Három sötét kezelés,
+      kettő világos háttérre.</p>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">a</span><span class="nev">Egyenletes cső · egy szín</span>
+        <span class="hol">sötét fal · a teljes cégér ég</span></div>
+      <div class="fal">
+        <svg class="wm" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+          <use href="#geo-all" stroke="#ff4fa3" stroke-width="23" filter="url(#f-nagy)"  opacity=".42"/>
+          <use href="#geo-all" stroke="#ff4fa3" stroke-width="14" filter="url(#f-kozep)" opacity=".82"/>
+          <use href="#geo-all" stroke="#ff4fa3" stroke-width="11"/>
+          <use href="#geo-all" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+          <use href="#geo-all" stroke="#ffffff" stroke-width="1.9" filter="url(#f-kicsi)"/>
+        </svg>
+        <p class="alcim vilagit">Hol a buli?</p>
+      </div>
+      <p class="megj">A poénból azt viszi, hogy <b>a kérdés már ki van írva a klub fölé</b>: az egész név egy
+        működő cégér, és a felkiáltójel a szó közepén ülve némán elvágja a „Hola”-t a „Buli”-tól.
+        Egyetlen gázszín — ez a leghitelesebb, legolcsóbb valódi cégér.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">b</span><span class="nev">Két cső, két szín</span>
+        <span class="hol">sötét fal · a poén láthatóvá téve</span></div>
+      <div class="fal">
+        <svg class="wm" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+          <use href="#geo-hola" stroke="#ff4fa3" stroke-width="23" filter="url(#f-nagy)"  opacity=".42"/>
+          <use href="#geo-hola" stroke="#ff4fa3" stroke-width="14" filter="url(#f-kozep)" opacity=".82"/>
+          <use href="#geo-hola" stroke="#ff4fa3" stroke-width="11"/>
+          <use href="#geo-hola" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+          <use href="#geo-buli" stroke="#8b5cf6" stroke-width="23" filter="url(#f-nagy)"  opacity=".46"/>
+          <use href="#geo-buli" stroke="#8b5cf6" stroke-width="14" filter="url(#f-kozep)" opacity=".85"/>
+          <use href="#geo-buli" stroke="#9d6bf8" stroke-width="11"/>
+          <use href="#geo-buli" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+          <use href="#geo-jel-sz" stroke="#ffd9ec" stroke-width="30" filter="url(#f-jel-nagy)"  opacity=".55"/>
+          <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="15" filter="url(#f-jel-kozep)" opacity=".8"/>
+          <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="11"/>
+        </svg>
+        <p class="alcim vilagit">Hol a buli?</p>
+      </div>
+      <p class="megj">Ez viszi a legtöbbet: <b>a két szó két külön cső, két külön gázszínnel</b> — a szem
+        magától „Hola” + „Buli”-ra bontja a nevet, és a köztük égő fehér felkiáltójel a kapcsoló,
+        ami a köszönést kérdéssé billenti.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">c</span><span class="nev">A felkiáltójel ég a legjobban</span>
+        <span class="hol">sötét fal · a jel lüktet</span></div>
+      <div class="fal">
+        <svg class="wm" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+          <use href="#geo-betuk" stroke="#ff4fa3" stroke-width="21" filter="url(#f-nagy)"  opacity=".12"/>
+          <use href="#geo-betuk" stroke="#ff4fa3" stroke-width="13" filter="url(#f-kozep)" opacity=".28"/>
+          <use href="#geo-betuk" stroke="#e0407f" stroke-width="11" opacity=".62"/>
+          <use href="#geo-betuk" stroke="#ffd6e9" stroke-width="3.4" opacity=".34"/>
+          <g class="pulzal">
+            <use href="#geo-jel-sz" stroke="#ff4fa3" stroke-width="38" filter="url(#f-jel-nagy)"  opacity=".8"/>
+            <use href="#geo-jel-sz" stroke="#ff9ed2" stroke-width="19" filter="url(#f-jel-kozep)" opacity=".95"/>
+          </g>
+          <use href="#geo-jel-sz" stroke="#ffb3dc" stroke-width="12"/>
+          <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="5.6"/>
+          <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="2.6" filter="url(#f-jel-kicsi)"/>
+        </svg>
+        <p class="alcim vilagit">Hol a buli?</p>
+      </div>
+      <p class="megj">A poénból azt viszi, hogy <b>a jel a hangsúly</b>: a szem előbb éri el a lüktető
+        felkiáltójelet, mint a betűket, és ettől a név magától „Hol a — BULI!”-ra esik szét.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">d</span><span class="nev">Kikapcsolt cső</span>
+        <span class="hol">világos háttér · nyomtatás, deck</span></div>
+      <div class="papir">
+        <svg class="wm" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+          <use href="#geo-betuk" stroke="#8d80a6" stroke-width="13"/>
+          <use href="#geo-betuk" stroke="#faf8fd" stroke-width="9.6"/>
+          <use href="#geo-betuk" stroke="#efa9cf" stroke-width="1.8"/>
+          <use href="#geo-jel-sz" stroke="#ff4fa3" stroke-width="30" filter="url(#f-jel-nagy)"  opacity=".26"/>
+          <use href="#geo-jel-sz" stroke="#ff2e93" stroke-width="13"/>
+        </svg>
+        <p class="alcim tinta">Hol a buli?</p>
+      </div>
+      <p class="megj">A poénból azt viszi, hogy <b>a cégér ki van kapcsolva, de a felkiáltójel akkor is ég</b> —
+        papíron is látszik, hogy a névben egyetlen elem a hős, és az a kérdés–felkiáltás kapcsolója.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">e</span><span class="nev">Nappali tömör</span>
+        <span class="hol">világos háttér · nyomda, matrica, hímzés</span></div>
+      <div class="papir">
+        <svg class="wm" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+          <use href="#geo-hola" stroke="#ff2e93" stroke-width="12.5"/>
+          <use href="#geo-buli" stroke="#7c3aed" stroke-width="12.5"/>
+          <use href="#geo-jel-sz" stroke="#1b1030" stroke-width="13.5"/>
+        </svg>
+        <p class="alcim tomor">Hol a buli?</p>
+      </div>
+      <p class="megj">A poénból a <b>vágást</b> viszi, a ragyogást nem: ugyanaz a három szín, csak tömören —
+        ez megy számla-fejlécre, matricára, hímzésre. Egyszínű bélyegzőhöz mind a három cső
+        egy tintát kap, és a vágást a felkiáltójel körüli nagyobb térköz tartja.</p>
+    </div>
+  </section>
+
+  <!-- ================= KERESZT-PRÓBA ================= -->
+  <section class="szekcio">
+    <h2>2 · Kereszt-próba — fordított háttér</h2>
+    <p class="vezeto">Mindegyik változat a saját ellentétén. Ez dönti el, melyikből lesz az elsődleges és
+      melyikből a tartalék.</p>
+
+    <div class="kartya">
+      <div class="racs2">
+        <div class="fal" style="border-radius:0">
+          <p class="cellacim vil">(d) kikapcsolt cső — sötéten</p>
+          <svg class="wm kicsi" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+            <use href="#geo-betuk" stroke="#f6f6fb" stroke-width="13"/>
+            <use href="#geo-betuk" stroke="#0b0b12" stroke-width="9.6"/>
+            <use href="#geo-betuk" stroke="rgba(255,79,163,.45)" stroke-width="1.7"/>
+            <use href="#geo-jel-sz" stroke="#ff4fa3" stroke-width="30" filter="url(#f-jel-nagy)" opacity=".45"/>
+            <use href="#geo-jel-sz" stroke="#ff4fa3" stroke-width="13"/>
+            <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="4.4" opacity=".9"/>
+          </svg>
+          <p class="alcim vilagit kis">Hol a buli?</p>
+          <p style="text-align:center;margin:0"><span class="verdikt jo">Működik — sötét kontúr-mód</span></p>
+        </div>
+        <div class="papir" style="border-radius:0">
+          <p class="cellacim sot">(b) izzó neon — világoson</p>
+          <svg class="wm kicsi" viewBox="-30 -29 548 169" role="img" aria-label="Hola!Buli">
+            <use href="#geo-hola" stroke="#ff4fa3" stroke-width="23" filter="url(#f-nagy)"  opacity=".42"/>
+            <use href="#geo-hola" stroke="#ff4fa3" stroke-width="14" filter="url(#f-kozep)" opacity=".82"/>
+            <use href="#geo-hola" stroke="#ff4fa3" stroke-width="11"/>
+            <use href="#geo-hola" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+            <use href="#geo-buli" stroke="#8b5cf6" stroke-width="23" filter="url(#f-nagy)"  opacity=".46"/>
+            <use href="#geo-buli" stroke="#8b5cf6" stroke-width="14" filter="url(#f-kozep)" opacity=".85"/>
+            <use href="#geo-buli" stroke="#9d6bf8" stroke-width="11"/>
+            <use href="#geo-buli" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+            <use href="#geo-jel-sz" stroke="#ffd9ec" stroke-width="30" filter="url(#f-jel-nagy)" opacity=".55"/>
+            <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="11"/>
+          </svg>
+          <p class="alcim tinta kis">Hol a buli?</p>
+          <p style="text-align:center;margin:0"><span class="verdikt rossz">Bukik — a fehér felkiáltójel eltűnik</span></p>
+        </div>
+      </div>
+      <p class="megj">A tanulság: az <b>izzó neont soha nem szabad világos alapra tenni</b> — a fehér mag és
+        vele a felkiáltójel beleolvad a papírba, épp a hős vész el. Világos alapra a (d) vagy az (e) megy, sötétre az (a)/(b)/(c).
+        A (d) sötét falon is jó, ha a cső színét fehérre váltjuk — ez az egyszínű tartalék.</p>
+    </div>
+  </section>
+
+  <!-- ================= FEJLÉC ================= -->
+  <section class="szekcio">
+    <h2>3 · Fejléc-változat · 22 px magas</h2>
+    <p class="vezeto">Ahogy az appban a bal felső sarokban ül. 22 px-en a ragyogás elmossa a csövet, ezért a
+      fejléc-változatból <b>kivesszük a fehér magot</b>, és csak hajszálnyi haló marad.</p>
+
+    <div class="kartya">
+      <div class="fejsor">
+        <div>
+          <p class="minicim">Ajánlott · sötét app-sáv</p>
+          <div class="appvaz">
+            <div class="appsav">
+              <svg viewBox="-5 0 500 110" role="img" aria-label="Hola!Buli">
+                <use href="#geo-betuk" stroke="#ff4fa3" stroke-width="24" filter="url(#f-kozep)" opacity=".26"/>
+                <use href="#geo-hola" stroke="#ff4fa3" stroke-width="13.5"/>
+                <use href="#geo-buli" stroke="#9d6bf8" stroke-width="13.5"/>
+                <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="13.5"/>
+              </svg>
+              <span class="terkitolto"></span>
+              <span class="avatar"></span>
+            </div>
+            <div class="apptest"><div class="sor"></div><div class="sor r2"></div><div class="sor r3"></div></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="minicim">Ajánlott · világos sáv</p>
+          <div class="appvaz vil">
+            <div class="appsav">
+              <svg viewBox="-5 0 500 110" role="img" aria-label="Hola!Buli">
+                <use href="#geo-hola" stroke="#ff2e93" stroke-width="13.5"/>
+                <use href="#geo-buli" stroke="#7c3aed" stroke-width="13.5"/>
+                <use href="#geo-jel-sz" stroke="#1b1030" stroke-width="14.5"/>
+              </svg>
+              <span class="terkitolto"></span>
+              <span class="avatar"></span>
+            </div>
+            <div class="apptest"><div class="sor"></div><div class="sor r2"></div><div class="sor r3"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fejsor" style="border-top:1px solid rgba(255,255,255,.06)">
+        <div class="nagyito">
+          <p class="minicim">Ajánlott · 3× nagyítva</p>
+          <div class="zoomdoboz">
+            <div class="zoom3">
+              <svg viewBox="-5 0 500 110" style="height:22px;width:auto;display:block" role="img" aria-label="Hola!Buli">
+                <use href="#geo-betuk" stroke="#ff4fa3" stroke-width="24" filter="url(#f-kozep)" opacity=".26"/>
+                <use href="#geo-hola" stroke="#ff4fa3" stroke-width="13.5"/>
+                <use href="#geo-buli" stroke="#9d6bf8" stroke-width="13.5"/>
+                <use href="#geo-jel-sz" stroke="#ffffff" stroke-width="13.5"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="nagyito" style="border-color:rgba(255,92,122,.3)">
+          <p class="minicim" style="color:#ffb3c2">Rossz · a teljes ragyogás 3× nagyítva</p>
+          <div class="zoomdoboz">
+            <div class="zoom3">
+              <svg viewBox="-30 -29 548 169" style="height:22px;width:auto;display:block" role="img" aria-label="Hola!Buli">
+                <use href="#geo-all" stroke="#ff4fa3" stroke-width="23" filter="url(#f-nagy)"  opacity=".42"/>
+                <use href="#geo-all" stroke="#ff4fa3" stroke-width="14" filter="url(#f-kozep)" opacity=".82"/>
+                <use href="#geo-all" stroke="#ff4fa3" stroke-width="11"/>
+                <use href="#geo-all" stroke="#ffffff" stroke-width="4.2" opacity=".92"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="megj">22 px-en a poénból az marad, hogy <b>a „Hola” pink, a „Buli” lila, a felkiáltójel pedig
+        a harmadik szín</b> (sötét sávon fehér, világoson tinta) — a szó közepén a vágás egyetlen
+        pillantásból látszik. A név olvasható, a jel megkülönböztethető.</p>
+    </div>
+  </section>
+
+  <!-- ================= IKON ================= -->
+  <section class="szekcio">
+    <h2>4 · App-ikon — csak a jel</h2>
+    <p class="vezeto">A teljes felirat nem fér el, ezért az ikonban egyedül a neoncső-felkiáltójel marad.
+      Két kidolgozás: a koncepció-hű sötét fal, és a biztonságos márka-négyzet.</p>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">A</span><span class="nev">Sötét fal + izzó jel</span>
+        <span class="hol">elsődleges</span></div>
+      <div class="ikonlap">
+        <div class="ikonsor">
+          <div class="ikontetel">
+            <svg id="ikon512" viewBox="-67 -29 160 160" width="512" height="512" role="img" aria-label="Hola!Buli app-ikon">
+              <g clip-path="url(#cp-ikon)">
+                <rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonfal)"/><rect x="-66.2" y="-28.2" width="158.4" height="158.4" rx="35.3" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.6"/>
+                <use href="#geo-jel" stroke="#ff4fa3" stroke-width="40" filter="url(#f-jel-nagy)"  opacity=".8"/>
+                <use href="#geo-jel" stroke="#b45cf0" stroke-width="24" filter="url(#f-jel-kozep)" opacity=".9"/>
+                <use href="#geo-jel" stroke="#ff77bd" stroke-width="17.5"/>
+                <use href="#geo-jel" stroke="#ffffff" stroke-width="8.6"/>
+                <use href="#geo-jel" stroke="#ffffff" stroke-width="3.4" filter="url(#f-jel-kicsi)"/>
+              </g>
+            </svg>
+            <p class="cimke">512 × 512</p>
+          </div>
+          <div style="display:flex;gap:22px;align-items:flex-end">
+            <div class="ikontetel">
+              <svg viewBox="-67 -29 160 160" width="128" height="128" role="img" aria-label="Hola!Buli app-ikon">
+                <g clip-path="url(#cp-ikon)">
+                  <rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonfal)"/><rect x="-66.2" y="-28.2" width="158.4" height="158.4" rx="35.3" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.6"/>
+                  <use href="#geo-jel" stroke="#ff4fa3" stroke-width="40" filter="url(#f-jel-nagy)"  opacity=".8"/>
+                  <use href="#geo-jel" stroke="#b45cf0" stroke-width="24" filter="url(#f-jel-kozep)" opacity=".9"/>
+                  <use href="#geo-jel" stroke="#ff77bd" stroke-width="17.5"/>
+                  <use href="#geo-jel" stroke="#ffffff" stroke-width="8.6"/>
+                </g>
+              </svg>
+              <p class="cimke">128</p>
+            </div>
+            <div class="ikontetel">
+              <div id="ikon48" style="width:48px;height:48px">
+                <svg viewBox="-67 -29 160 160" width="48" height="48" role="img" aria-label="Hola!Buli app-ikon">
+                  <g clip-path="url(#cp-ikon)">
+                    <rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonfal)"/><rect x="-66.2" y="-28.2" width="158.4" height="158.4" rx="35.3" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.6"/>
+                    <use href="#geo-jel" stroke="#ff4fa3" stroke-width="40" filter="url(#f-jel-nagy)"  opacity=".8"/>
+                    <use href="#geo-jel" stroke="#b45cf0" stroke-width="24" filter="url(#f-jel-kozep)" opacity=".9"/>
+                    <use href="#geo-jel" stroke="#ff77bd" stroke-width="17.5"/>
+                    <use href="#geo-jel" stroke="#ffffff" stroke-width="8.6"/>
+                  </g>
+                </svg>
+              </div>
+              <p class="cimke">48</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="megj">A poénból azt viszi, hogy <b>a felkiáltójel önmagában is „Hol a buli?”-t kiált</b>:
+        egy sötét ablakban égő cső — ez a márka legkisebb, még értelmes darabja.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">B</span><span class="nev">Márka-négyzet + fehér jel</span>
+        <span class="hol">tartalék · világos kezdőlapra</span></div>
+      <div class="ikonlap">
+        <div class="ikonsor">
+          <div class="ikontetel">
+            <svg viewBox="-67 -29 160 160" width="256" height="256" role="img" aria-label="Hola!Buli app-ikon, tartalék">
+              <g clip-path="url(#cp-ikon)">
+                <rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonhat)"/>
+                <use href="#geo-jel" stroke="rgba(60,10,60,.35)" stroke-width="26" filter="url(#f-jel-kozep)"/>
+                <use href="#geo-jel" stroke="#ffffff" stroke-width="16"/>
+              </g>
+            </svg>
+            <p class="cimke">256 × 256</p>
+          </div>
+          <div class="ikontetel">
+            <svg viewBox="-67 -29 160 160" width="48" height="48" role="img" aria-label="Hola!Buli app-ikon, tartalék">
+              <g clip-path="url(#cp-ikon)">
+                <rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonhat)"/>
+                <use href="#geo-jel" stroke="rgba(60,10,60,.35)" stroke-width="26" filter="url(#f-jel-kozep)"/>
+                <use href="#geo-jel" stroke="#ffffff" stroke-width="16"/>
+              </g>
+            </svg>
+            <p class="cimke">48</p>
+          </div>
+        </div>
+      </div>
+      <p class="megj">A poénból csak a <b>jel alakját</b> viszi, a neon-hangulatot nem — cserébe fehér
+        telefon-kezdőlapon és apró kedvencek-ikonként is biztosan látszik.</p>
+    </div>
+
+    <div class="kartya">
+      <div class="fejlec"><span class="betujel">↯</span><span class="nev">Kezdőlap-próba</span>
+        <span class="hol">48 px, valódi méretben, két háttéren</span></div>
+      <div style="padding:22px">
+        <div class="kezdolap sotet" style="margin-bottom:14px">
+          <svg viewBox="-67 -29 160 160" width="48" height="48" aria-hidden="true">
+            <g clip-path="url(#cp-ikon)"><rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonfal)"/><rect x="-66.2" y="-28.2" width="158.4" height="158.4" rx="35.3" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.6"/>
+              <use href="#geo-jel" stroke="#ff4fa3" stroke-width="40" filter="url(#f-jel-nagy)" opacity=".8"/>
+              <use href="#geo-jel" stroke="#b45cf0" stroke-width="24" filter="url(#f-jel-kozep)" opacity=".9"/>
+              <use href="#geo-jel" stroke="#ff77bd" stroke-width="17.5"/>
+              <use href="#geo-jel" stroke="#ffffff" stroke-width="8.6"/></g>
+          </svg>
+          <svg viewBox="-67 -29 160 160" width="48" height="48" aria-hidden="true">
+            <g clip-path="url(#cp-ikon)"><rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonhat)"/>
+              <use href="#geo-jel" stroke="rgba(60,10,60,.35)" stroke-width="26" filter="url(#f-jel-kozep)"/>
+              <use href="#geo-jel" stroke="#ffffff" stroke-width="16"/></g>
+          </svg>
+          <p class="ikonrolvasat" style="margin:0">Sötét kezdőlapon mindkettő megáll; az izzó változat
+            ragyogása adja a klub-érzetet.</p>
+        </div>
+        <div class="kezdolap vilagos">
+          <svg viewBox="-67 -29 160 160" width="48" height="48" aria-hidden="true">
+            <g clip-path="url(#cp-ikon)"><rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonfal)"/><rect x="-66.2" y="-28.2" width="158.4" height="158.4" rx="35.3" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.6"/>
+              <use href="#geo-jel" stroke="#ff4fa3" stroke-width="40" filter="url(#f-jel-nagy)" opacity=".8"/>
+              <use href="#geo-jel" stroke="#b45cf0" stroke-width="24" filter="url(#f-jel-kozep)" opacity=".9"/>
+              <use href="#geo-jel" stroke="#ff77bd" stroke-width="17.5"/>
+              <use href="#geo-jel" stroke="#ffffff" stroke-width="8.6"/></g>
+          </svg>
+          <svg viewBox="-67 -29 160 160" width="48" height="48" aria-hidden="true">
+            <g clip-path="url(#cp-ikon)"><rect x="-67" y="-29" width="160" height="160" fill="url(#g-ikonhat)"/>
+              <use href="#geo-jel" stroke="rgba(60,10,60,.35)" stroke-width="26" filter="url(#f-jel-kozep)"/>
+              <use href="#geo-jel" stroke="#ffffff" stroke-width="16"/></g>
+          </svg>
+          <p class="ikonrolvasat" style="margin:0">Világos kezdőlapon a sötét négyzet „lyukat üt”, a
+            márka-négyzet barátságosabb — ezért kell a tartalék.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ÖSSZEGZÉS ================= -->
+  <section class="szekcio">
+    <h2>5 · Amit tud és amit nem</h2>
+    <div class="kettoszlop">
+      <div class="doboz plusz">
+        <h3>Erős</h3>
+        <ul>
+          <li>Egyetlen képben elmondja, hogy ez <b>éjszakai hely</b> — nem kell magyarázni.</li>
+          <li>A felkiáltójel a szó közepén <b>vizuálisan is elvágja</b> a nevet: „Hol a” / „buli”.</li>
+          <li>A jel önmagában is működő ikon; a márka legkisebb darabja megmarad.</li>
+          <li>Egy-vonalas geometria: <b>animálható</b> (bekapcsolás, villanás), vektorosan bármeddig nagyítható.</li>
+          <li>Pontosan a meglévő pink–lila palettából él, nem kell új szín.</li>
+          <li>A két-csöves változatban <b>a két szó két színe magát a poént rajzolja ki</b>.</li>
+        </ul>
+      </div>
+      <div class="doboz minusz">
+        <h3>Gyenge</h3>
+        <ul>
+          <li>Világos háttéren az izzás <b>használhatatlan</b> — külön „kikapcsolt” változatot kell vinni.</li>
+          <li>A neon-cégér <b>gyakori nightlife-klisé</b>; a név viszi a különbséget, nem a forma.</li>
+          <li>Öt kezelés kell egy márkához (sötét, világos, fejléc, ikon) — <b>több karbantartás</b>.</li>
+          <li>22 px alatt a ragyogás elmosódik; ott már csak a tömör cső marad.</li>
+          <li>A sötét ikon-négyzet világos telefon-kezdőlapon szűk, sötét folt.</li>
+          <li>Az egy-vonalas betűk kevésbé karakteresek, mint egy egyedi betűtípus.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hola!Buli — Beszédbuborék</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b12;
+  --brand:#ff4fa3;
+  --brand2:#8b5cf6;
+  --text:#f6f6fb;
+  --muted:rgba(246,246,251,.58);
+  --line:rgba(255,255,255,.11);
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,"Segoe UI",system-ui,sans-serif;
+  font-size:15px;line-height:1.55;
+}
+.wrap{max-width:940px;margin:0 auto;padding:44px 30px 90px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- lap-fejléc ---------- */
+.kicsi{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin:0 0 10px}
+h1{font-family:Outfit,Inter,sans-serif;font-weight:700;font-size:34px;line-height:1.15;margin:0 0 14px;letter-spacing:-.01em}
+.bevezeto{max-width:680px;color:var(--muted);font-size:16px;margin:0}
+.bevezeto b{color:var(--text);font-weight:600}
+
+h2{font-family:Outfit,Inter,sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+   color:var(--muted);margin:56px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h2 span{color:var(--brand)}
+
+/* ---------- panelek (sötét / világos) ---------- */
+.panel{border-radius:22px;padding:38px 34px 30px}
+.panel + .panel{margin-top:18px}
+.panel.dark{
+  background:#0b0b12;border:1px solid rgba(255,255,255,.10);
+  --pt:#f6f6fb; --pm:rgba(246,246,251,.55);
+  --bub:#ffffff; --bubtx:#141220; --bubline:transparent;
+  --bubsh:0 14px 34px rgba(0,0,0,.55);
+  --surf:rgba(255,255,255,.07); --surfline:rgba(255,255,255,.15);
+  --surftx:#f6f6fb; --own:rgba(139,92,246,.30); --ownline:rgba(139,92,246,.55);
+}
+.panel.light{
+  background:#f6f6fb;border:1px solid rgba(20,18,32,.10);
+  --pt:#161220; --pm:rgba(22,18,31,.58);
+  --bub:#ffffff; --bubtx:#141220; --bubline:rgba(20,18,32,.14);
+  --bubsh:0 10px 24px rgba(20,18,32,.13);
+  --surf:#ffffff; --surfline:rgba(20,18,32,.12);
+  --surftx:#161220; --own:rgba(139,92,246,.16); --ownline:rgba(139,92,246,.40);
+}
+.panel-cimke{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pm);margin:0 0 26px}
+
+.valt{padding:30px 0 4px}
+.valt + .valt{margin-top:8px;border-top:1px solid color-mix(in srgb, var(--pt) 10%, transparent)}
+.valt-fej{display:flex;align-items:baseline;gap:12px;margin-bottom:26px}
+.valt-betu{font-family:Outfit,sans-serif;font-weight:800;font-size:13px;color:#fff;background:linear-gradient(135deg,#ff4fa3,#8b5cf6);
+  width:24px;height:24px;border-radius:8px;display:grid;place-items:center;flex:none;align-self:center}
+.valt-nev{font-family:Outfit,Inter,sans-serif;font-weight:700;font-size:15px;color:var(--pt);letter-spacing:.01em}
+.leiras{max-width:640px;color:var(--pm);font-size:14px;margin:24px 0 8px;padding-left:14px;border-left:2px solid var(--brand)}
+
+/* ---------- a szó-jel közös nyelve ---------- */
+.lock{
+  font-family:Fredoka,Outfit,"Segoe UI",system-ui,sans-serif;
+  font-weight:600;line-height:1;color:var(--pt);
+  font-size:var(--s,66px);letter-spacing:-.005em;
+}
+.excl{position:relative;display:inline-block;width:.30em;height:.72em;vertical-align:baseline;margin:0 .015em}
+.excl svg{display:block;width:100%;height:100%;overflow:visible}
+
+/* pill-buborék (A) */
+.bub{
+  position:relative;display:inline-flex;align-items:baseline;
+  background:var(--bub);color:var(--bubtx);
+  border:1px solid var(--bubline);box-shadow:var(--bubsh);
+  border-radius:999px;padding:.22em .44em .24em;
+}
+.tail{position:absolute;left:.30em;bottom:-.28em;width:.44em;height:.34em}
+.tail svg{display:block;width:100%;height:100%}
+
+/* chat-buborék (B, C) — az app saját geometriája: 4/16/16/16 */
+.cbub{
+  display:inline-flex;align-items:baseline;
+  background:var(--surf);color:var(--surftx);
+  border:1px solid var(--surfline);
+  border-radius:.09em .30em .30em .30em;
+  padding:.20em .38em .22em;
+}
+.panel.light .cbub{box-shadow:0 6px 18px rgba(20,18,32,.07)}
+.cbub.own{background:var(--own);border-color:var(--ownline);border-radius:.30em .09em .30em .30em}
+.avatar{width:.58em;height:.58em;border-radius:50%;background:linear-gradient(135deg,#ff4fa3,#8b5cf6);flex:none}
+
+/* A változat: vízszintes zár */
+.lock-a{display:inline-flex;align-items:baseline;gap:.20em}
+/* B változat: érkező üzenet + válasz-szó */
+.lock-b{display:inline-flex;flex-direction:column;align-items:flex-start;gap:.10em}
+.lock-b .sor{display:inline-flex;align-items:center;gap:.18em}
+.lock-b .nagy{padding-left:.76em;letter-spacing:-.01em}
+/* C változat: két buborék, üzenetváltás */
+.lock-c{display:inline-flex;flex-direction:column;align-items:flex-start;gap:.13em}
+.lock-c .also{padding-left:1.55em}
+
+.alcim{
+  display:block;
+  font-family:Inter,sans-serif;font-weight:600;font-size:.215em;
+  letter-spacing:.20em;text-transform:uppercase;color:var(--pm);
+  margin-top:.95em;
+}
+.alcim-sor{display:block;line-height:1;padding-top:.30em}
+.alcim-sor .alcim{margin-top:.62em}
+.lockbox{display:block}
+
+/* ---------- 22 px fejléc ---------- */
+.barsor{display:flex;flex-direction:column;gap:0}
+.bar{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px}
+.bar.dark{background:rgba(11,11,18,.96);border:1px solid rgba(255,255,255,.10);
+  --pt:#f6f6fb;--pm:rgba(246,246,251,.55);--bub:#fff;--bubtx:#141220;--bubline:transparent;--bubsh:none;
+  --surf:rgba(255,255,255,.10);--surfline:rgba(255,255,255,.20);--surftx:#f6f6fb;--own:rgba(139,92,246,.42);--ownline:rgba(139,92,246,.6)}
+.bar.light{background:#fff;border:1px solid rgba(20,18,32,.12);
+  --pt:#161220;--pm:rgba(22,18,31,.55);--bub:#141220;--bubtx:#fff;--bubline:transparent;--bubsh:none;
+  --surf:rgba(20,18,32,.06);--surfline:rgba(20,18,32,.14);--surftx:#161220;--own:rgba(139,92,246,.20);--ownline:rgba(139,92,246,.45)}
+.mero{height:22px;display:flex;align-items:center;outline:1px dashed rgba(255,79,163,.55);outline-offset:2px}
+.bar .jobb{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pont{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.14)}
+.bar.light .pont{background:rgba(20,18,32,.10)}
+.barjel{font-size:11px;color:var(--pm);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.barlista{display:grid;gap:12px}
+.barcim{font-size:12px;color:var(--muted);margin:18px 0 6px;font-weight:600}
+
+/* mini zárak */
+.mini{--s:13px}
+.mini .bub{padding:.16em .38em .18em;box-shadow:none}
+.mini .tail{width:.42em;height:.30em;bottom:-.20em;left:.26em}
+.mini .alcim{display:none}
+.mini .cbub{padding:.15em .34em .17em}
+.mini.lock-b{--s:15px;flex-direction:row;align-items:center;gap:.26em}
+.mini.lock-b .nagy{padding-left:0}
+.mini.lock-c{--s:15px;flex-direction:row;align-items:center;gap:.22em}
+.mini.lock-c .also{padding-left:0}
+
+/* ---------- ikonok ---------- */
+.ikonsor{display:flex;align-items:flex-end;gap:44px;flex-wrap:wrap}
+.ikondoboz{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ikoncim{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pm)}
+.ik{display:block;border-radius:22.3%;overflow:hidden}
+.ik svg{display:block;width:100%;height:100%}
+.ik512{width:320px;height:320px}
+.ik128{width:128px;height:128px}
+#ikon48{width:48px;height:48px;border-radius:11px;overflow:hidden}
+#ikon48 svg{display:block;width:48px;height:48px}
+.rács{display:flex;gap:16px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--surf);border:1px solid var(--surfline)}
+
+.jegyzet{color:var(--muted);font-size:13.5px;max-width:680px;margin:16px 0 0;padding-left:14px;border-left:2px solid rgba(255,255,255,.14)}
+.jegyzet b{color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- közös SVG-defs: márka-gradiens 135 fokban -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="gBrand" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ff4fa3"/><stop offset="1" stop-color="#8b5cf6"/>
+  </linearGradient>
+  <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ff4fa3"/><stop offset="1" stop-color="#8b5cf6"/>
+  </linearGradient>
+  <linearGradient id="gTileUser" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
+    <stop offset="0" stop-color="#ff4fa3"/><stop offset="1" stop-color="#8b5cf6"/>
+  </linearGradient>
+</defs></svg>
+
+<div class="wrap">
+
+  <p class="kicsi">Logó-ötlet · 5. koncepció</p>
+  <h1>Beszédbuborék — a köszönés benne</h1>
+  <p class="bevezeto">
+    A <b>Hola!Buli</b> nem felirat, hanem <b>odaszólás</b>: ezért a „Hola!” beszédbuborékba kerül,
+    mert ez az, amit az ember kimond — és kimondva már benne van a kérdés is, hogy hol a buli.
+    A felkiáltójel a buborék belsejében lakik, ő a márka hőse: ez a jel megy tovább az app-ikonra,
+    ahol 48 pixelen is annyit üzen, hogy <b>valaki most szólt hozzád</b>.
+  </p>
+
+  <!-- ============ NAGY, SÖTÉT ============ -->
+  <h2>1 · A szó-jel nagyban — <span>sötét háttéren</span></h2>
+
+  <div class="panel dark">
+    <p class="panel-cimke">Háttér #0b0b12 — az app alap-felülete</p>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">A</span><span class="valt-nev">Kerek buborék farokkal</span></div>
+      <div class="lockbox">
+        <div class="lock lock-a">
+          <span class="bub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span>
+            <span class="tail"><svg viewBox="0 0 44 34" aria-hidden="true">
+              <path d="M14 0 L42 0 L42 6 C40 17 28 27 4 33 C12 23 15 12 14 0 Z" fill="var(--bub)"/></svg></span>
+          </span><span>Buli</span>
+        </div>
+        <div class="lock alcim-sor"><span class="alcim">Hol a buli?</span></div>
+      </div>
+      <p class="leiras">A buborék kimondja a nevet: ez nem cégtábla, hanem valaki odaköszön — a lefelé nyúló farok pedig azt jelöli, hogy a hang a tömegből érkezik, és a „Buli” már a folytatása ugyanannak a mondatnak.</p>
+    </div>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">B</span><span class="valt-nev">Chat-buborék — az app saját nyelvén</span></div>
+      <div class="lockbox">
+        <div class="lock lock-b">
+          <span class="sor"><span class="avatar"></span><span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span></span>
+          <span class="nagy">Buli</span>
+          <span class="alcim" style="padding-left:.9em">Hol a buli?</span>
+        </div>
+      </div>
+      <p class="leiras">Pontosan a buli-chat buboréka (4/16/16/16-os sarok, ugyanaz a felület és szegély): a név úgy érkezik, mint egy üzenet, amire nagy betűkkel rávágod, hogy Buli.</p>
+    </div>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">C</span><span class="valt-nev">Két buborék — üzenetváltás</span></div>
+      <div class="lockbox">
+        <div class="lock lock-c">
+          <span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span>
+          <span class="also"><span class="cbub own">Buli</span></span>
+          <span class="alcim">Hol a buli?</span>
+        </div>
+      </div>
+      <p class="leiras">A név itt egy párbeszéd: valaki odaköszön, te meg rávágod a választ — a poén két lépésben pattan, és a lila „Buli” a te üzeneted.</p>
+    </div>
+  </div>
+
+  <!-- ============ NAGY, VILÁGOS ============ -->
+  <h2>2 · Ugyanaz — <span>világos háttéren</span> (deck, nyomtatás)</h2>
+
+  <div class="panel light">
+    <p class="panel-cimke">Háttér #f6f6fb — prezentáció, matrica, plakát</p>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">A</span><span class="valt-nev">Kerek buborék farokkal</span></div>
+      <div class="lockbox">
+        <div class="lock lock-a">
+          <span class="bub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span>
+            <span class="tail"><svg viewBox="0 0 44 34" aria-hidden="true">
+              <path d="M14 0 L42 0 L42 6 C40 17 28 27 4 33 C12 23 15 12 14 0 Z" fill="var(--bub)"/></svg></span>
+          </span><span>Buli</span>
+        </div>
+        <div class="lock alcim-sor"><span class="alcim">Hol a buli?</span></div>
+      </div>
+      <p class="leiras">Világoson a buborék finom árnyékkal ül a lapon — a felkiáltójel marad az egyetlen színes elem, így a poén hordozója nyomtatásban is a jel.</p>
+    </div>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">B</span><span class="valt-nev">Chat-buborék — az app saját nyelvén</span></div>
+      <div class="lockbox">
+        <div class="lock lock-b">
+          <span class="sor"><span class="avatar"></span><span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span></span>
+          <span class="nagy">Buli</span>
+          <span class="alcim" style="padding-left:.9em">Hol a buli?</span>
+        </div>
+      </div>
+      <p class="leiras">Fehér alapon is azonnal chatnek olvasódik: az avatár-korong a márka-gradienst viszi, a buborék pedig visszafogott marad.</p>
+    </div>
+
+    <div class="valt">
+      <div class="valt-fej"><span class="valt-betu">C</span><span class="valt-nev">Két buborék — üzenetváltás</span></div>
+      <div class="lockbox">
+        <div class="lock lock-c">
+          <span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+              <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+              <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span>
+          <span class="also"><span class="cbub own">Buli</span></span>
+          <span class="alcim">Hol a buli?</span>
+        </div>
+      </div>
+      <p class="leiras">A lépcsős elrendezés világoson is megtartja a párbeszéd-ritmust, és nyomtatásban is elfér egy keskeny hasábban.</p>
+    </div>
+  </div>
+
+  <!-- ============ 22 PX FEJLÉC ============ -->
+  <h2>3 · Fejléc — <span>22 px magasan</span>, ahogy a bal felső sarokban ül</h2>
+
+  <p class="barcim">Sötét fejléc (az app)</p>
+  <div class="barlista">
+    <div class="bar dark">
+      <div class="mero"><div class="lock lock-a mini">
+        <span class="bub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span>
+          <span class="tail"><svg viewBox="0 0 44 34" aria-hidden="true">
+            <path d="M14 0 L42 0 L42 6 C40 17 28 27 4 33 C12 23 15 12 14 0 Z" fill="var(--bub)"/></svg></span>
+        </span><span>Buli</span>
+      </div></div>
+      <span class="barjel">A</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+
+    <div class="bar dark">
+      <div class="mero"><div class="lock lock-b mini">
+        <span class="sor"><span class="avatar"></span><span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span></span>
+        <span class="nagy">Buli</span>
+      </div></div>
+      <span class="barjel">B</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+
+    <div class="bar dark">
+      <div class="mero"><div class="lock lock-c mini">
+        <span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span>
+        <span class="also"><span class="cbub own">Buli</span></span>
+      </div></div>
+      <span class="barjel">C</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+  </div>
+
+  <p class="barcim">Világos fejléc</p>
+  <div class="barlista">
+    <div class="bar light">
+      <div class="mero"><div class="lock lock-a mini">
+        <span class="bub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span>
+          <span class="tail"><svg viewBox="0 0 44 34" aria-hidden="true">
+            <path d="M14 0 L42 0 L42 6 C40 17 28 27 4 33 C12 23 15 12 14 0 Z" fill="var(--bub)"/></svg></span>
+        </span><span>Buli</span>
+      </div></div>
+      <span class="barjel">A</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+    <div class="bar light">
+      <div class="mero"><div class="lock lock-b mini">
+        <span class="sor"><span class="avatar"></span><span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span></span>
+        <span class="nagy">Buli</span>
+      </div></div>
+      <span class="barjel">B</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+    <div class="bar light">
+      <div class="mero"><div class="lock lock-c mini">
+        <span class="cbub">Hola<span class="excl"><svg viewBox="0 0 30 72" aria-hidden="true">
+            <path d="M10 2.5 H20 L17 41.5 H13 Z" fill="url(#gBrand)" stroke="url(#gBrand)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="15" cy="64" r="8" fill="url(#gBrand)"/></svg><span class="sr">!</span></span></span>
+        <span class="also"><span class="cbub own">Buli</span></span>
+      </div></div>
+      <span class="barjel">C</span>
+      <div class="jobb"><div class="pont"></div></div>
+    </div>
+  </div>
+
+  <p class="jegyzet">A szaggatott rózsaszín keret pontosan <b>22 px magas</b>. A buborék miatt a betű maga kisebb, mint egy sima felirat lenne — cserébe a fejlécben is látszik, hogy a név egy odaszólás. <b>A</b> és <b>B</b> ebben a magasságban is elbírja magát; a <b>C</b> viszont nem tud lépcsőben állni, ezért egy sorba lapul — vagyis a párbeszéd-poén 22 px-en elveszik, és a C-nek külön fejléc-változat kell (praktikusan az A). Fontos, mért gyengeség: <b>ilyen kicsiben az A farka alig 3 pixel</b>, vagyis a buborék majdnem sima pirulává válik, és A meg B fejlécben szinte egyformán néz ki — a buborék-poént ekkora méretben már az ikon viszi, nem a felirat.</p>
+
+  <!-- ============ IKON ============ -->
+  <h2>4 · App-ikon — <span>csak a jel</span></h2>
+
+  <div class="panel dark">
+    <p class="panel-cimke">Alapváltozat — gradiens csempe, fehér buborék, benne a felkiáltójel</p>
+    <div class="ikonsor">
+      <div class="ikondoboz">
+        <div class="ik ik512"><svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="url(#gTile)"/>
+          <g fill="#ffffff">
+            <path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/>
+            <rect x="13" y="16" width="74" height="52" rx="17"/>
+          </g>
+          <g fill="#141220">
+            <path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#141220" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="56" r="5.6"/>
+          </g>
+        </svg></div>
+        <span class="ikoncim">512 × 512</span>
+      </div>
+      <div class="ikondoboz">
+        <div class="ik ik128"><svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="url(#gTile)"/>
+          <g fill="#ffffff">
+            <path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/>
+            <rect x="13" y="16" width="74" height="52" rx="17"/>
+          </g>
+          <g fill="#141220">
+            <path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#141220" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="56" r="5.6"/>
+          </g>
+        </svg></div>
+        <span class="ikoncim">128 × 128</span>
+      </div>
+      <div class="ikondoboz">
+        <div id="ikon48"><svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="url(#gTile)"/>
+          <g fill="#ffffff">
+            <path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/>
+            <rect x="13" y="16" width="74" height="52" rx="17"/>
+          </g>
+          <g fill="#141220">
+            <path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#141220" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="56" r="5.6"/>
+          </g>
+        </svg></div>
+        <span class="ikoncim">48 × 48</span>
+      </div>
+    </div>
+    <p class="leiras">A teljes felirat nem fér el, de nem is kell: egy buborék, benne egy felkiáltójel — ennyiből is látszik, hogy itt valaki szólni akar valamit, és ez a jel a névből érkezik.</p>
+  </div>
+
+  <div class="panel light">
+    <p class="panel-cimke">Ugyanaz világos háttéren, és mellette a fordított változat (sötét csempe)</p>
+    <div class="ikonsor">
+      <div class="ikondoboz">
+        <div class="ik ik128"><svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="url(#gTile)"/>
+          <g fill="#ffffff">
+            <path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/>
+            <rect x="13" y="16" width="74" height="52" rx="17"/>
+          </g>
+          <g fill="#141220">
+            <path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#141220" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="56" r="5.6"/>
+          </g>
+        </svg></div>
+        <span class="ikoncim">Alap · 128</span>
+      </div>
+      <div class="ikondoboz">
+        <div class="ik ik128"><svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="#0b0b12"/>
+          <g fill="url(#gTileUser)">
+            <path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/>
+            <rect x="13" y="16" width="74" height="52" rx="17"/>
+          </g>
+          <g fill="#ffffff">
+            <path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="56" r="5.6"/>
+          </g>
+        </svg></div>
+        <span class="ikoncim">Fordított · 128</span>
+      </div>
+      <div class="ikondoboz">
+        <div class="rács">
+          <div class="ik" style="width:48px;height:48px;border-radius:11px"><svg viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="0" y="0" width="100" height="100" fill="url(#gTile)"/>
+            <g fill="#ffffff"><path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/><rect x="13" y="16" width="74" height="52" rx="17"/></g>
+            <g fill="#141220"><path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#141220" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="56" r="5.6"/></g>
+          </svg></div>
+          <div class="ik" style="width:48px;height:48px;border-radius:11px"><svg viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="0" y="0" width="100" height="100" fill="#0b0b12"/>
+            <g fill="url(#gTileUser)"><path d="M29 57 L28.1 82.5 Q28 86 30.7 83.8 L52 66 Z"/><rect x="13" y="16" width="74" height="52" rx="17"/></g>
+            <g fill="#ffffff"><path d="M45.5 26.5 H54.5 L52 44.5 H48 Z" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="56" r="5.6"/></g>
+          </svg></div>
+          <span class="ikoncim" style="color:rgba(22,18,31,.55)">48 px<br>egymás mellett</span>
+        </div>
+      </div>
+    </div>
+    <p class="leiras">A fordított változat a sötét app-hoz igazodik, az alap a telefon kezdőképernyőjén erősebb színfolt — ugyanaz a jel, ugyanaz a poén.</p>
+  </div>
+
+</div>
+</body>
+</html>

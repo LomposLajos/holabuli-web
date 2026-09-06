@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hola!Buli — REFLEKTOR logó-koncepció</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b12; --bg2:#101019; --line:rgba(255,255,255,.09);
+  --text:#f6f6fb; --muted:#a5a5c0; --faint:#797994;
+  --brand:#ff4fa3; --brand2:#8b5cf6;
+  --papir:#f4f2f8; --tinta:#14121c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.lap{max-width:940px;margin:0 auto;padding:56px 30px 90px}
+
+/* ---------- fejléc ---------- */
+.fej{border-bottom:1px solid var(--line);padding-bottom:34px;margin-bottom:44px}
+.kicsicim{font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--brand);font-weight:600;margin:0 0 12px}
+.fej h1{margin:0 0 16px;font-family:"Space Grotesk",sans-serif;font-weight:700;
+  font-size:50px;letter-spacing:-.03em;line-height:1.06;max-width:21ch;text-wrap:balance}
+.fej h1 em{font-style:normal;background:linear-gradient(135deg,#ff4fa3,#8b5cf6);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.fej p{margin:0;max-width:660px;font-size:16.5px;line-height:1.65;color:var(--muted)}
+.fej p strong{color:var(--text)}
+.kiemel{color:var(--brand);font-style:normal}
+
+h2.szekcio{font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+  margin:62px 0 22px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h3.valt{font-family:"Space Grotesk",sans-serif;font-size:19px;font-weight:700;
+  letter-spacing:-.01em;margin:36px 0 4px}
+h3.valt b{color:var(--brand);margin-right:8px}
+.alairas{margin:0 0 16px;font-size:14.5px;line-height:1.6;color:var(--muted);max-width:790px}
+.cimke{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+  font-weight:600;margin:0 0 14px}
+
+/* ---------- kártyák ---------- */
+.parban{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kartya{border:1px solid var(--line);border-radius:16px;padding:26px 22px;
+  background:var(--bg2);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:150px;overflow:hidden}
+.kartya.vilagos{background:var(--papir);border-color:rgba(11,11,18,.12);color:var(--tinta)}
+.kartya.vilagos .cimke{color:#8a8699}
+
+/* ---------- a szó-jel ---------- */
+.lockup{display:flex;flex-direction:column;align-items:center;gap:.26em}
+.szo{display:flex;align-items:baseline;line-height:1;
+  font-family:"Space Grotesk","Segoe UI",system-ui,sans-serif;font-weight:700;
+  letter-spacing:-.03em;color:var(--text);white-space:nowrap}
+.kartya.vilagos .szo{color:var(--tinta)}
+.jel{flex:none;height:.86em;display:block}
+.jel-ab{width:.478em;margin:0 .05em}
+.jel-c{width:.693em;margin-left:.05em;margin-right:.01em}
+.alcim{font-size:.168em;font-family:Inter,sans-serif;font-weight:600;
+  letter-spacing:.30em;text-transform:uppercase;color:var(--muted);padding-left:.30em}
+.kartya.vilagos .alcim{color:#7a7690}
+
+/* (c) — a szó a fényben áll */
+.buli-burok{position:relative;display:inline-block}
+.fenyfolt{position:absolute;left:-.30em;right:-.10em;top:-.20em;bottom:-.28em;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(60% 62% at 22% 56%,
+     rgba(255,150,205,.58), rgba(255,79,163,.24) 46%, rgba(139,92,246,0) 76%);
+  filter:blur(.07em)}
+.kartya.vilagos .fenyfolt{opacity:.5}
+.buli-vilagit{position:relative;z-index:1;
+  background:linear-gradient(101deg,#ffffff 0%,#ffcbe4 15%,#ff4fa3 46%,#8b5cf6 72%,#575270 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-right:.05em;margin-right:-.05em}
+.kartya.vilagos .buli-vilagit{
+  background:linear-gradient(101deg,#ff1785 0%,#ff4fa3 24%,#8b5cf6 58%,#918cab 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* méretek */
+.nagy{font-size:74px}
+.fejlec-meret{font-size:25.6px}   /* így a jel teljes magassága pontosan 22 px */
+
+/* ---------- fejléc-próba ---------- */
+.appbar{display:flex;align-items:center;gap:14px;width:100%;
+  padding:13px 16px;border-radius:12px;background:#0e0e17;border:1px solid var(--line)}
+.kartya.vilagos .appbar{background:#fff;border-color:rgba(11,11,18,.1)}
+.appbar .toltelek{margin-left:auto;display:flex;gap:9px;align-items:center}
+.pont{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.22)}
+.kartya.vilagos .pont{background:rgba(11,11,18,.16)}
+.vonalka{width:56px;height:9px;border-radius:5px;background:rgba(255,255,255,.14)}
+.kartya.vilagos .vonalka{background:rgba(11,11,18,.1)}
+.merce{font-size:11.5px;color:var(--faint);margin:14px 0 0;letter-spacing:.04em}
+.kartya.vilagos .merce{color:#8a8699}
+
+/* ---------- ikonok ---------- */
+.ikonsor{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;justify-content:center}
+.ikoncella{display:flex;flex-direction:column;align-items:center;gap:9px}
+.ikoncella span{font-size:10.5px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+.kartya.vilagos .ikoncella span{color:#8a8699}
+.i512{width:150px;height:150px;display:block}
+.i48{width:48px;height:48px;display:block}
+#ikon48{width:48px;height:48px;line-height:0;display:block}
+
+.homescreen{display:grid;grid-template-columns:repeat(5,48px);gap:20px 24px;
+  padding:22px;border-radius:18px;
+  background:linear-gradient(150deg,#1b1430,#0d0d16 60%,#241428)}
+.ures{width:48px;height:48px;border-radius:11px;background:rgba(255,255,255,.09)}
+.homescreen.vil{background:linear-gradient(150deg,#e9e5f4,#f7f5fb 60%,#f2e8f0)}
+.homescreen.vil .ures{background:rgba(11,11,18,.09)}
+
+.zaro{margin-top:64px;padding-top:26px;border-top:1px solid var(--line);
+  font-size:13.5px;line-height:1.75;color:var(--faint)}
+.zaro b{color:var(--muted);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ================= REJTETT SVG-KÖNYVTÁR ================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <linearGradient id="gr-tomor" x1="0" y1="0" x2=".55" y2="1">
+    <stop offset="0"   stop-color="#ff7dc0"/>
+    <stop offset=".38" stop-color="#ff4fa3"/>
+    <stop offset="1"   stop-color="#8b5cf6"/>
+  </linearGradient>
+  <linearGradient id="gr-csova" x1=".5" y1="0" x2=".5" y2="1">
+    <stop offset="0"   stop-color="#ffe0f0" stop-opacity="1"/>
+    <stop offset=".2"  stop-color="#ff86c6" stop-opacity="1"/>
+    <stop offset=".62" stop-color="#ff4fa3" stop-opacity=".86"/>
+    <stop offset="1"   stop-color="#9a6cf8" stop-opacity=".62"/>
+  </linearGradient>
+  <linearGradient id="gr-mag" x1=".5" y1="0" x2=".5" y2="1">
+    <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
+    <stop offset=".5"  stop-color="#ffe4f2" stop-opacity=".34"/>
+    <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="gr-folt" cx=".5" cy=".4" r=".64">
+    <stop offset="0"   stop-color="#ffffff"/>
+    <stop offset=".3"  stop-color="#ffb3da"/>
+    <stop offset=".66" stop-color="#ff4fa3"/>
+    <stop offset="1"   stop-color="#8b5cf6"/>
+  </radialGradient>
+  <linearGradient id="gr-ikonbg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ff4fa3"/>
+    <stop offset="1" stop-color="#8b5cf6"/>
+  </linearGradient>
+  <linearGradient id="gr-ikonbg-sotet" x1=".15" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#241736"/>
+    <stop offset="1" stop-color="#0b0b12"/>
+  </linearGradient>
+  <filter id="f-para" x="-90%" y="-45%" width="280%" height="205%">
+    <feGaussianBlur stdDeviation="7"/>
+  </filter>
+  <filter id="f-para-nagy" x="-90%" y="-45%" width="280%" height="205%">
+    <feGaussianBlur stdDeviation="12"/>
+  </filter>
+
+  <!-- ===== (a) TÖMÖR CSÓVA ===== -->
+  <symbol id="jel-a" viewBox="0 0 100 180">
+    <path d="M43,8 Q50,0 57,8 L77,104 Q78.5,112 71,112 L29,112 Q21.5,112 23,104 Z" fill="url(#gr-tomor)"/>
+    <ellipse cx="50" cy="156" rx="29" ry="24" fill="url(#gr-tomor)"/>
+  </symbol>
+  <symbol id="jel-a-f" viewBox="0 0 100 180">
+    <path d="M43,8 Q50,0 57,8 L77,104 Q78.5,112 71,112 L29,112 Q21.5,112 23,104 Z" fill="currentColor"/>
+    <ellipse cx="50" cy="156" rx="29" ry="24" fill="currentColor"/>
+  </symbol>
+
+  <!-- ===== (b) LÁGY FÉNY ===== -->
+  <symbol id="jel-b" viewBox="0 0 100 180">
+    <g filter="url(#f-para)" opacity=".4">
+      <path d="M43,8 L57,8 L77,112 L23,112 Z" fill="#ff4fa3"/>
+      <ellipse cx="50" cy="156" rx="27" ry="22" fill="#ff4fa3"/>
+    </g>
+    <rect x="40" y="0" width="20" height="10" rx="4.5" fill="#ffe0f0"/>
+    <path d="M43,8 L57,8 L77,104 Q78.5,112 71,112 L29,112 Q21.5,112 23,104 Z" fill="url(#gr-csova)"/>
+    <path d="M46.5,10 L53.5,10 L61,112 L39,112 Z" fill="url(#gr-mag)"/>
+    <ellipse cx="50" cy="156" rx="30" ry="25" fill="url(#gr-folt)" opacity=".3" filter="url(#f-para)"/>
+    <ellipse cx="50" cy="156" rx="28" ry="23" fill="url(#gr-folt)"/>
+  </symbol>
+  <symbol id="jel-b-f" viewBox="0 0 100 180">
+    <g filter="url(#f-para)" opacity=".45">
+      <path d="M43,8 L57,8 L77,112 L23,112 Z" fill="currentColor"/>
+      <ellipse cx="50" cy="156" rx="27" ry="22" fill="currentColor"/>
+    </g>
+    <rect x="40" y="0" width="20" height="10" rx="4.5" fill="currentColor"/>
+    <path d="M43,8 L57,8 L77,104 Q78.5,112 71,112 L29,112 Q21.5,112 23,104 Z" fill="currentColor" opacity=".78"/>
+    <path d="M46.5,10 L53.5,10 L61,112 L39,112 Z" fill="currentColor"/>
+    <ellipse cx="50" cy="156" rx="28" ry="23" fill="currentColor"/>
+  </symbol>
+
+  <!-- ===== (c) MEGDŐLT CSÓVA — a fénykör a „Buli” lába elé esik ===== -->
+  <symbol id="jel-c" viewBox="0 0 145 180">
+    <g filter="url(#f-para-nagy)" opacity=".38">
+      <path d="M43,8 L57,8 L128,112 L72,112 Z" fill="#ff4fa3"/>
+      <ellipse cx="100" cy="156" rx="34" ry="26" fill="#ff4fa3"/>
+    </g>
+    <path d="M43,8 Q50,0 57,8 L128,104 Q131,112 124,112 L76,112 Q69,112 72,104 Z" fill="url(#gr-csova)"/>
+    <path d="M46.5,8 L53.5,8 L105,112 L88,112 Z" fill="url(#gr-mag)" opacity=".85"/>
+    <ellipse cx="100" cy="156" rx="34" ry="26" fill="url(#gr-folt)" opacity=".3" filter="url(#f-para)"/>
+    <ellipse cx="100" cy="156" rx="31" ry="24" fill="url(#gr-folt)"/>
+  </symbol>
+</defs>
+</svg>
+
+<div class="lap">
+
+<!-- ================= FEJLÉC ================= -->
+<header class="fej">
+  <p class="kicsicim">Logó-ötlet · 1. koncepció</p>
+  <h1><em>REFLEKTOR</em> — a felkiáltójel egy fénycsóva</h1>
+  <p>A <strong>Hola!Buli</strong> felkiáltójelét kettévágjuk, és mindkét felét klub-fénnyé
+  fordítjuk: a szár lefelé szélesedő reflektor-csóva, a pont pedig a fénykör, amit a lámpa
+  a táncparkettre vet. Így a jel nem írásjel többé, hanem maga a válasz a kérdésre — a
+  felkiáltójel <em class="kiemel">megmutatja, hol a buli</em>.</p>
+</header>
+
+<!-- ================= 1. A SZÓ-JEL NAGYBAN ================= -->
+<h2 class="szekcio">1 · A szó-jel nagyban</h2>
+
+<h3 class="valt"><b>a)</b> Tömör csóva</h3>
+<p class="alairas">A felkiáltójel szára mértani fénycsóva, a pontja a fénykör a parketten — tömör,
+egyetlen színnel is kiadható alakzat, ami mindenhol ugyanaz marad, mégis rögtön látszik rajta, hogy
+a kiáltás rávilágít valamire.</p>
+<div class="parban">
+  <div class="kartya">
+    <p class="cimke">Sötét háttér · #0b0b12</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-a" width="100" height="180"/></svg>Buli</div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+  <div class="kartya vilagos">
+    <p class="cimke">Világos háttér · nyomtatás, deck</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-a" width="100" height="180"/></svg>Buli</div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+</div>
+
+<h3 class="valt"><b>b)</b> Lágy fény</h3>
+<p class="alairas">Ugyanez lágyan: a csóva teteje lámpává zárul, lefelé szétoszlik, a magja fehéren
+izzik, a fénykör ragyog — így a jel nem alakzat, hanem valódi klublámpa, vagyis a poén mellé
+hangulatot és éjszakát is kapunk.</p>
+<div class="parban">
+  <div class="kartya">
+    <p class="cimke">Sötét háttér · #0b0b12</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-b" width="100" height="180"/></svg>Buli</div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+  <div class="kartya vilagos">
+    <p class="cimke">Világos háttér · nyomtatás, deck</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-b" width="100" height="180"/></svg>Buli</div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+</div>
+
+<h3 class="valt"><b>c)</b> Rávilágít a „Buli” szóra</h3>
+<p class="alairas">A csóva megdől, a fénykör a <em>Buli</em> lába elé esik, a szó pedig kigyullad a
+fényben és kifelé haladva elhalványul: itt a felkiáltójel el is végzi, amit a név ígér — rámutat,
+hol a buli.</p>
+<div class="parban">
+  <div class="kartya">
+    <p class="cimke">Sötét háttér · #0b0b12</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-c" viewBox="0 0 145 180"><use href="#jel-c" width="145" height="180"/></svg><span class="buli-burok"><span class="fenyfolt"></span><span class="buli-vilagit">Buli</span></span></div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+  <div class="kartya vilagos">
+    <p class="cimke">Világos háttér · nyomtatás, deck</p>
+    <div class="lockup nagy">
+      <div class="szo">Hola<svg class="jel jel-c" viewBox="0 0 145 180"><use href="#jel-c" width="145" height="180"/></svg><span class="buli-burok"><span class="fenyfolt"></span><span class="buli-vilagit">Buli</span></span></div>
+      <div class="alcim">Hol a buli?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. FEJLÉCBEN, 22 PX ================= -->
+<h2 class="szekcio">2 · Ugyanaz kicsiben — 22 px magas fejléc-változat</h2>
+<p class="alairas">Ahogy az appban a bal felső sarokban ül: a jel teljes magassága pontosan 22 px,
+a betűk nagybetű-magassága ehhez igazodik.</p>
+
+<div class="parban">
+  <div class="kartya" style="align-items:stretch;justify-content:flex-start">
+    <p class="cimke">Sötét app-fejléc</p>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-a" width="100" height="180"/></svg>Buli</div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <div style="height:12px"></div>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-b" width="100" height="180"/></svg>Buli</div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <div style="height:12px"></div>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-c" viewBox="0 0 145 180"><use href="#jel-c" width="145" height="180"/></svg><span class="buli-burok"><span class="fenyfolt"></span><span class="buli-vilagit">Buli</span></span></div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <p class="merce">fentről lefelé: a) tömör · b) lágy fény · c) rávilágít</p>
+  </div>
+  <div class="kartya vilagos" style="align-items:stretch;justify-content:flex-start">
+    <p class="cimke">Világos fejléc</p>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-a" width="100" height="180"/></svg>Buli</div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <div style="height:12px"></div>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-ab" viewBox="0 0 100 180"><use href="#jel-b" width="100" height="180"/></svg>Buli</div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <div style="height:12px"></div>
+    <div class="appbar"><div class="szo fejlec-meret">Hola<svg class="jel jel-c" viewBox="0 0 145 180"><use href="#jel-c" width="145" height="180"/></svg><span class="buli-burok"><span class="fenyfolt"></span><span class="buli-vilagit">Buli</span></span></div>
+      <div class="toltelek"><div class="vonalka"></div><div class="pont"></div></div></div>
+    <p class="merce">fentről lefelé: a) tömör · b) lágy fény · c) rávilágít</p>
+  </div>
+</div>
+
+<!-- ================= 3. APP-IKON ================= -->
+<h2 class="szekcio">3 · App-ikon — csak a jel</h2>
+<p class="alairas">A teljes felirat nem fér el, ezért az ikonban egyedül a jel marad. Bal oldalon a
+javasolt változat: márka-gradiens négyzet, benne fehér csóva — ez adja a legnagyobb kontrasztot a
+telefon tapétáján. 48 px-en az <em>a)</em> és a <em>b)</em> gyakorlatilag egybeesik: a lágy fény csak
+nagyban látszik, a felismerést a csóva és a fénykör aránya viszi.</p>
+
+<div class="parban">
+  <div class="kartya">
+    <p class="cimke">Márka-gradiens alap · fehér jel</p>
+    <div class="ikonsor">
+      <div class="ikoncella">
+        <svg class="i512" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/>
+          <use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#ffffff"/>
+        </svg><span>512 · a)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i512" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/>
+          <use href="#jel-b-f" x="163" y="88" width="187" height="336" color="#ffffff"/>
+        </svg><span>512 · b)</span>
+      </div>
+    </div>
+    <div style="height:26px"></div>
+    <div class="ikonsor">
+      <div class="ikoncella">
+        <div id="ikon48">
+          <svg class="i48" viewBox="0 0 512 512">
+            <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/>
+            <use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#ffffff"/>
+          </svg>
+        </div><span>48 · a)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i48" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/>
+          <use href="#jel-b-f" x="163" y="88" width="187" height="336" color="#ffffff"/>
+        </svg><span>48 · b)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i48" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/>
+          <use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#ffffff" transform="rotate(13 256 256)"/>
+        </svg><span>48 · c)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="kartya vilagos">
+    <p class="cimke">Sötét alap · gradiens jel</p>
+    <div class="ikonsor">
+      <div class="ikoncella">
+        <svg class="i512" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/>
+          <use href="#jel-a" x="163" y="88" width="187" height="336"/>
+        </svg><span>512 · a)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i512" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/>
+          <use href="#jel-b" x="163" y="88" width="187" height="336"/>
+        </svg><span>512 · b)</span>
+      </div>
+    </div>
+    <div style="height:26px"></div>
+    <div class="ikonsor">
+      <div class="ikoncella">
+        <svg class="i48" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/>
+          <use href="#jel-a" x="163" y="88" width="187" height="336"/>
+        </svg><span>48 · a)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i48" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/>
+          <use href="#jel-b" x="163" y="88" width="187" height="336"/>
+        </svg><span>48 · b)</span>
+      </div>
+      <div class="ikoncella">
+        <svg class="i48" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/>
+          <use href="#jel-a" x="163" y="88" width="187" height="336" transform="rotate(13 256 256)"/>
+        </svg><span>48 · c)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="szekcio">4 · 48 px a telefon képernyőjén</h2>
+<p class="alairas">A döntő próba: más ikonok közé keverve is felismerhető-e a csóva meg a fénykör.</p>
+<div class="parban">
+  <div class="kartya">
+    <p class="cimke">Sötét tapéta</p>
+    <div class="homescreen">
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/><use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#fff"/></svg>
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/><use href="#jel-a" x="163" y="88" width="187" height="336"/></svg>
+      <div class="ures"></div>
+      <div class="ures"></div>
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/><use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#fff" transform="rotate(13 256 256)"/></svg>
+      <div class="ures"></div>
+      <div class="ures"></div>
+    </div>
+  </div>
+  <div class="kartya vilagos">
+    <p class="cimke">Világos tapéta</p>
+    <div class="homescreen vil">
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/><use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#fff"/></svg>
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg-sotet)"/><use href="#jel-a" x="163" y="88" width="187" height="336"/></svg>
+      <div class="ures"></div>
+      <div class="ures"></div>
+      <div class="ures"></div>
+      <svg class="i48" viewBox="0 0 512 512"><rect width="512" height="512" rx="114" fill="url(#gr-ikonbg)"/><use href="#jel-a-f" x="163" y="88" width="187" height="336" color="#fff" transform="rotate(13 256 256)"/></svg>
+      <div class="ures"></div>
+      <div class="ures"></div>
+    </div>
+  </div>
+</div>
+
+<p class="zaro"><b>Betűk:</b> Space Grotesk 700 (szó-jel) · Inter 600 (alcím) — mindkettő ingyenes, Google Fonts.
+<b>Paletta:</b> #ff4fa3 → #8b5cf6, 135°, háttér #0b0b12.
+<b>A jel</b> vektor (SVG), nem betű: bármekkorára skálázható, és az <em>a)</em> változat egyetlen színnel,
+fóliázva vagy bélyegzőn is kiadható.
+Ez ötletelés — a három változat ugyanannak a gondolatnak a három hangereje.</p>
+
+</div>
+</body>
+</html>
