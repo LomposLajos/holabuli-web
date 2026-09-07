@@ -54,7 +54,7 @@
   // --- Passz-oldal: mentés a telefonra ---
   const passPage = document.querySelector('.page-pass');
   if (passPage) {
-    HB.addPass({ token: passPage.dataset.token, eventId: passPage.dataset.event, nev: passPage.dataset.nev, at: Date.now() });
+    HB.addPass({ token: passPage.dataset.token, eventId: passPage.dataset.event, nev: passPage.dataset.nev, kind: passPage.dataset.kind || 'jegy', at: Date.now() });
     if (passPage.dataset.nev) HB.setNev(passPage.dataset.nev);
   }
 
@@ -65,22 +65,50 @@
     const megyek = document.getElementById('megyek-btn');
     const passzom = document.getElementById('passzom-btn');
     if (mine && megyek && passzom) {
+      const rsvp = mine.kind === 'megyek'; // ingyenes belépésre nincs jegy, csak jelentkezés
       megyek.classList.add('hidden');
       passzom.href = HB.passUrl(mine.token);
+      passzom.textContent = rsvp ? 'Ott leszel' : 'Jegyem';
       passzom.classList.remove('hidden');
-      // A gomb-felirat önmagában kevés volt: látható sáv is jelezze, hogy már van jegyed.
+      // A gomb-felirat önmagában kevés volt: látható sáv is jelezze.
       const info = document.querySelector('.info-block');
       if (info && !document.querySelector('.van-jegyed')) {
         const b = document.createElement('div');
         b.className = 'van-jegyed';
-        b.innerHTML = '<span class="van-jegyed-cim">✓ Van jegyed erre a bulira</span>';
+        b.innerHTML = `<span class="van-jegyed-cim">✓ ${rsvp ? 'Jelentkeztél erre a bulira' : 'Van jegyed erre a bulira'}</span>`;
         const a = document.createElement('a');
         a.className = 'link'; a.href = HB.passUrl(mine.token); a.textContent = 'Megnézem';
-        const t = document.createElement('button');
-        t.type = 'button'; t.className = 'link van-jegyed-tovabb'; t.dataset.open = 'jegyek'; t.textContent = 'Még jegyet';
-        b.appendChild(a); b.appendChild(t);
+        b.appendChild(a);
+        // „Még jegyet” csak akkor, ha van egyáltalán megvehető jegy.
+        if (document.getElementById('jegyek')) {
+          const t = document.createElement('button');
+          t.type = 'button'; t.className = 'link van-jegyed-tovabb'; t.dataset.open = 'jegyek'; t.textContent = rsvp ? 'Jegyet is veszek' : 'Még jegyet';
+          b.appendChild(t);
+        }
         info.parentNode.insertBefore(b, info);
       }
+    }
+
+    // „Megyek” lap (ingyenes belépés): dupla küldés elleni zár, ugyanaz a minta, mint a pénztárnál.
+    const mform = document.getElementById('megyek-form');
+    if (mform && !window.HB_STATIC) {
+      const mgomb = mform.querySelector('button[type="submit"]');
+      const meredeti = mgomb ? mgomb.textContent : '';
+      mform.addEventListener('submit', (e) => {
+        if (mform.dataset.kuldes === '1') { e.preventDefault(); return; }
+        if (!mform.checkValidity()) return;
+        mform.dataset.kuldes = '1';
+        setTimeout(() => { if (mgomb) { mgomb.disabled = true; mgomb.setAttribute('aria-busy', 'true'); mgomb.textContent = 'Egy pillanat…'; } }, 0);
+      });
+      window.addEventListener('pageshow', (ev2) => {
+        if (!ev2.persisted) return;
+        mform.dataset.kuldes = '';
+        if (mgomb) { mgomb.disabled = false; mgomb.removeAttribute('aria-busy'); mgomb.textContent = meredeti; }
+      });
+      const mnev = mform.querySelector('input[name="nev"]');
+      if (mnev && !mnev.value && HB.nev()) mnev.value = HB.nev();
+      const mref = mform.querySelector('input[name="ref"]');
+      if (mref && !mref.value && HB.ref()) mref.value = HB.ref();
     }
 
     // Jegy-választó: darabszám-léptetők, futó összeg, és a pénztár-link összeállítása.
@@ -214,7 +242,8 @@
     if (du) { e.preventDefault(); HB.toast(du.dataset.demoUzenet); }
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheets(); });
-  if (location.hash === '#jegyek' || location.hash === '#megyek') openSheet('jegyek');
+  if (location.hash === '#megyek-lap' || (location.hash === '#megyek' && document.getElementById('megyek-lap'))) openSheet('megyek-lap');
+  else if (location.hash === '#jegyek' || location.hash === '#megyek') openSheet('jegyek');
 
   // --- Főoldal: szűrők + kereső ---
   // Ékezet-független, szó-sorrendtől független: MINDEN beírt szónak szerepelnie kell valahol.
@@ -276,12 +305,14 @@
   function jegyJelvenyek() {
     const sajat = HB.passes();
     if (!sajat.length) return;
-    const ids = new Set(sajat.map((p) => p.eventId));
+    const kindById = {};
+    sajat.forEach((p) => { if (!kindById[p.eventId]) kindById[p.eventId] = p.kind || 'jegy'; });
     document.querySelectorAll('.card-poster[data-event]').forEach((c) => {
-      if (!ids.has(c.dataset.event) || c.querySelector('.jegy-jel')) return;
+      const k = kindById[c.dataset.event];
+      if (!k || c.querySelector('.jegy-jel')) return;
       const s = document.createElement('span');
       s.className = 'jegy-jel';
-      s.textContent = '✓ Van jegyed';
+      s.textContent = k === 'megyek' ? '✓ Mész' : '✓ Van jegyed';
       c.appendChild(s);
     });
   }

@@ -367,3 +367,26 @@
 }
 .nev-kero .btn-row { margin-top: 10px; }
 .nev-kero .btn-row .btn { flex: 1; }
+
+/* --- „Megyek” (ingyenes belépés): jegy helyett visszaigazolás, QR nélkül --- */
+.rsvp-pipa {
+  width: 96px; height: 96px; margin: 6px auto 10px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px; line-height: 1; font-weight: 700;
+  background: var(--ok-soft); color: var(--stamp); border: 3px solid var(--stamp);
+}
+.rsvp-cim { font-size: var(--fs-l); font-weight: 800; color: var(--ink); letter-spacing: var(--cim-spacing); }
+.ticket.rsvp .qr-hint { margin-top: 8px; }
+.ticket.rsvp .qr-hint b { color: var(--ink); }
+
+/* --- „Később érkezel?” jegy-ajánlat az ingyenes buli oldalán --- */
+.jegy-blokk .jegy-ajanlat {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 14px; margin-top: 10px;
+  border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surface);
+}
+.jegy-ajanlat-ar { font-weight: 700; font-size: var(--fs-m); white-space: nowrap; }
+.jegy-blokk .btn-block { margin-top: 12px; }
+
+/* A pénztárban nincs alsó menüsáv (fix sávként rálógna az űrlapra), ezért kevesebb alsó térköz kell. */
+body.body-penztar .page { padding-bottom: calc(var(--safe-b) + 28px); }

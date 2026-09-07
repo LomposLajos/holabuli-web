@@ -75,6 +75,7 @@
     duplicate: { ikon: '✕', cim: 'MÁR BENT VOLT', cls: 'err', sub: 'Ezzel a jeggyel már beléptek' },
     wrong_event: { ikon: '✕', cim: 'MÁSIK BULIRA SZÓL', cls: 'err', sub: 'Nem erre a bulira váltotta' },
     void: { ikon: '✕', cim: 'VISSZAVONT JEGY', cls: 'err', sub: 'A hely visszavonta' },
+    nem_jegy: { ikon: '!', cim: 'INGYENES BELÉPÉS', cls: 'warn', sub: 'Ez jelentkezés, nem jegy — beengedhető' },
     unknown: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Nem a mi jegyünk' },
     signature: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Hamis vagy sérült kód' },
     format: { ikon: '✕', cim: 'ÉRVÉNYTELEN', cls: 'err', sub: 'Ez nem jegy-kód' },

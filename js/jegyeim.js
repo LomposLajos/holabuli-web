@@ -32,9 +32,10 @@
     node.querySelector('.jb-cim').textContent = d.event.cim;
     node.querySelector('.jb-hely').textContent = (d.venue ? d.venue.nev + ' · ' : '') + d.event.price;
     const st = node.querySelector('.jegy-status');
+    const rsvp = d.pass.kind === 'megyek'; // ingyenes belépés: jelentkezés, nem jegy
     if (d.pass.status === 'scanned') { st.textContent = 'Belépett'; st.classList.add('ok'); }
     else if (d.event.past) { st.textContent = 'Lement'; node.classList.add('past'); }
-    else { st.textContent = 'Érvényes'; }
+    else { st.textContent = rsvp ? 'Mész' : 'Érvényes'; }
     lista.appendChild(node);
   }
 })();

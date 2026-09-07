@@ -98,18 +98,19 @@
   function allapot(eventId) { const ps = passesOf(eventId); return { megyek: ps.length, bent: ps.filter((p) => p.status === 'scanned').length }; }
   const newId = (pre) => pre + Math.random().toString(36).slice(2, 10);
 
-  HBS.issuePass = function ({ eventId, nev, kapcsolat, ref, tetelek }) {
+  HBS.issuePass = function ({ eventId, nev, kapcsolat, ref, tetelek, kind }) {
     const items = (tetelek || []).filter((t) => t && t.db > 0);
     const amountHuf = osszegOf(items);
     const id = newId('p_');
+    const rsvp = kind === 'megyek';
     const p = {
       id, eventId,
       nev: String(nev || '').trim().slice(0, 60),
       kapcsolat: String(kapcsolat || '').trim().slice(0, 80),
       ref: ref || null,
-      kind: amountHuf > 0 ? 'jegy' : 'vendeglista',
+      kind: rsvp ? 'megyek' : 'jegy',
       tetelek: items, fo: darabOf(items) || 1,
-      sorszam: 'HB-' + id.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(-4),
+      sorszam: rsvp ? null : 'HB-' + id.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(-4),
       amountHuf,
       status: 'issued', createdAt: new Date().toISOString(), scannedAt: null,
     };
@@ -127,6 +128,7 @@
     const now = new Date().toISOString();
     if (!pd) return { ok: false, reason: 'format', nev: null, kind: null, fo: null, scannedAt: null, allapot: allapot(eventId) };
     if (pd.eventId !== eventId) return { ok: false, reason: 'wrong_event', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: null, allapot: allapot(eventId) };
+    if (pd.kind === 'megyek') return { ok: false, reason: 'nem_jegy', nev: pd.nev, kind: pd.kind, fo: 1, scannedAt: null, allapot: allapot(eventId) };
     if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: db.scanned[pd.id], allapot: allapot(eventId) };
     rememberForeign(pd);
     db.scanned[pd.id] = now;
@@ -234,7 +236,8 @@
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/kereses$/))) {
       const ev = evByKapu(decodeURIComponent(m[1])); if (!ev) return json({ ok: false, reason: 'unknown_kapu' }, 404);
       const q = norm(params.get('q') || '').slice(0, 60);
-      let list = passesOf(ev.id);
+      // A „Megyek” jelentkezők nem kerülnek a kapu-listába (ingyenes belépés → nincs mit ellenőrizni).
+      let list = passesOf(ev.id).filter((p) => p.kind !== 'megyek');
       if (q) { list = list.filter((p) => norm(p.nev).includes(q)); list.sort((a, b) => (a.status === 'scanned') - (b.status === 'scanned') || a.nev.localeCompare(b.nev, 'hu')); }
       else list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       return json({ ok: true, q, osszes: list.length, talalatok: list.slice(0, 20).map((p) => ({ id: p.id, nev: p.nev, kind: p.kind, status: p.status, scannedAt: p.scannedAt, token: tokenOf(p) })) });
@@ -286,16 +289,25 @@
       const fd = new FormData(f);
       if (fd.get('weboldal')) { window.HB && HB.toast('Az űrlapot nem sikerült elküldeni. Ha automatikus kitöltőt használsz, kapcsold ki.'); return; }
       const nev = String(fd.get('nev') || '').trim(), k = String(fd.get('kapcsolat') || '').trim();
-      const okK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(k) || k.replace(/\D/g, '').length >= 7;
       if (nev.length < 2) { window.HB && HB.toast('Add meg a neved (legalább 2 betű).'); return; }
-      if (!okK) { window.HB && HB.toast('E-mail-cím vagy telefonszám kell, hogy a jegy a tiéd legyen.'); return; }
       const ev = evById(fd.get('eventId'));
       if (!ev) { window.HB && HB.toast('Ez a buli nem található.'); return; }
+      const zar = (szoveg) => { f.dataset.kuldes = '1'; const g = f.querySelector('button[type="submit"]'); if (g) { g.disabled = true; g.setAttribute('aria-busy', 'true'); g.textContent = szoveg; } };
+
+      // „Megyek”: ingyenes belépés → nincs jegy, nincs QR, elérhetőség sem kell.
+      if (fd.get('mod') === 'megyek') {
+        zar('Egy pillanat…');
+        const r = HBS.issuePass({ eventId: ev.id, nev, kapcsolat: '', ref: fd.get('ref') || null, tetelek: [], kind: 'megyek' });
+        location.href = `${BASE}/p/?uj=1#${r.token}`;
+        return;
+      }
+
+      const okK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(k) || k.replace(/\D/g, '').length >= 7;
+      if (!okK) { window.HB && HB.toast('E-mail-cím vagy telefonszám kell, hogy a jegy a tiéd legyen.'); return; }
       let tetelek = rendelesBol(ev, fd.get('t'));
       if (!tetelek.length) { const t0 = tipusokOf(ev)[0]; tetelek = t0 ? [{ tipusId: t0.id, nev: t0.nev, ar: t0.ar || 0, db: 1 }] : []; }
-      f.dataset.kuldes = '1';
-      const gomb = f.querySelector('button[type="submit"]');
-      if (gomb) { gomb.disabled = true; gomb.setAttribute('aria-busy', 'true'); gomb.textContent = 'Jegy készül…'; }
+      if (!tetelek.length) { window.HB && HB.toast('Ezen a bulin nincs megvehető jegy — a belépés ingyenes.'); return; }
+      zar('Jegy készül…');
       const { token } = HBS.issuePass({ eventId: ev.id, nev, kapcsolat: k, ref: fd.get('ref') || null, tetelek });
       location.href = `${BASE}/p/?uj=1#${token}`;
       return;
@@ -334,8 +346,8 @@
     if (!pd || !evById(pd.eventId)) { $('ps-tartalom').classList.add('hidden'); $('ps-hiba').classList.remove('hidden'); return; }
     const ev = evById(pd.eventId), v = venueById(ev.venueId);
     const sajat = db.passes.find((p) => p.id === pd.id) || null; // a saját eszközön a tételek is megvannak
-    root.dataset.token = token; root.dataset.event = ev.id; root.dataset.nev = pd.nev; // az app.js ebből menti a Jegyeimbe
-    if (new URLSearchParams(location.search).get('uj') === '1') { $('ps-hooray').textContent = `🎉 Megvan a jegyed, ${keresztnev(pd.nev)}!`; $('ps-hooray').classList.remove('hidden'); }
+    root.dataset.token = token; root.dataset.event = ev.id; root.dataset.nev = pd.nev; root.dataset.kind = pd.kind || 'jegy'; // az app.js ebből menti a Jegyeimbe
+    if (new URLSearchParams(location.search).get('uj') === '1') { $('ps-hooray').textContent = `🎉 ${pd.kind === 'megyek' ? 'Ott leszel' : 'Megvan a jegyed'}, ${keresztnev(pd.nev)}!`; $('ps-hooray').classList.remove('hidden'); }
     $('ps-genre').textContent = (GENRE_NEV[ev.mufaj] || ev.mufaj || '').toUpperCase();
     $('ps-cim').textContent = ev.cim;
     $('ps-date').textContent = longDate(ev.kezdes);
@@ -343,10 +355,24 @@
     $('ps-nev').textContent = pd.nev;
     const tetelek = (sajat && sajat.tetelek) || [];
     const osszeg = sajat ? (sajat.amountHuf || 0) : 0;
-    $('ps-kind').textContent = `${tetelek.length ? tetelSor(tetelek) : (pd.kind === 'jegy' ? 'Jegy' : 'Vendéglista')} · ${osszeg > 0 ? huf(osszeg) : 'Ingyenes'} · ${ev.korhatar}+`;
+    const rsvp = pd.kind === 'megyek'; // ingyenes belépés: nincs jegy, nincs QR
     const fo = (sajat && sajat.fo) || pd.fo || 1;
-    $('ps-sorszam').textContent = (pd.sorszam || (sajat && sajat.sorszam) || '') + (fo > 1 ? ` · ${fo} fő` : '');
-    $('ps-id').textContent = `Jegyazonosító: ${pd.sorszam || pd.id}`;
+    if (rsvp) {
+      $('ps-fejlec').textContent = 'Megyek';
+      $('ps-qr').classList.add('hidden');
+      $('ps-rsvp').classList.remove('hidden');
+      $('ps-ticket').classList.add('rsvp');
+      const ingyen = ev.ingyenEddig ? `Ingyenes belépés ${ev.ingyenEddig}-ig` : 'Ingyenes belépés';
+      $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> Sétálj be, a neved a hely listáján van.`;
+      $('ps-kind').textContent = `${ev.korhatar}+`;
+      $('ps-sorszam').textContent = '';
+      $('ps-id').textContent = 'Jelentkezés';
+      $('ps-share').dataset.shareTitle = window.HB_APP_NAME || 'Hola!Buli';
+    } else {
+      $('ps-kind').textContent = `${tetelek.length ? tetelSor(tetelek) : 'Jegy'} · ${osszeg > 0 ? huf(osszeg) : 'Ingyenes'} · ${ev.korhatar}+`;
+      $('ps-sorszam').textContent = (pd.sorszam || (sajat && sajat.sorszam) || '') + (fo > 1 ? ` · ${fo} fő` : '');
+      $('ps-id').textContent = `Jegyazonosító: ${pd.sorszam || pd.id}`;
+    }
     // Helyszín: cím, útvonal, naptár
     $('ps-hely-nev').textContent = v ? v.nev : '';
     $('ps-hely-cim').textContent = v ? `${v.kerulet} kerület, ${v.cim}` : '';
@@ -362,11 +388,13 @@
     $('ps-invite-share').dataset.shareTitle = `Gyere velem: ${ev.cim}`; $('ps-invite-share').dataset.shareText = `${longDate(ev.kezdes)} · ${v ? v.nev : ''} – itt a lista:`; $('ps-invite-share').dataset.shareUrl = invite;
     $('ps-share').dataset.shareText = `${ev.cim} · ${longDate(ev.kezdes)}`; $('ps-share').dataset.shareUrl = passUrl;
     $('ps-chat').href = `${BASE}/chat/${ev.id}/`; $('ps-event').href = `${BASE}/e/${ev.id}/`;
-    if (db.scanned[pd.id]) { $('ps-ticket').classList.add('used'); $('ps-hint').outerHTML = `<div class="stamp">BELÉPETT · ${hhmm(db.scanned[pd.id])}</div>`; }
-    try {
-      const q = window.qrcode(0, 'M'); q.addData(passUrl); q.make();
-      $('ps-qr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
-    } catch (e) { $('ps-qr').textContent = 'QR nem rajzolható: ' + e.message; }
+    if (!rsvp && db.scanned[pd.id]) { $('ps-ticket').classList.add('used'); $('ps-hint').outerHTML = `<div class="stamp">BELÉPETT · ${hhmm(db.scanned[pd.id])}</div>`; }
+    if (!rsvp) {
+      try {
+        const q = window.qrcode(0, 'M'); q.addData(passUrl); q.make();
+        $('ps-qr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+      } catch (e) { $('ps-qr').textContent = 'QR nem rajzolható: ' + e.message; }
+    }
   }
 
   // ---------- statikus pénztár (?e=&t=) ----------

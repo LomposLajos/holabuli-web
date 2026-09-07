@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hola!Buli">
 <link rel="manifest" href="/holabuli-web/manifest.webmanifest">
-<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=fc4a0ba-hqzaw" sizes="32x32" type="image/png">
-<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=fc4a0ba-hqzaw" sizes="48x48" type="image/png">
-<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=fc4a0ba-hqzaw">
+<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=c450d3c-hqzc7" sizes="32x32" type="image/png">
+<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=c450d3c-hqzc7" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=c450d3c-hqzc7">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Salsa a Tetőn · Hídfő Terasz">
@@ -26,22 +26,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap">
 
 <script>try{var t=localStorage.getItem('holabuli.dizajn');var q=new URLSearchParams(location.search).get('dizajn');if(q!==null)t=q==='alap'?'':q;if(t)document.documentElement.dataset.dizajn=t;}catch(e){}</script>
-<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/base.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/components.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=c450d3c-hqzc7">
 
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=fc4a0ba-hqzaw">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=fc4a0ba-hqzaw">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=c450d3c-hqzc7">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=c450d3c-hqzc7">
 
 
-<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='fc4a0ba-hqzaw';</script>
-<script src="/holabuli-web/js/data.js?v=fc4a0ba-hqzaw"></script>
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='c450d3c-hqzc7';</script>
+<script src="/holabuli-web/js/data.js?v=c450d3c-hqzc7"></script>
 
 </head>
-<body class="" data-build="fc4a0ba-hqzaw">
+<body class="" data-build="c450d3c-hqzc7">
 
 <main class="page page-event" data-event="e_salsa-terasz-hidfo">
   <div class="hero">
@@ -120,14 +120,54 @@
   </section>
   
 
+  
+  
+  <section class="section jegy-blokk">
+    <h2>Később érkezel?</h2>
+    <p class="muted">Ingyenes belépés 21:00-ig — utána a belépés fizetős. Ha később jönnél, itt előre megveheted.</p>
+    
+      <div class="jegy-ajanlat">
+        <div><b>Késői belépő 21:00 után</b><div class="muted small">21:00 előtt ingyen mehetsz be — ez akkor kell, ha később érkezel</div></div>
+        <div class="jegy-ajanlat-ar">1500 Ft</div>
+      </div>
+    
+    <button class="btn btn-ghost btn-block" type="button" data-open="jegyek">Jegyek megnézése</button>
+  </section>
+  
+
   <div class="cta-spacer"></div>
 </main>
 
 <div class="cta-bar" id="cta">
   <div class="cta-price"><b>Ingyen 21:00-ig</b><span class="muted"><time datetime="2026-09-10T18:00:00.000Z" data-fmt="when">csütörtök · 20:00</time></span></div>
-  <button class="btn btn-primary" type="button" id="megyek-btn" data-open="jegyek">Jegyek</button>
+  
+    
+    <button class="btn btn-primary" type="button" id="megyek-btn" data-open="megyek-lap">Megyek</button>
+  
   <a class="btn btn-primary hidden" id="passzom-btn" href="#">Jegyem</a>
 </div>
+
+
+<div class="sheet hidden" id="megyek-lap" role="dialog" aria-modal="true" aria-labelledby="megyek-cim">
+  <div class="sheet-backdrop" data-close></div>
+  <form class="sheet-panel" method="post" action="/holabuli-web/megyek" autocomplete="on" id="megyek-form">
+    <div class="sheet-grip"></div>
+    <h2 id="megyek-cim">Megyek: Salsa a Tetőn</h2>
+    <p class="muted"><b>Ingyenes belépés 21:00-ig, jegy nem kell.</b> Csak szólj, hogy jössz: a hely tudja, hányan lesztek, te pedig látod, ki megy még.</p>
+    
+    <input type="hidden" name="eventId" value="e_salsa-terasz-hidfo">
+    <input type="hidden" name="mod" value="megyek">
+    <input type="hidden" name="ref" value="">
+    <input class="hp" type="text" name="weboldal" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="field"><span>Neved</span><input name="nev" type="text" required minlength="2" maxlength="60" placeholder="pl. Kovács Anna" autocomplete="name"></label>
+    <label class="check"><input type="checkbox" name="korhatar" value="1" required><span>Elmúltam 18 éves.</span></label>
+    <label class="check"><input type="checkbox" name="adat" value="1" required><span>Elfogadom az <a class="link" href="/holabuli-web/adatkezeles" target="_blank">adatkezelési tájékoztatót</a> (név és jelentkezés ideje; 90 nap).</span></label>
+    <button class="btn btn-primary btn-block btn-xl" type="submit">Megyek</button>
+    <button class="btn btn-ghost btn-block" type="button" data-close>Mégse</button>
+  </form>
+</div>
+
+
 
 <div class="sheet hidden" id="jegyek" role="dialog" aria-modal="true" aria-labelledby="jegyek-cim" data-event="e_salsa-terasz-hidfo" data-ref="">
   <div class="sheet-backdrop" data-close></div>
@@ -138,38 +178,26 @@
     
     <ul class="jegy-lista">
       
-        <li class="jegy-sor" data-tipus="vendeglista" data-ar="0" data-nev="Vendéglista">
-          <div class="jegy-info">
-            <b>Vendéglista</b>
-            <span class="muted">Ingyenes belépés 21:00-ig, sorban állás nélkül</span>
-          </div>
-          <div class="jegy-ar">Ingyenes</div>
-          <div class="stepper">
-            <button class="stepper-btn" type="button" data-lep="-1" aria-label="Vendéglista: eggyel kevesebb">−</button>
-            <output class="stepper-db" data-db="1" aria-live="polite" aria-label="Vendéglista darabszám">1</output>
-            <button class="stepper-btn" type="button" data-lep="1" aria-label="Vendéglista: eggyel több">+</button>
-          </div>
-        </li>
-      
         <li class="jegy-sor" data-tipus="kesoi" data-ar="1500" data-nev="Késői belépő 21:00 után">
           <div class="jegy-info">
             <b>Késői belépő 21:00 után</b>
-            <span class="muted">Ha később érkezel, ezzel nem kell fizetned a kapuban</span>
+            <span class="muted">21:00 előtt ingyen mehetsz be — ez akkor kell, ha később érkezel</span>
           </div>
           <div class="jegy-ar">1500 Ft</div>
           <div class="stepper">
             <button class="stepper-btn" type="button" data-lep="-1" aria-label="Késői belépő 21:00 után: eggyel kevesebb">−</button>
-            <output class="stepper-db" data-db="0" aria-live="polite" aria-label="Késői belépő 21:00 után darabszám">0</output>
+            <output class="stepper-db" data-db="1" aria-live="polite" aria-label="Késői belépő 21:00 után darabszám">1</output>
             <button class="stepper-btn" type="button" data-lep="1" aria-label="Késői belépő 21:00 után: eggyel több">+</button>
           </div>
         </li>
       
     </ul>
-    <div class="jegy-osszeg"><span>Összesen<span class="muted" id="jegy-fo"> · 1 fő</span></span><b id="jegy-osszeg">Ingyenes</b></div>
+    <div class="jegy-osszeg"><span>Összesen<span class="muted" id="jegy-fo"> · 1 fő</span></span><b id="jegy-osszeg">1500 Ft</b></div>
     <a class="btn btn-primary btn-block btn-xl" id="jegy-tovabb" href="/holabuli-web/penztar?e=e_salsa-terasz-hidfo">Tovább a pénztárhoz</a>
     <button class="btn btn-ghost btn-block" type="button" data-close>Mégse</button>
   </div>
 </div>
+
 
 <nav class="tabbar" aria-label="Fő navigáció">
   <a class="tab " href="/holabuli-web/" aria-label="Felfedezés">
@@ -190,11 +218,11 @@
   </a>
 </nav>
 
-<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build fc4a0ba-hqzaw">DEMÓ</div>
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build c450d3c-hqzc7">DEMÓ</div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/holabuli-web/vendor/qrcode-gen.js?v=fc4a0ba-hqzaw" defer></script><script src="/holabuli-web/js/static-mode.js?v=fc4a0ba-hqzaw" defer></script>
-<script src="/holabuli-web/js/app.js?v=fc4a0ba-hqzaw" defer></script>
-<script src="/holabuli-web/js/dizajn.js?v=fc4a0ba-hqzaw" defer></script>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=c450d3c-hqzc7" defer></script><script src="/holabuli-web/js/static-mode.js?v=c450d3c-hqzc7" defer></script>
+<script src="/holabuli-web/js/app.js?v=c450d3c-hqzc7" defer></script>
+<script src="/holabuli-web/js/dizajn.js?v=c450d3c-hqzc7" defer></script>
 
 </body>
 </html>
