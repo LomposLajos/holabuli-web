@@ -25,6 +25,11 @@
     $('chart-sum').textContent = `${d.bent} belépés`;
     $('chart').innerHTML = d.svg;
 
+    const jut = $('juttatas-lista');
+    if (jut && d.juttatasStat) {
+      jut.innerHTML = d.juttatasStat.map((j) => `<div class="stat-row"><span class="juttatas-ikon" aria-hidden="true">${esc(j.ikon)}</span><span class="sr-body"><b>${esc(j.nev)}</b><span class="muted small">${j.jogosult} jogosult${j.kinek === 'jegy' ? ' (csak jeggyel)' : ''}</span></span><span class="pill">${j.bevaltva} · ${j.arany}%</span></div>`).join('');
+    }
+
     const top = $('top-lista');
     top.innerHTML = d.top.length
       ? d.top.map((t, i) => `<div class="stat-row"><span class="top-rank ${i === 0 ? 'first' : ''}">${i + 1}</span><span class="sr-body"><b>${esc(t.nev)}</b><span class="muted small">${t.bent} már bent</span></span><span class="pill">${t.db} fő</span></div>`).join('')

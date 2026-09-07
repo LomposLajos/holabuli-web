@@ -18,7 +18,56 @@
 
   const pad = (n) => String(n).padStart(2, '0');
   const hhmm = (iso) => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
-  const KIND = { vendeglista: 'Vendéglista', jegy: 'Jegy' };
+  const KIND = { vendeglista: 'Vendéglista', jegy: 'Jegy', megyek: 'Megyek (ingyenes)' };
+
+  // ---------- Juttatás-beváltás a kapuban (D-020) ----------
+  const ovJuttatas = $('ov-juttatas'), ovJuttatasLista = $('ov-juttatas-lista'), ovKesz = $('ov-kesz');
+  let aktivPassId = null;
+
+  function juttatasokKiir(lista) {
+    ovJuttatasLista.innerHTML = '';
+    if (!lista || !lista.length) { ovJuttatas.classList.add('hidden'); return false; }
+    lista.forEach((j) => {
+      const sor = document.createElement('div');
+      sor.className = 'ov-j-sor' + (j.bevaltva ? ' bevaltva' : '');
+      const cim = document.createElement('span');
+      cim.className = 'ov-j-nev';
+      cim.textContent = `${j.ikon} ${j.nev}`;
+      sor.appendChild(cim);
+      if (j.bevaltva) {
+        const kesz = document.createElement('span');
+        kesz.className = 'ov-j-kesz';
+        kesz.textContent = '✓ ' + hhmm(j.bevaltva);
+        sor.appendChild(kesz);
+      } else {
+        const b = document.createElement('button');
+        b.className = 'btn btn-primary ov-j-btn';
+        b.type = 'button';
+        b.textContent = 'Beváltás';
+        b.addEventListener('click', async () => {
+          b.disabled = true; b.textContent = '…';
+          try {
+            const r = await fetch('/api/bevaltas', {
+              method: 'POST', headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ passId: aktivPassId, eventId, juttatasId: j.id }),
+            });
+            const d = await r.json();
+            if (d.ok) { vibrate(60); soundOk(); } else { vibrate([120, 60, 120]); soundErr(); }
+            juttatasokKiir(d.juttatasok || []);
+          } catch {
+            b.disabled = false; b.textContent = 'Beváltás';
+          }
+        });
+        sor.appendChild(b);
+      }
+      ovJuttatasLista.appendChild(sor);
+    });
+    ovJuttatas.classList.remove('hidden');
+    return true;
+  }
+  if (ovKesz) ovKesz.addEventListener('click', (e) => { e.stopPropagation(); hideOverlay(); });
+  // Az overlay-re koppintás bezár — a beváltó-gombokat ez nem viheti el.
+  if (ovJuttatas) ovJuttatas.addEventListener('click', (e) => e.stopPropagation());
 
   // ---------- Hang (WebAudio) + rezgés ----------
   // Az AudioContext csak gesztusra indul (iOS), ezért az első érintésnél hozzuk létre.
@@ -96,6 +145,14 @@
     // Egy jegy több emberre is szólhat — a kidobónak ezt LÁTNIA kell, mielőtt beengedi őket.
     const fo = r && r.fo > 1 ? ` · ${r.fo} fő` : '';
     ovSub.textContent = key === 'ok' ? (KIND[r.kind] || 'Vendéglista') + fo : (t.sub || '');
+    // Ingyenes belépésnél a beolvasás nem beléptetés, hanem „itt van + jár neki valami”.
+    if (key === 'ok' && r.kind === 'megyek') ovCim.textContent = 'INGYENES BELÉPÉS';
+    // Juttatások: a vendég a kapuban váltja be, tételenként. Amíg van beváltatlan, az overlay MARAD.
+    aktivPassId = (r && r.passId) || null;
+    const juttatasVan = (key === 'ok' || key === 'duplicate') && aktivPassId
+      ? juttatasokKiir(r.juttatasok || [])
+      : (ovJuttatas.classList.add('hidden'), false);
+    const vanBevaltatlan = juttatasVan && (r.juttatasok || []).some((j) => !j.bevaltva);
     overlay.classList.remove('hidden');
     void overlay.offsetWidth;
     overlay.classList.add('show');
@@ -105,12 +162,14 @@
     }
     busy = true;
     clearTimeout(hideTimer);
-    if (!opts.sticky) hideTimer = setTimeout(hideOverlay, OVERLAY_MS);
+    if (!opts.sticky && !vanBevaltatlan) hideTimer = setTimeout(hideOverlay, OVERLAY_MS);
   }
   function hideOverlay() {
     clearTimeout(hideTimer);
     overlay.classList.remove('show');
     overlay.classList.add('hidden');
+    if (ovJuttatas) { ovJuttatas.classList.add('hidden'); ovJuttatasLista.innerHTML = ''; }
+    aktivPassId = null;
     busy = false;
   }
   overlay.addEventListener('click', hideOverlay); // koppintásra is eltűnik
@@ -244,6 +303,7 @@
         btn.classList.replace('btn-primary', 'btn-ghost');
       } else {
         st.textContent = `${KIND[p.kind] || 'Vendéglista'} · érvényes`;
+        if (p.kind === 'megyek') btn.textContent = 'Megnyitás'; // nem beléptetés, hanem juttatás-beváltás
       }
       btn.addEventListener('click', async () => {
         if (busy) return;

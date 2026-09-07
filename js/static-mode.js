@@ -21,6 +21,7 @@
   // állandók, tehát a helyi adat érvényes marad. Korábban minden publikálás némán kiürítette.
   if (!db) db = { seed: SEED_ID, passes: [], scanned: {}, scans: [], messages: [], kiemelt: {} };
   else { db.seed = SEED_ID; db.passes = db.passes || []; db.scanned = db.scanned || {}; db.scans = db.scans || []; db.messages = db.messages || []; db.kiemelt = db.kiemelt || {}; }
+  db.bevaltva = db.bevaltva || {}; // passzId → { juttatasId: időpont } — a helyi beváltások
   function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* privát mód */ } }
 
   const events = SEED.events || [];
@@ -62,6 +63,30 @@
   const osszegOf = (t) => (t || []).reduce((s, x) => s + (x.ar || 0) * (x.db || 0), 0);
   const darabOf = (t) => (t || []).reduce((s, x) => s + (x.db || 0), 0);
   const tetelSor = (t) => (t || []).map((x) => `${x.db}× ${x.nev}`).join(', ');
+
+  // ---------- juttatások (a lib/juttatas.js kliens-oldali párja) ----------
+  const juttatasaiEv = (ev) => (ev && Array.isArray(ev.juttatasok) ? ev.juttatasok : []);
+  const vanJuttatas = (ev) => juttatasaiEv(ev).length > 0;
+  function juttatasAllapot(ev, p) {
+    const jegyes = p && p.kind === 'jegy';
+    const helyi = (p && db.bevaltva[p.id]) || {};
+    const sutott = (p && p.bevaltva) || {};
+    return juttatasaiEv(ev)
+      .filter((j) => j.kinek !== 'jegy' || jegyes)
+      .map((j) => ({ ...j, bevaltva: helyi[j.id] || sutott[j.id] || null }));
+  }
+  function bevalt(passId, eventId, juttatasId) {
+    const ev = evById(eventId);
+    const p = passesOf(eventId).find((x) => x.id === passId);
+    if (!ev || !p) return { ok: false, reason: 'unknown', juttatasok: [] };
+    const jaro = juttatasAllapot(ev, p).find((j) => j.id === juttatasId);
+    if (!jaro) return { ok: false, reason: 'nem_jar', juttatasok: juttatasAllapot(ev, p) };
+    if (jaro.bevaltva) return { ok: false, reason: 'mar_bevaltva', at: jaro.bevaltva, juttatasok: juttatasAllapot(ev, p) };
+    db.bevaltva[passId] = db.bevaltva[passId] || {};
+    db.bevaltva[passId][juttatasId] = new Date().toISOString();
+    save();
+    return { ok: true, at: db.bevaltva[passId][juttatasId], juttatasok: juttatasAllapot(ev, p) };
+  }
   const GENRE_NEV = { techno: 'Techno', house: 'House', retro: 'Retro', hiphop: 'Hip-hop', latin: 'Latin', indie: 'Indie / rock', egyetemi: 'Egyetemi buli', dnb: 'Drum & bass' };
 
   // ---------- önleíró passz-token: hs.<payload>.<aláírás> ----------
@@ -111,7 +136,7 @@
       kind: rsvp ? 'megyek' : 'jegy',
       tetelek: items, fo: darabOf(items) || 1,
       sorszam: rsvp ? null : 'HB-' + id.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(-4),
-      amountHuf,
+      amountHuf, bevaltva: {},
       status: 'issued', createdAt: new Date().toISOString(), scannedAt: null,
     };
     db.passes.push(p); save();
@@ -128,13 +153,16 @@
     const now = new Date().toISOString();
     if (!pd) return { ok: false, reason: 'format', nev: null, kind: null, fo: null, scannedAt: null, allapot: allapot(eventId) };
     if (pd.eventId !== eventId) return { ok: false, reason: 'wrong_event', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: null, allapot: allapot(eventId) };
-    if (pd.kind === 'megyek') return { ok: false, reason: 'nem_jegy', nev: pd.nev, kind: pd.kind, fo: 1, scannedAt: null, allapot: allapot(eventId) };
-    if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: db.scanned[pd.id], allapot: allapot(eventId) };
+    const ev = evById(eventId);
+    // „Megyek” nem jegy — de ha van juttatás, a beolvasásnak VAN értelme (beváltás).
+    if (pd.kind === 'megyek' && !vanJuttatas(ev)) return { ok: false, reason: 'nem_jegy', nev: pd.nev, kind: pd.kind, fo: 1, scannedAt: null, allapot: allapot(eventId) };
+    const jut = () => juttatasAllapot(ev, passesOf(eventId).find((x) => x.id === pd.id) || pd);
+    if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: db.scanned[pd.id], passId: pd.id, juttatasok: jut(), allapot: allapot(eventId) };
     rememberForeign(pd);
     db.scanned[pd.id] = now;
     db.scans.push({ id: newId('s_'), eventId, passId: pd.id, result: 'ok', at: now });
     save();
-    return { ok: true, reason: null, nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, sorszam: pd.sorszam || null, scannedAt: now, allapot: allapot(eventId) };
+    return { ok: true, reason: null, nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, sorszam: pd.sorszam || null, scannedAt: now, passId: pd.id, juttatasok: jut(), allapot: allapot(eventId) };
   }
 
   // ---------- stat (a routes/kapu.js statData párja) ----------
@@ -185,7 +213,13 @@
     const utolso = okScans.slice(-10).reverse().map((s) => { const p = byId[s.passId]; return { nev: p ? p.nev : 'Ismeretlen', ini: initials(p ? p.nev : '?'), ido: hhmm(s.at), at: s.at, kind: p ? p.kind : 'vendeglista' }; });
     const bk = buckets(ev, okScans);
     const nw = new Date();
-    return { eventId: ev.id, megyek, bent, arany: megyek ? Math.round((bent / megyek) * 100) : 0, meghivoval: ps.filter((p) => p.ref).length, buckets: bk, svg: chartSvg(bk), top, utolso, frissitve: `${pad(nw.getHours())}:${pad(nw.getMinutes())}:${pad(nw.getSeconds())}` };
+    // Juttatás-beváltás (a routes/kapu.js statData párja)
+    const juttatasStat = juttatasaiEv(ev).map((j) => {
+      const jogosult = ps.filter((p) => j.kinek !== 'jegy' || p.kind === 'jegy');
+      const bev = jogosult.filter((p) => juttatasAllapot(ev, p).some((x) => x.id === j.id && x.bevaltva)).length;
+      return { ...j, jogosult: jogosult.length, bevaltva: bev, arany: jogosult.length ? Math.round((bev / jogosult.length) * 100) : 0 };
+    });
+    return { eventId: ev.id, megyek, bent, arany: megyek ? Math.round((bent / megyek) * 100) : 0, meghivoval: ps.filter((p) => p.ref).length, buckets: bk, svg: chartSvg(bk), top, utolso, juttatasStat, frissitve: `${pad(nw.getHours())}:${pad(nw.getMinutes())}:${pad(nw.getSeconds())}` };
   }
 
   // ---------- chat helyben ----------
@@ -236,8 +270,9 @@
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/kereses$/))) {
       const ev = evByKapu(decodeURIComponent(m[1])); if (!ev) return json({ ok: false, reason: 'unknown_kapu' }, 404);
       const q = norm(params.get('q') || '').slice(0, 60);
-      // A „Megyek” jelentkezők nem kerülnek a kapu-listába (ingyenes belépés → nincs mit ellenőrizni).
-      let list = passesOf(ev.id).filter((p) => p.kind !== 'megyek');
+      // „Megyek” jelentkezők csak juttatás esetén kerülnek a kapu-listába (akkor van mit beváltani).
+      const juttVan = vanJuttatas(ev);
+      let list = passesOf(ev.id).filter((p) => juttVan || p.kind !== 'megyek');
       if (q) { list = list.filter((p) => norm(p.nev).includes(q)); list.sort((a, b) => (a.status === 'scanned') - (b.status === 'scanned') || a.nev.localeCompare(b.nev, 'hu')); }
       else list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       return json({ ok: true, q, osszes: list.length, talalatok: list.slice(0, 20).map((p) => ({ id: p.id, nev: p.nev, kind: p.kind, status: p.status, scannedAt: p.scannedAt, token: tokenOf(p) })) });
@@ -247,6 +282,11 @@
       if (typeof body.token !== 'string' || typeof body.eventId !== 'string' || !evById(body.eventId)) return json({ ok: false, reason: 'format' }, 400);
       const mm = body.token.match(/\/p\/(?:\?[^#]*#|#|\?t=)?([A-Za-z0-9_.-]+)/);
       return json(scan(mm ? mm[1] : body.token.trim(), body.eventId));
+    }
+    if (path === '/api/bevaltas') {
+      let body = {}; try { body = JSON.parse((init && init.body) || '{}'); } catch { /* */ }
+      if (typeof body.passId !== 'string' || typeof body.eventId !== 'string' || typeof body.juttatasId !== 'string') return json({ ok: false, reason: 'format' }, 400);
+      return json(bevalt(body.passId, body.eventId, body.juttatasId));
     }
     if ((m = path.match(/^\/api\/stat\/(.+)$/))) { const ev = evById(decodeURIComponent(m[1])); return ev ? json({ ok: true, ...statData(ev) }) : json({ ok: false, reason: 'unknown_event' }, 404); }
     // Link-beolvasás: a valódi olvasás szervert igényel (idegen oldalt kell letölteni).
@@ -355,15 +395,20 @@
     $('ps-nev').textContent = pd.nev;
     const tetelek = (sajat && sajat.tetelek) || [];
     const osszeg = sajat ? (sajat.amountHuf || 0) : 0;
-    const rsvp = pd.kind === 'megyek'; // ingyenes belépés: nincs jegy, nincs QR
+    const rsvp = pd.kind === 'megyek'; // ingyenes belépés: nincs jegy
+    const qrKell = !rsvp || vanJuttatas(ev); // juttatásnál VAN mit beváltani → kell a kód
     const fo = (sajat && sajat.fo) || pd.fo || 1;
     if (rsvp) {
       $('ps-fejlec').textContent = 'Megyek';
-      $('ps-qr').classList.add('hidden');
-      $('ps-rsvp').classList.remove('hidden');
       $('ps-ticket').classList.add('rsvp');
       const ingyen = ev.ingyenEddig ? `Ingyenes belépés ${ev.ingyenEddig}-ig` : 'Ingyenes belépés';
-      $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> Sétálj be, a neved a hely listáján van.`;
+      if (qrKell) {
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kódot azért mutasd fel, hogy megkapd, ami jár.`;
+      } else {
+        $('ps-qr').classList.add('hidden');
+        $('ps-rsvp').classList.remove('hidden');
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> Sétálj be, a neved a hely listáján van.`;
+      }
       $('ps-kind').textContent = `${ev.korhatar}+`;
       $('ps-sorszam').textContent = '';
       $('ps-id').textContent = 'Jelentkezés';
@@ -388,8 +433,24 @@
     $('ps-invite-share').dataset.shareTitle = `Gyere velem: ${ev.cim}`; $('ps-invite-share').dataset.shareText = `${longDate(ev.kezdes)} · ${v ? v.nev : ''} – itt a lista:`; $('ps-invite-share').dataset.shareUrl = invite;
     $('ps-share').dataset.shareText = `${ev.cim} · ${longDate(ev.kezdes)}`; $('ps-share').dataset.shareUrl = passUrl;
     $('ps-chat').href = `${BASE}/chat/${ev.id}/`; $('ps-event').href = `${BASE}/e/${ev.id}/`;
+    // „Jár neked” lista beváltás-állapottal
+    const jutt = juttatasAllapot(ev, sajat || pd);
+    if (jutt.length) {
+      const ul = $('ps-juttatasok');
+      ul.innerHTML = '';
+      jutt.forEach((j) => {
+        const li = document.createElement('li');
+        li.className = 'juttatas-sor' + (j.bevaltva ? ' bevaltva' : '');
+        const i = document.createElement('span'); i.className = 'juttatas-ikon'; i.textContent = j.ikon;
+        const n = document.createElement('span'); n.className = 'juttatas-nev'; n.textContent = j.nev;
+        const a = document.createElement('span'); a.className = 'juttatas-allapot'; a.textContent = j.bevaltva ? '✓ beváltva ' + hhmm(j.bevaltva) : 'még nem';
+        li.appendChild(i); li.appendChild(n); li.appendChild(a);
+        ul.appendChild(li);
+      });
+      $('ps-juttatas-blokk').classList.remove('hidden');
+    }
     if (!rsvp && db.scanned[pd.id]) { $('ps-ticket').classList.add('used'); $('ps-hint').outerHTML = `<div class="stamp">BELÉPETT · ${hhmm(db.scanned[pd.id])}</div>`; }
-    if (!rsvp) {
+    if (qrKell) {
       try {
         const q = window.qrcode(0, 'M'); q.addData(passUrl); q.make();
         $('ps-qr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });

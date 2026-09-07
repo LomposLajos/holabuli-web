@@ -390,3 +390,43 @@
 
 /* A pénztárban nincs alsó menüsáv (fix sávként rálógna az űrlapra), ezért kevesebb alsó térköz kell. */
 body.body-penztar .page { padding-bottom: calc(var(--safe-b) + 28px); }
+
+/* --- Juttatások (promóciók): mit kap a vendég, mert az appon keresztül jött --- */
+.juttatas-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.juttatas-sor {
+  display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 10px 14px;
+  border: 1px solid var(--brand-line); border-radius: var(--r-m); background: var(--brand-tint);
+  font-size: var(--fs-s);
+}
+.juttatas-ikon { font-size: var(--fs-l); line-height: 1; flex: none; }
+.juttatas-nev { flex: 1; min-width: 0; font-weight: 700; }
+.juttatas-cimke {
+  flex: none; padding: 3px 8px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 700;
+  background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+}
+.juttatas-allapot { flex: none; font-size: var(--fs-xs); color: var(--muted); }
+.juttatas-sor.bevaltva { border-color: var(--ok-line); background: var(--ok-soft); }
+.juttatas-sor.bevaltva .juttatas-nev { text-decoration: line-through; opacity: 0.75; }
+.juttatas-sor.bevaltva .juttatas-allapot { color: var(--ok-ink); font-weight: 700; }
+
+/* --- Beváltás a kapu-overlayen --- */
+.ov-juttatas {
+  width: min(92vw, 460px); margin-top: 18px; padding: 14px;
+  border-radius: var(--r-m); background: var(--scrim); backdrop-filter: blur(8px);
+}
+.ov-juttatas-cim {
+  font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--scrim-ink); opacity: 0.85; margin-bottom: 10px;
+}
+.ov-j-sor {
+  display: flex; align-items: center; gap: 10px; min-height: 56px;
+  padding: 8px 10px; margin-bottom: 8px; border-radius: var(--r-s);
+  background: var(--surface); border: 1px solid var(--line);
+}
+.ov-j-nev { flex: 1; min-width: 0; text-align: left; font-weight: 700; font-size: var(--fs-s); color: var(--text); }
+.ov-j-btn { height: 48px; padding: 0 18px; font-size: var(--fs-s); flex: none; }
+.ov-j-kesz { flex: none; font-size: var(--fs-s); font-weight: 800; color: var(--ok); }
+/* A beváltott sor MARAD sötét felületen: az overlay zöldjén a halvány zöld kitöltés olvashatatlan. */
+.ov-j-sor.bevaltva { border-color: var(--ok-line); background: var(--surface); }
+.ov-j-sor.bevaltva .ov-j-nev { color: var(--muted); text-decoration: line-through; }
+.ov-kesz { width: 100%; margin-top: 4px; }
