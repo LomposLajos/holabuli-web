@@ -9,6 +9,20 @@
   'use strict';
   if (!window.HB_STATIC) return;
   const BASE = window.HB_BASE || '';
+
+  // ---------- Tiszta lap a bemutató előtt ----------
+  // A statikus kirakat minden adata a LÁTOGATÓ böngészőjében él (jegyek, beolvasások, chat,
+  // választott megjelenés). A `?reset=1` ezt törli, és visszavisz a friss főoldalra.
+  try {
+    if (/[?&]reset=1(&|$)/.test(location.search)) {
+      ['holabuli.static.v1', 'holabuli.passes', 'holabuli.nev', 'holabuli.meghivo', 'holabuli.demoProfil', 'holabuli.dizajn'].forEach((k) => {
+        try { localStorage.removeItem(k); } catch { /* privát mód */ }
+      });
+      try { sessionStorage.clear(); } catch { /* privát mód */ }
+      location.replace(BASE + '/');
+      return;
+    }
+  } catch { /* privát mód: nincs mit törölni */ }
   const SEED = window.HB_DATA || { events: [], venues: [], passes: [], scans: [], messages: [], meta: {} };
   const SEED_ID = (SEED.meta && SEED.meta.seededAt) || 'seed';
   const KEY = 'holabuli.static.v1';
