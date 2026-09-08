@@ -88,14 +88,26 @@
     let events = [];
     try { events = await (await fetch('/api/events', { cache: 'no-store' })).json(); } catch { return; }
     const evById = Object.fromEntries(events.map((e) => [e.id, e]));
-    const talalt = ids.map((id) => evById[id]).filter(Boolean);
-    if (!talalt.length) return;
+    if (!ids.map((id) => evById[id]).filter(Boolean).length) return;
     const base = window.HB_BASE || '';
+    // A listát MINDIG a tárolt állapotból rajzoljuk újra, hogy a levétel is látszódjon.
+    function rajzol() {
+    const talalt = HB.kedvencek().map((id) => evById[id]).filter(Boolean);
     lista.innerHTML = '';
     talalt.forEach((ev) => {
-      const a = document.createElement('a');
-      a.className = 'mentve-sor';
-      a.href = base + '/e/' + ev.id + (window.HB_STATIC ? '/' : '');
+      // ⚠️ A sor DIV, benne KIFESZÍTETT link — a szív-gomb NEM kerülhet a linken belülre.
+      // Az érvénytelen HTML lenne, és a gyakorlatban a szívre koppintás a linket is elsütné:
+      // a vendég le akarná venni a mentésről, és közben átdobná a buli oldalára.
+      // Ugyanaz a minta, mint a kártyáknál (views/partials/kartya.ejs).
+      const sor = document.createElement('div');
+      sor.className = 'mentve-sor';
+      const link = document.createElement('a');
+      link.className = 'mentve-link';
+      link.href = base + '/e/' + ev.id + (window.HB_STATIC ? '/' : '');
+      const sr = document.createElement('span');
+      sr.className = 'sr-only';
+      sr.textContent = ev.cim;
+      link.appendChild(sr);
       const b = document.createElement('span');
       b.className = 'mentve-body';
       const cim = document.createElement('b'); cim.textContent = ev.cim;
@@ -109,11 +121,15 @@
       szivGomb.setAttribute('aria-pressed', 'true');
       szivGomb.setAttribute('aria-label', ev.cim + ' levétele a mentettekről');
       szivGomb.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.5 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9Z"/></svg>';
-      a.appendChild(b); a.appendChild(szivGomb);
-      lista.appendChild(a);
+      sor.appendChild(link); sor.appendChild(b); sor.appendChild(szivGomb);
+      lista.appendChild(sor);
     });
     if (szam) szam.textContent = `${talalt.length} buli`;
-    szekcio.hidden = false;
+    // Ha az utolsó mentést is levették, a szakasz eltűnik — nem marad üres cím a profilon.
+    szekcio.hidden = !talalt.length;
+    }
+    rajzol();
+    document.addEventListener('hb:kedvenc', rajzol);
   })();
   document.getElementById('pf-rejt').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Profilod rejtve' : 'Profilod látható'));
   document.getElementById('pf-push').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Emlékeztető be' : 'Emlékeztető ki'));

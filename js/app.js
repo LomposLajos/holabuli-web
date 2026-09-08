@@ -55,6 +55,9 @@
     const be = HB.kedvencValt(b.dataset.kedvenc);
     HB.szivekFrissit();
     HB.toast(be ? 'Elmentve a kedvencek közé' : 'Levéve a kedvencekről');
+    // Aki LISTÁT épít a kedvencekből (profil „Mentve”), erre iratkozik fel — különben a sor
+    // ott maradna a levétel után, és a vendég nem tudná, sikerült-e.
+    document.dispatchEvent(new CustomEvent('hb:kedvenc', { detail: { id: b.dataset.kedvenc, be } }));
   });
 
   let toastTimer;
