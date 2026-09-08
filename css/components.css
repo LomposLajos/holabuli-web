@@ -574,9 +574,13 @@ body.body-penztar .page { padding-bottom: calc(var(--safe-b) + 28px); }
   content: ""; position: absolute; inset: 0; z-index: 400; pointer-events: none;
   background: linear-gradient(180deg, var(--hero-shade-top), transparent 30%, transparent 70%, var(--hero-shade-top));
 }
-.leaflet-control-zoom a {
+/* ⚠️ A vendorolt leaflet.min.css a head-ben KÉSŐBB töltődik be, mint ez a fájl, ezért azonos
+   erősségű szelektornál ő nyer. A saját szabályunknak eggyel erősebbnek kell lennie
+   (.page-terkep előtag), különben a nagyító-gomb 30×30 marad, a 44 px-es mérce alatt. */
+.page-terkep .leaflet-touch .leaflet-bar a,
+.page-terkep .leaflet-control-zoom a {
   background: var(--surface); color: var(--text); border-color: var(--line);
-  width: 34px; height: 34px; line-height: 32px;
+  width: 44px; height: 44px; line-height: 42px; font-size: 20px;
 }
 .leaflet-control-zoom a:hover { background: var(--surface-2); color: var(--text); }
 .leaflet-control-attribution {
@@ -627,3 +631,54 @@ body.body-penztar .page { padding-bottom: calc(var(--safe-b) + 28px); }
 }
 .hely-buli-cim { min-width: 0; font-size: var(--fs-s); font-weight: 600; }
 .hely-kartya > p { margin: 8px 0 0; }
+
+/* --- Jogi oldal: apróbetűs, dokumentum-szerű megjelenés ---
+   A szerkezet a magyar jegyértékesítők bevett tájékoztató-felépítését követi
+   (cél / adatkezelő / fogalmak / adattáblázat / adattovábbítás / biztonság / jogok /
+   jogorvoslat / záró rendelkezések), a hangnem magázó és jogi. */
+.page-jogi { --jogi-szoveg: 13.5px; }
+.jogi-top { position: relative; padding-top: calc(30px + var(--safe-t)); padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.jogi-top .back { top: calc(26px + var(--safe-t)); }
+.jogi-top h1 { font-size: var(--fs-l); letter-spacing: -0.01em; margin: 0 0 12px 52px; }
+.jogi-meta { display: grid; gap: 3px; margin: 0; font-size: var(--fs-xs); }
+.jogi-meta > div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; }
+.jogi-meta dt { color: var(--faint); }
+.jogi-meta dd { margin: 0; color: var(--muted); }
+
+.jogi-torzs { padding-top: 18px; }
+.jogi-torzs p, .jogi-torzs li {
+  font-size: var(--jogi-szoveg); line-height: 1.62; color: var(--muted); margin: 0 0 9px;
+}
+.jogi-torzs p b, .jogi-torzs li b { color: var(--text); font-weight: 600; }
+.jogi-torzs ul { padding-left: 18px; margin: 0 0 9px; }
+.jogi-bevezeto { border-left: 2px solid var(--line); padding-left: 13px; }
+.jogi-kiemelt {
+  border: 1px solid var(--line); border-radius: var(--r-s);
+  padding: 11px 13px; margin: 14px 0 4px; background: var(--bg-2);
+}
+.jogi-torzs h2 {
+  margin: 26px 0 9px; font-size: var(--fs-s); font-weight: 700;
+  letter-spacing: 0.01em; color: var(--text);
+}
+.jogi-zaras { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--faint); font-size: var(--fs-xs); }
+
+/* Adattáblázat — a tájékoztatók bevett, keretes formájában. */
+.jogi-tabla { margin: 12px 0 14px; overflow-x: auto; border: 1px solid var(--line); }
+.jogi-tabla table { border-collapse: collapse; width: 100%; min-width: 560px; }
+.jogi-tabla th, .jogi-tabla td {
+  text-align: left; padding: 9px 11px; vertical-align: top;
+  border: 1px solid var(--line); font-size: 12.5px; line-height: 1.5; color: var(--muted);
+}
+.jogi-tabla thead th { font-weight: 700; color: var(--text); background: var(--bg-2); }
+.jogi-tabla tbody td:first-child { color: var(--text); }
+
+@media (max-width: 560px) {
+  .jogi-tabla { overflow-x: visible; border: 0; }
+  .jogi-tabla table { min-width: 0; display: block; }
+  .jogi-tabla thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .jogi-tabla tbody { display: block; }
+  .jogi-tabla tbody tr { display: block; border: 1px solid var(--line); border-bottom: 0; padding: 10px 12px; }
+  .jogi-tabla tbody tr:last-child { border-bottom: 1px solid var(--line); }
+  .jogi-tabla tbody td { display: grid; grid-template-columns: 86px 1fr; gap: 10px; padding: 3px 0; border: 0; }
+  .jogi-tabla tbody td::before { content: attr(data-cimke); color: var(--faint); font-size: 11.5px; }
+}
