@@ -270,7 +270,18 @@
   async function local(path, params, init) {
     let m;
     if (path === '/api/verzio') return json({ build: window.HB_BUILD || 'static', name: 'Holabuli', static: true });
-    if (path === '/api/events') return json(events.filter((e) => !isPast(e.kezdes)).map((e) => ({ id: e.id, cim: e.cim, kezdes: e.kezdes, mufaj: e.mufaj, stilusok: e.stilusok, ar: e.ar, kiemelt: e.kiemelt, hely: (venueById(e.venueId) || {}).nev || '', going: allapot(e.id).megyek })));
+    if (path === '/api/events') return json(events.filter((e) => !isPast(e.kezdes)).sort((a, b) => new Date(a.kezdes) - new Date(b.kezdes)).map((e) => ({ id: e.id, cim: e.cim, kezdes: e.kezdes, mufaj: e.mufaj, tipus: e.tipus || 'buli', stilusok: e.stilusok, ar: e.ar, kiemelt: e.kiemelt, hely: (venueById(e.venueId) || {}).nev || '', when: when(e.kezdes), price: !e.ar ? (e.ingyenEddig ? `Ingyen ${e.ingyenEddig}-ig` : 'Ingyen') : huf(e.ar), going: allapot(e.id).megyek })));
+    if (path === '/api/helyek') {
+      const jovo = events.filter((e) => !isPast(e.kezdes)).sort((a, b) => new Date(a.kezdes) - new Date(b.kezdes));
+      return json(venues.map((v) => {
+        const sajat = jovo.filter((e) => e.venueId === v.id);
+        return {
+          id: v.id, nev: v.nev, kerulet: v.kerulet, cim: v.cim, tipus: v.tipus, lat: v.lat, lon: v.lon,
+          bulik: sajat.slice(0, 3).map((e) => ({ id: e.id, cim: e.cim, kezdes: e.kezdes, when: when(e.kezdes), price: !e.ar ? (e.ingyenEddig ? `Ingyen ${e.ingyenEddig}-ig` : 'Ingyen') : huf(e.ar), mufaj: e.mufaj })),
+          osszes: sajat.length,
+        };
+      }));
+    }
     if ((m = path.match(/^\/api\/pass\/(.+)$/))) {
       const pd = decode(decodeURIComponent(m[1]));
       if (!pd) return json({ ok: false }, 404);

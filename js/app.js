@@ -27,6 +27,36 @@
   } catch { /* privát mód */ }
   HB.ref = function () { try { return sessionStorage.getItem('holabuli.ref') || ''; } catch { return ''; } };
 
+  // --- Kedvencek (mentett bulik) ---
+  const KED_KEY = 'holabuli.kedvencek';
+  HB.kedvencek = function () { try { return JSON.parse(localStorage.getItem(KED_KEY) || '[]'); } catch { return []; } };
+  HB.kedvencVan = function (id) { return HB.kedvencek().indexOf(id) !== -1; };
+  HB.kedvencValt = function (id) {
+    const arr = HB.kedvencek();
+    const i = arr.indexOf(id);
+    if (i === -1) arr.unshift(id); else arr.splice(i, 1);
+    try { localStorage.setItem(KED_KEY, JSON.stringify(arr.slice(0, 200))); } catch { /* privát mód */ }
+    return i === -1;
+  };
+  // A szív-gombok állapotának kirajzolása (a statikus mód átrendezi a kártyákat, ezért újrahívható).
+  HB.szivekFrissit = function () {
+    const arr = HB.kedvencek();
+    document.querySelectorAll('[data-kedvenc]').forEach((b) => {
+      const on = arr.indexOf(b.dataset.kedvenc) !== -1;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  };
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-kedvenc]');
+    if (!b) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const be = HB.kedvencValt(b.dataset.kedvenc);
+    HB.szivekFrissit();
+    HB.toast(be ? 'Elmentve a kedvencek közé' : 'Levéve a kedvencekről');
+  });
+
   let toastTimer;
   HB.toast = function (msg) {
     const t = document.getElementById('toast');
@@ -263,6 +293,7 @@
         let ok = true;
         if (aktiv === 'ma') ok = c.dataset.ma === '1';
         else if (aktiv === 'ingyen') ok = c.dataset.ingyen === '1';
+        else if (aktiv.startsWith('tipus:')) ok = (c.dataset.tipus || 'buli') === aktiv.slice(6);
         else if (aktiv.startsWith('mufaj:')) ok = c.dataset.mufaj === aktiv.slice(6);
         if (ok && szavak.length) {
           // A data-kereso a szerveren már normalizált, de a régi sütött oldalak kedvéért újranormalizáljuk (egyszer, gyorsítótárba).
@@ -296,6 +327,22 @@
     if (kereso) kereso.addEventListener('input', apply);
     const torles = document.getElementById('szuro-torles');
     if (torles) torles.addEventListener('click', () => { aktiv = 'mind'; if (kereso) kereso.value = ''; szurok.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.szuro === 'mind')); apply(); });
+    // Népszerű keresések: csak a kereső fókuszakor látszanak, és a chip beírja magát a mezőbe.
+    const nep = document.getElementById('nepszeru');
+    if (nep && kereso) {
+      const mutat = (on) => nep.classList.toggle('latszik', on);
+      kereso.addEventListener('focus', () => mutat(true));
+      kereso.addEventListener('blur', () => setTimeout(() => mutat(false), 150));
+      nep.addEventListener('mousedown', (e) => e.preventDefault()); // ne veszítse el a fókuszt a mező
+      nep.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-keres]');
+        if (!b) return;
+        kereso.value = b.dataset.keres;
+        apply();
+        mutat(false);
+        kereso.blur();
+      });
+    }
     // Visszalépéskor a böngésző visszaírja a keresőmezőt — a listát is szűrni kell hozzá.
     if (kereso && kereso.value.trim()) apply();
   }
@@ -317,6 +364,11 @@
     });
   }
   jegyJelvenyek();
+  HB.szivekFrissit();
+
+  // --- Harang: pötty, ha van mit mutatni (jegy vagy mentett buli) ---
+  const harangPont = document.getElementById('harang-pont');
+  if (harangPont && (HB.passes().length || HB.kedvencek().length)) harangPont.classList.remove('hidden');
 
 
   // --- Sztorik ---

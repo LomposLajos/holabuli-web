@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hola!Buli">
 <link rel="manifest" href="/holabuli-web/manifest.webmanifest">
-<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=0679434-hqzz9" sizes="32x32" type="image/png">
-<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=0679434-hqzz9" sizes="48x48" type="image/png">
-<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=0679434-hqzz9">
+<link rel="icon" href="/holabuli-web/img/favicon-32.png?v=5646a92" sizes="32x32" type="image/png">
+<link rel="icon" href="/holabuli-web/img/favicon-48.png?v=5646a92" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/holabuli-web/img/icon-180.png?v=5646a92">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,22 +19,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap">
 
 <script>try{var t=localStorage.getItem('holabuli.dizajn');var q=new URLSearchParams(location.search).get('dizajn');if(q!==null)t=q==='alap'?'':q;if(t)document.documentElement.dataset.dizajn=t;}catch(e){}</script>
-<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/base.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/components.css?v=0679434-hqzz9">
+<link rel="stylesheet" href="/holabuli-web/css/tokens.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/base.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/components.css?v=5646a92">
 
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=0679434-hqzz9">
-<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=0679434-hqzz9">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-ejfel.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-rave.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-retro.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-mono.css?v=5646a92">
+<link rel="stylesheet" href="/holabuli-web/css/dizajn-valto.css?v=5646a92">
 
 
-<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='0679434-hqzz9';</script>
-<script src="/holabuli-web/js/data.js?v=0679434-hqzz9"></script>
+<script>window.HB_STATIC=true;window.HB_BASE='/holabuli-web';window.HB_BUILD='5646a92';</script>
+<script src="/holabuli-web/js/data.js?v=5646a92"></script>
 
 </head>
-<body class="" data-build="0679434-hqzz9">
+<body class="" data-build="5646a92">
 
 <main class="page page-profil" data-genres='{"techno":"Techno","house":"House","retro":"Retro","hiphop":"Hip-hop","latin":"Latin","indie":"Indie / rock","egyetemi":"Egyetemi buli","dnb":"Drum & bass"}'>
   <header class="topbar profil-head">
@@ -57,6 +57,14 @@
     </div>
   </section>
 
+  <section class="section" id="mentve-szekcio" hidden>
+    <div class="section-head">
+      <h2>Mentve</h2>
+      <span class="muted small" id="mentve-szam"></span>
+    </div>
+    <div class="mentve-lista" id="mentve-lista"></div>
+  </section>
+
   <section class="section">
     <h2>Stílusaid</h2>
     <div class="genre-bars" id="pf-stilusok"><p class="muted">Még nincs adat.</p></div>
@@ -76,13 +84,29 @@
     <h2>Beállítások</h2>
     <label class="switch-row"><span><b>Profil elrejtése</b><small class="muted">Ne lássák mások, hogy melyik bulira megyek.</small></span><input type="checkbox" id="pf-rejt" role="switch"></label>
     <label class="switch-row"><span><b>Emlékeztető a buli előtt</b><small class="muted">Értesítés 2 órával a kapunyitás előtt.</small></span><input type="checkbox" id="pf-push" role="switch" checked></label>
+    <div class="beallitas-sorok">
+      <div class="beallitas-sor">
+        <span><b>Nyelv</b><small class="muted">Az app nyelve.</small></span>
+        <span class="beallitas-ertek">Magyar</span>
+      </div>
+      <a class="beallitas-sor" href="/holabuli-web/adatkezeles">
+        <span><b>Adatkezelés</b><small class="muted">Mit tárolunk rólad és meddig.</small></span>
+        <span class="beallitas-nyil" aria-hidden="true">›</span>
+      </a>
+    </div>
     <button class="btn btn-ghost btn-block" type="button" id="pf-torles">Jegyek törlése erről a telefonról</button>
+    <button class="btn btn-ghost btn-block" type="button" id="pf-mindent-torol">Minden adatom törlése erről az eszközről</button>
+    <p class="muted small">Az appban nincs fiók: minden adatod ezen az eszközön él. A törlés a jegyeket, a mentett bulikat, a chat-üzeneteket és a beállításokat is elviszi.</p>
   </section>
 </main>
 <nav class="tabbar" aria-label="Fő navigáció">
   <a class="tab " href="/holabuli-web/" aria-label="Felfedezés">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3.7 6.3-1.9 5.2-5.2 1.9 1.9-5.2 5.2-1.9Z"/></svg>
     <span>Felfedezés</span>
+  </a>
+  <a class="tab " href="/holabuli-web/terkep" aria-label="Térkép">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+    <span>Térkép</span>
   </a>
   <a class="tab " href="/holabuli-web/heti-top" aria-label="Heti Top">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.9 6.3 6.8.8-5 4.7 1.3 6.8L12 17.3l-6 3.3 1.3-6.8-5-4.7 6.8-.8L12 2Z"/></svg>
@@ -98,12 +122,12 @@
   </a>
 </nav>
 
-<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 0679434-hqzz9">DEMÓ</div>
+<div class="demo-badge" title="Demó-verzió: kitalált helyek és bulik · build 5646a92">DEMÓ</div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/holabuli-web/vendor/qrcode-gen.js?v=0679434-hqzz9" defer></script><script src="/holabuli-web/js/static-mode.js?v=0679434-hqzz9" defer></script>
-<script src="/holabuli-web/js/app.js?v=0679434-hqzz9" defer></script>
-<script src="/holabuli-web/js/dizajn.js?v=0679434-hqzz9" defer></script>
-<script src="/holabuli-web/js/profil.js?v=0679434-hqzz9" defer></script>
+<script src="/holabuli-web/vendor/qrcode-gen.js?v=5646a92" defer></script><script src="/holabuli-web/js/static-mode.js?v=5646a92" defer></script>
+<script src="/holabuli-web/js/app.js?v=5646a92" defer></script>
+<script src="/holabuli-web/js/dizajn.js?v=5646a92" defer></script>
+<script src="/holabuli-web/js/profil.js?v=5646a92" defer></script>
 </body>
 </html>
 

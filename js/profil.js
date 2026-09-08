@@ -63,6 +63,58 @@
   demoBtn.addEventListener('click', () => { localStorage.setItem(DEMO_KEY, demo ? '0' : '1'); location.reload(); });
   torles.parentNode.insertBefore(demoBtn, torles);
   torles.addEventListener('click', () => { if (confirm('Törlöd a jegyeket erről a telefonról? A QR-kódok a linkjükön továbbra is élnek.')) { HB.savePasses([]); localStorage.removeItem('holabuli.meghivo'); location.reload(); } });
+
+  // Minden helyi adat törlése — fiók nincs, tehát ez a „fiók törlése” megfelelője.
+  const mindent = document.getElementById('pf-mindent-torol');
+  if (mindent) {
+    mindent.addEventListener('click', () => {
+      if (!confirm('Törlöd MINDEN adatodat erről az eszközről? Jegyek, mentett bulik, chat-üzenetek és beállítások is törlődnek. Ez nem vonható vissza.')) return;
+      ['holabuli.passes', 'holabuli.kedvencek', 'holabuli.nev', 'holabuli.meghivo', 'holabuli.demoProfil', 'holabuli.dizajn', 'holabuli.static.v1'].forEach((k) => {
+        try { localStorage.removeItem(k); } catch { /* privát mód */ }
+      });
+      try { sessionStorage.clear(); } catch { /* privát mód */ }
+      location.href = (window.HB_BASE || '') + '/';
+    });
+  }
+
+  // --- Mentve: a kedvencekhez tett bulik ---
+  (async function mentve() {
+    const szekcio = document.getElementById('mentve-szekcio');
+    const lista = document.getElementById('mentve-lista');
+    const szam = document.getElementById('mentve-szam');
+    if (!szekcio || !lista) return;
+    const ids = HB.kedvencek();
+    if (!ids.length) return;
+    let events = [];
+    try { events = await (await fetch('/api/events', { cache: 'no-store' })).json(); } catch { return; }
+    const evById = Object.fromEntries(events.map((e) => [e.id, e]));
+    const talalt = ids.map((id) => evById[id]).filter(Boolean);
+    if (!talalt.length) return;
+    const base = window.HB_BASE || '';
+    lista.innerHTML = '';
+    talalt.forEach((ev) => {
+      const a = document.createElement('a');
+      a.className = 'mentve-sor';
+      a.href = base + '/e/' + ev.id + (window.HB_STATIC ? '/' : '');
+      const b = document.createElement('span');
+      b.className = 'mentve-body';
+      const cim = document.createElement('b'); cim.textContent = ev.cim;
+      const meta = document.createElement('span'); meta.className = 'muted small';
+      meta.textContent = `${ev.when} · ${ev.hely || ''}`;
+      b.appendChild(cim); b.appendChild(meta);
+      const szivGomb = document.createElement('button');
+      szivGomb.type = 'button';
+      szivGomb.className = 'szivgomb szivgomb-sor on';
+      szivGomb.dataset.kedvenc = ev.id;
+      szivGomb.setAttribute('aria-pressed', 'true');
+      szivGomb.setAttribute('aria-label', ev.cim + ' levétele a mentettekről');
+      szivGomb.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.5 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9Z"/></svg>';
+      a.appendChild(b); a.appendChild(szivGomb);
+      lista.appendChild(a);
+    });
+    if (szam) szam.textContent = `${talalt.length} buli`;
+    szekcio.hidden = false;
+  })();
   document.getElementById('pf-rejt').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Profilod rejtve' : 'Profilod látható'));
   document.getElementById('pf-push').addEventListener('change', (e) => HB.toast(e.target.checked ? 'Emlékeztető be' : 'Emlékeztető ki'));
 })();
