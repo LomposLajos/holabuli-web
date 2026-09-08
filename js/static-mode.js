@@ -428,11 +428,11 @@
       $('ps-ticket').classList.add('rsvp');
       const ingyen = ev.ingyenEddig ? `Ingyenes belépés ${ev.ingyenEddig}-ig` : 'Ingyenes belépés';
       if (qrKell) {
-        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kódot azért mutasd fel, hogy megkapd, ami jár.`;
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kód a juttatásokhoz kell.`;
       } else {
         $('ps-qr').classList.add('hidden');
         $('ps-rsvp').classList.remove('hidden');
-        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> Sétálj be, a neved a hely listáján van.`;
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A neved rajta van a hely listáján.`;
       }
       $('ps-kind').textContent = `${ev.korhatar}+`;
       $('ps-sorszam').textContent = '';
