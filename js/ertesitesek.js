@@ -19,6 +19,10 @@
     if (ora < 24) return `${ora} óra`;
     return `${Math.round(ora / 24)} nap`;
   };
+  // ⚠️ A sor jobb szélén álló idő egy értesítés-listában konvenció szerint azt jelenti,
+  // MENNYI IDEJE ÉRKEZETT. Nálunk viszont azt, mennyi idő MÚLVA kezdődik a buli — ezért
+  // a „múlva” nem elhagyható, különben a vendég pont az ellenkezőjét olvassa ki.
+  const idoCimke = (t) => (t > 0 ? `${rel(t)} múlva` : 'most');
 
   (async function () {
     let events = [];
@@ -40,10 +44,14 @@
       const t = new Date(ev.kezdes).getTime() - most;
       if (t < -6 * ORA) return;
       sorok.push({
+        // A cím azt mondja meg, MIÉRT kapod; az időt a sor jobb széle viszi — ne kétszer.
+        // ⚠️ Az evId KELL: ennek a sornak az href-je JEGY-URL, amiben nincs benne a buli
+        // azonosítója — ezért az href-alapú duplikátum-szűrés pont ezt a sort nem látta.
+        evId: ev.id,
         ikon: p.kind === 'megyek' ? '✓' : '🎟️',
-        cim: t > 0 ? `${rel(t)} múlva kezdődik` : 'Most kezdődik',
+        cim: p.kind === 'megyek' ? 'Ott leszel' : 'Megvan a jegyed',
         szoveg: `${ev.cim} · ${ev.hely || ''}`,
-        ido: t > 0 ? rel(t) : 'most',
+        ido: idoCimke(t),
         rend: Math.abs(t),
         href: HB.passUrl(p.token),
       });
@@ -57,10 +65,11 @@
       const t = new Date(ev.kezdes).getTime() - most;
       if (t < 0) return;
       sorok.push({
+        evId: ev.id,
         ikon: '♥',
-        cim: 'Mentett buli közeledik',
+        cim: 'Mentett buli',
         szoveg: `${ev.cim} · ${ev.hely || ''} · még nincs jegyed`,
-        ido: rel(t),
+        ido: idoCimke(t),
         rend: Math.abs(t) + 1,
         href: utvonal('/e/' + ev.id),
       });
@@ -77,10 +86,11 @@
       .slice(0, 3)
       .forEach((ev) => {
         sorok.push({
+          evId: ev.id,
           ikon: '📍',
           cim: 'Ma este a közeledben',
           szoveg: `${ev.cim} · ${ev.hely || ''} · ${ev.ar ? new Intl.NumberFormat('hu-HU').format(ev.ar) + ' Ft' : 'ingyenes'}`,
-          ido: rel(new Date(ev.kezdes).getTime() - most),
+          ido: idoCimke(new Date(ev.kezdes).getTime() - most),
           rend: 10 * ORA,
           href: utvonal('/e/' + ev.id),
         });
@@ -89,12 +99,13 @@
     // 4) Kiemelt buli a héten, ha még kevés a sor
     if (sorok.length < 3) {
       events.filter((ev) => ev.kiemelt).slice(0, 2).forEach((ev) => {
-        if (sorok.some((s) => s.href.indexOf(ev.id) !== -1)) return;
+        if (sorok.some((s) => s.evId === ev.id)) return;
         sorok.push({
+          evId: ev.id,
           ikon: '★',
           cim: 'Heti Top ajánlat',
           szoveg: `${ev.cim} · ${ev.hely || ''}`,
-          ido: rel(new Date(ev.kezdes).getTime() - most),
+          ido: idoCimke(new Date(ev.kezdes).getTime() - most),
           rend: 100 * ORA,
           href: utvonal('/e/' + ev.id),
         });
@@ -102,9 +113,13 @@
     }
 
     sorok.sort((a, b) => a.rend - b.rend);
+    // Egy buliról EGY sor szóljon. A rendezés után az elöl álló a fontosabb (saját jegy > mentett > ajánlat),
+    // ezért az elsőt tartjuk meg. Enélkül ugyanaz a buli kétszer is felbukkanhat, más címmel.
+    const latott = new Set();
+    const egyedi = sorok.filter((s) => { if (!s.evId) return true; if (latott.has(s.evId)) return false; latott.add(s.evId); return true; });
     lista.innerHTML = '';
-    if (!sorok.length) { ures.classList.remove('hidden'); return; }
-    sorok.slice(0, 12).forEach((s) => {
+    if (!egyedi.length) { ures.classList.remove('hidden'); return; }
+    egyedi.slice(0, 12).forEach((s) => {
       const node = tpl.content.firstElementChild.cloneNode(true);
       node.href = s.href;
       node.querySelector('.ert-ikon').textContent = s.ikon;
