@@ -1,25 +1,25 @@
 Sorszám;Név;Kapcsolat;Jegy;Fő;Összeg (Ft);Státusz;Kérés ideje;Belépés ideje;Meghívó
-HB-W0WR;Ádám;;1× Elővétel;1;3500;Bent;2026-09-08 03:34;2026-09-08 22:44;
-HB-UW4W;Bea;;1× Normál;1;4600;Bent;2026-09-08 04:26;2026-09-08 22:51;
-HB-TBYT;Cili;;1× Elővétel;1;3500;Bent;2026-09-08 05:18;2026-09-08 22:58;
-HB-IKIH;Dorka;;1× Normál;1;4600;Bent;2026-09-08 06:10;2026-09-08 23:05;
-HB-AU9B;Elek;;2× Elővétel;2;7000;Bent;2026-09-08 07:02;2026-09-08 23:12;
-HB-JL3E;Fanni;;1× Normál;1;4600;Bent;2026-09-08 07:54;2026-09-08 23:19;
-HB-OKXA;Gábor;;1× Elővétel;1;3500;Bent;2026-09-08 08:46;2026-09-08 23:26;
-HB-FC8L;Hédi;;1× Normál;1;4600;Bent;2026-09-08 09:38;2026-09-08 23:33;
-HB-48KK;Imre;;1× Elővétel;1;3500;Bent;2026-09-08 10:30;2026-09-08 23:40;
-HB-MCVR;Janka;;1× Normál;1;4600;Bent;2026-09-08 11:22;2026-09-08 23:47;
-HB-KQGE;Kata;;2× Elővétel;2;7000;Bent;2026-09-08 12:14;2026-09-08 23:54;
-HB-CDPF;Levi;;1× Normál;1;4600;Bent;2026-09-08 13:06;2026-09-09 00:01;
-HB-DP81;Mira;;1× Elővétel;1;3500;Bent;2026-09-08 13:58;2026-09-09 00:08;
-HB-GCKU;Norbi;;1× Normál;1;4600;Bent;2026-09-08 14:50;2026-09-09 00:15;
-HB-IZ3A;Orsi;;1× Elővétel;1;3500;Megyek;2026-09-08 15:42;;
-HB-YLOC;Panna;;1× Normál;1;4600;Megyek;2026-09-08 16:34;;
-HB-VYOD;Roland;;2× Elővétel;2;7000;Megyek;2026-09-08 17:26;;Ádám
-HB-IBNK;Sára;;1× Normál;1;4600;Megyek;2026-09-08 18:18;;Bea
-HB-FDIL;Tomi;;1× Elővétel;1;3500;Megyek;2026-09-08 19:10;;Cili
-HB-TYKY;Vera;;1× Normál;1;4600;Megyek;2026-09-08 20:02;;Dorka
-HB-LMWY;Zita;;1× Elővétel;1;3500;Megyek;2026-09-08 20:54;;Ádám
-HB-HUXD;Ákos;;1× Normál;1;4600;Megyek;2026-09-08 21:46;;Bea
-HB-7OOM;Bogi;;2× Elővétel;2;7000;Megyek;2026-09-08 22:38;;Cili
-HB-MAH3;Dénes;;1× Normál;1;4600;Megyek;2026-09-08 23:30;;Dorka
+HB-ZTVC;Ádám;;1× Elővétel;1;3500;Bent;2026-09-09 23:20;2026-09-10 18:30;
+HB-DTXF;Bea;;1× Normál;1;4600;Bent;2026-09-10 00:12;2026-09-10 18:37;
+HB-GEUP;Cili;;1× Elővétel;1;3500;Bent;2026-09-10 01:04;2026-09-10 18:44;
+HB-PF3Y;Dorka;;1× Normál;1;4600;Bent;2026-09-10 01:56;2026-09-10 18:51;
+HB-QJB3;Elek;;2× Elővétel;2;7000;Bent;2026-09-10 02:48;2026-09-10 18:58;
+HB-WRKJ;Fanni;;1× Normál;1;4600;Bent;2026-09-10 03:40;2026-09-10 19:05;
+HB-ALVO;Gábor;;1× Elővétel;1;3500;Bent;2026-09-10 04:32;2026-09-10 19:12;
+HB-E8MX;Hédi;;1× Normál;1;4600;Bent;2026-09-10 05:24;2026-09-10 19:19;
+HB-IRKM;Imre;;1× Elővétel;1;3500;Bent;2026-09-10 06:16;2026-09-10 19:26;
+HB-I3PI;Janka;;1× Normál;1;4600;Bent;2026-09-10 07:08;2026-09-10 19:33;
+HB-DYXL;Kata;;2× Elővétel;2;7000;Bent;2026-09-10 08:00;2026-09-10 19:40;
+HB-QRAC;Levi;;1× Normál;1;4600;Bent;2026-09-10 08:52;2026-09-10 19:47;
+HB-EUCZ;Mira;;1× Elővétel;1;3500;Bent;2026-09-10 09:44;2026-09-10 19:54;
+HB-Q4PD;Norbi;;1× Normál;1;4600;Bent;2026-09-10 10:36;2026-09-10 20:01;
+HB-OIDZ;Orsi;;1× Elővétel;1;3500;Megyek;2026-09-10 11:28;;
+HB-DHQF;Panna;;1× Normál;1;4600;Megyek;2026-09-10 12:20;;
+HB-RFMS;Roland;;2× Elővétel;2;7000;Megyek;2026-09-10 13:12;;Ádám
+HB-VA76;Sára;;1× Normál;1;4600;Megyek;2026-09-10 14:04;;Bea
+HB-DWIJ;Tomi;;1× Elővétel;1;3500;Megyek;2026-09-10 14:56;;Cili
+HB-8QMJ;Vera;;1× Normál;1;4600;Megyek;2026-09-10 15:48;;Dorka
+HB-LYAF;Zita;;1× Elővétel;1;3500;Megyek;2026-09-10 16:40;;Ádám
+HB-4RS0;Ákos;;1× Normál;1;4600;Megyek;2026-09-10 17:32;;Bea
+HB-FTND;Bogi;;2× Elővétel;2;7000;Megyek;2026-09-10 18:24;;Cili
+HB-F8SW;Dénes;;1× Normál;1;4600;Megyek;2026-09-10 19:16;;Dorka

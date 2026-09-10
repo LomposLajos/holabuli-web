@@ -171,7 +171,17 @@
     // „Megyek” nem jegy — de ha van juttatás, a beolvasásnak VAN értelme (beváltás).
     if (pd.kind === 'megyek' && !vanJuttatas(ev)) return { ok: false, reason: 'nem_jegy', nev: pd.nev, kind: pd.kind, fo: 1, scannedAt: null, allapot: allapot(eventId) };
     const jut = () => juttatasAllapot(ev, passesOf(eventId).find((x) => x.id === pd.id) || pd);
-    if (db.scanned[pd.id]) return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: db.scanned[pd.id], passId: pd.id, juttatasok: jut(), allapot: allapot(eventId) };
+    // Már beolvasva? A helyben szkennelt (db.scanned) MELLETT a seedelt „bent” vendég is az —
+    // különben a kirakat mást mutatna, mint a szerver (lib/pass.js párja, karszalag-modell D-023):
+    // jegynél PIROS (jegymásolás-védelem), a „Megyek” juttatás-utalványnál nyugodt zöld újra.
+    const seedPass = (SEED.passes || []).find((p) => p.id === pd.id);
+    const korabbi = db.scanned[pd.id] || (seedPass && seedPass.scannedAt) || null;
+    if (korabbi) {
+      if (pd.kind === 'megyek') {
+        return { ok: true, reason: 'megyek_ujra', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: korabbi, passId: pd.id, juttatasok: jut(), allapot: allapot(eventId) };
+      }
+      return { ok: false, reason: 'duplicate', nev: pd.nev, kind: pd.kind, fo: pd.fo || 1, scannedAt: korabbi, passId: pd.id, juttatasok: jut(), allapot: allapot(eventId) };
+    }
     rememberForeign(pd);
     db.scanned[pd.id] = now;
     db.scans.push({ id: newId('s_'), eventId, passId: pd.id, result: 'ok', at: now });
@@ -428,7 +438,7 @@
       $('ps-ticket').classList.add('rsvp');
       const ingyen = ev.ingyenEddig ? `Ingyenes belépés ${ev.ingyenEddig}-ig` : 'Ingyenes belépés';
       if (qrKell) {
-        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kód a juttatásokhoz kell.`;
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kódra a kapunál szelvényeket kapsz.`;
       } else {
         $('ps-qr').classList.add('hidden');
         $('ps-rsvp').classList.remove('hidden');
@@ -468,7 +478,7 @@
         li.className = 'juttatas-sor' + (j.bevaltva ? ' bevaltva' : '');
         const i = document.createElement('span'); i.className = 'juttatas-ikon'; i.textContent = j.ikon;
         const n = document.createElement('span'); n.className = 'juttatas-nev'; n.textContent = j.nev;
-        const a = document.createElement('span'); a.className = 'juttatas-allapot'; a.textContent = j.bevaltva ? '✓ beváltva ' + hhmm(j.bevaltva) : 'még nem';
+        const a = document.createElement('span'); a.className = 'juttatas-allapot'; a.textContent = j.bevaltva ? '✓ kiadva ' + hhmm(j.bevaltva) : 'a kapunál kapod';
         li.appendChild(i); li.appendChild(n); li.appendChild(a);
         ul.appendChild(li);
       });

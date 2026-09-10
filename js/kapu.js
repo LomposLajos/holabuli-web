@@ -20,7 +20,10 @@
   const hhmm = (iso) => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
   const KIND = { vendeglista: 'Vendéglista', jegy: 'Jegy', megyek: 'Megyek (ingyenes)' };
 
-  // ---------- Juttatás-beváltás a kapuban (D-020) ----------
+  // ---------- Szelvény-kiadás a kapuban (D-020 + D-024) ----------
+  // A juttatásokat a vendég FIZIKAI szelvényként kapja meg a kapunál (italjegy, ruhatárjegy),
+  // a beváltás bent a pultnál/ruhatárnál papírral történik. Az app itt a KIADÁST jelöli
+  // tételenként — így látszik, ki kapta már meg, és a „nem kaptam” vita eldönthető.
   const ovJuttatas = $('ov-juttatas'), ovJuttatasLista = $('ov-juttatas-lista'), ovKesz = $('ov-kesz');
   let aktivPassId = null;
 
@@ -43,7 +46,7 @@
         const b = document.createElement('button');
         b.className = 'btn btn-primary ov-j-btn';
         b.type = 'button';
-        b.textContent = 'Beváltás';
+        b.textContent = 'Kiadva';
         b.addEventListener('click', async () => {
           b.disabled = true; b.textContent = '…';
           try {
@@ -55,7 +58,7 @@
             if (d.ok) { vibrate(60); soundOk(); } else { vibrate([120, 60, 120]); soundErr(); }
             juttatasokKiir(d.juttatasok || []);
           } catch {
-            b.disabled = false; b.textContent = 'Beváltás';
+            b.disabled = false; b.textContent = 'Kiadva';
           }
         });
         sor.appendChild(b);
@@ -136,6 +139,8 @@
 
   function showResult(r, opts) {
     opts = opts || {};
+    // ok=true mellett is jöhet ok-kód: 'megyek_ujra' — a juttatás-utalvány ismételt felmutatása.
+    // Az a zöld úton megy: ingyenes bulin a ki-be járást senki nem figyeli (karszalag-modell, D-023).
     const key = r && r.ok ? 'ok' : (r && TEXT[r.reason] ? r.reason : 'unknown');
     const t = TEXT[key];
     overlay.className = 'kapu-overlay ' + t.cls;
@@ -147,7 +152,7 @@
     ovSub.textContent = key === 'ok' ? (KIND[r.kind] || 'Vendéglista') + fo : (t.sub || '');
     // Ingyenes belépésnél a beolvasás nem beléptetés, hanem „itt van + jár neki valami”.
     if (key === 'ok' && r.kind === 'megyek') ovCim.textContent = 'INGYENES BELÉPÉS';
-    // Juttatások: a vendég a kapuban váltja be, tételenként. Amíg van beváltatlan, az overlay MARAD.
+    // Szelvények: a kapunál adja át a személyzet, tételenként jelölve. Amíg van kiadatlan, az overlay MARAD.
     aktivPassId = (r && r.passId) || null;
     const juttatasVan = (key === 'ok' || key === 'duplicate') && aktivPassId
       ? juttatasokKiir(r.juttatasok || [])
@@ -298,12 +303,19 @@
         node.classList.add('bent');
         st.textContent = `Bent · ${hhmm(p.scannedAt)}`;
         st.classList.add('ok');
-        btn.textContent = 'Bent van';
-        btn.disabled = true;
-        btn.classList.replace('btn-primary', 'btn-ghost');
+        if (p.kind === 'megyek') {
+          // A „Megyek” kód juttatás-utalvány: beolvasás után is megnyitható, mert a szelvény-kiadás
+          // vitájánál (nem kaptam!) az állapotot meg kell tudni nézni. A jegynél marad a letiltás.
+          btn.textContent = 'Megnyitás';
+          btn.classList.replace('btn-primary', 'btn-ghost');
+        } else {
+          btn.textContent = 'Bent van';
+          btn.disabled = true;
+          btn.classList.replace('btn-primary', 'btn-ghost');
+        }
       } else {
         st.textContent = `${KIND[p.kind] || 'Vendéglista'} · érvényes`;
-        if (p.kind === 'megyek') btn.textContent = 'Megnyitás'; // nem beléptetés, hanem juttatás-beváltás
+        if (p.kind === 'megyek') btn.textContent = 'Megnyitás'; // nem beléptetés, hanem szelvény-kiadás
       }
       btn.addEventListener('click', async () => {
         if (busy) return;
