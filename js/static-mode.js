@@ -284,7 +284,7 @@
   async function local(path, params, init) {
     let m;
     if (path === '/api/verzio') return json({ build: window.HB_BUILD || 'static', name: 'Holabuli', static: true });
-    if (path === '/api/events') return json(events.filter((e) => !isPast(e.kezdes)).sort((a, b) => new Date(a.kezdes) - new Date(b.kezdes)).map((e) => ({ id: e.id, cim: e.cim, kezdes: e.kezdes, mufaj: e.mufaj, tipus: e.tipus || 'buli', stilusok: e.stilusok, ar: e.ar, kiemelt: e.kiemelt, hely: (venueById(e.venueId) || {}).nev || '', when: when(e.kezdes), price: !e.ar ? (e.ingyenEddig ? `Ingyen ${e.ingyenEddig}-ig` : 'Ingyen') : huf(e.ar), going: allapot(e.id).megyek })));
+    if (path === '/api/events') return json(events.filter((e) => !isPast(e.kezdes)).sort((a, b) => new Date(a.kezdes) - new Date(b.kezdes)).map((e) => ({ id: e.id, cim: e.cim, kezdes: e.kezdes, mufaj: e.mufaj, tipus: e.tipus || 'buli', stilusok: e.stilusok, ar: e.ar, kiemelt: e.kiemelt, elmarad: e.elmarad || null, hely: (venueById(e.venueId) || {}).nev || '', when: when(e.kezdes), price: !e.ar ? (e.ingyenEddig ? `Ingyen ${e.ingyenEddig}-ig` : 'Ingyen') : huf(e.ar), going: allapot(e.id).megyek })));
     if (path === '/api/helyek') {
       const jovo = events.filter((e) => !isPast(e.kezdes)).sort((a, b) => new Date(a.kezdes) - new Date(b.kezdes));
       return json(venues.map((v) => {
@@ -371,6 +371,7 @@
       if (nev.length < 2) { window.HB && HB.toast('Add meg a neved (legalább 2 betű).'); return; }
       const ev = evById(fd.get('eventId'));
       if (!ev) { window.HB && HB.toast('Ez a buli nem található.'); return; }
+      if (ev.elmarad) { window.HB && HB.toast('Ez a buli elmarad.'); return; } // D-027
       const zar = (szoveg) => { f.dataset.kuldes = '1'; const g = f.querySelector('button[type="submit"]'); if (g) { g.disabled = true; g.setAttribute('aria-busy', 'true'); g.textContent = szoveg; } };
       // Kapacitás (a routes/public.js párja): seed + helyi passzok fő-összege a plafonhoz képest.
       const szabadHely = () => {

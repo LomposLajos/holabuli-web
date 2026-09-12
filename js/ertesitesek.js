@@ -43,6 +43,19 @@
       if (!ev) return;
       const t = new Date(ev.kezdes).getTime() - most;
       if (t < -6 * ORA) return;
+      // Lemondott buli (D-027): ez a LEGFONTOSABB értesítés — a lista elejére kerül.
+      if (ev.elmarad) {
+        sorok.push({
+          evId: ev.id,
+          ikon: '⚠️',
+          cim: 'Elmarad a buli',
+          szoveg: `${ev.cim} · ${ev.elmarad.indok || 'a hely lemondta'}`,
+          ido: idoCimke(t),
+          rend: -1, // mindig legelöl
+          href: utvonal('/e/' + ev.id),
+        });
+        return;
+      }
       sorok.push({
         // A cím azt mondja meg, MIÉRT kapod; az időt a sor jobb széle viszi — ne kétszer.
         // ⚠️ Az evId KELL: ennek a sornak az href-je JEGY-URL, amiben nincs benne a buli
@@ -64,6 +77,14 @@
       if (jegyek.some((p) => p.eventId === id)) return; // erről már szóltunk fent
       const t = new Date(ev.kezdes).getTime() - most;
       if (t < 0) return;
+      if (ev.elmarad) {
+        sorok.push({
+          evId: ev.id, ikon: '⚠️', cim: 'Elmarad a buli',
+          szoveg: `${ev.cim} · ${ev.elmarad.indok || 'a hely lemondta'}`,
+          ido: idoCimke(t), rend: -1, href: utvonal('/e/' + ev.id),
+        });
+        return;
+      }
       sorok.push({
         evId: ev.id,
         ikon: '♥',
@@ -80,6 +101,7 @@
       .filter((ev) => {
         const t = new Date(ev.kezdes).getTime() - most;
         return t > -2 * ORA && t < 20 * ORA
+          && !ev.elmarad // lemondott bulira nem hívunk senkit
           && !jegyek.some((p) => p.eventId === ev.id)
           && kedvencek.indexOf(ev.id) === -1;
       })

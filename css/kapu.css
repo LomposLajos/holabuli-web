@@ -103,3 +103,6 @@
   .reader-wrap { max-height: 44dvh; }
   .ov-ikon { width: 120px; height: 120px; font-size: 76px; }
 }
+
+/* Lemondott buli a kapun (D-027): a szemelyzet elso pillantasra lassa. */
+.kapu-tag.elmarad { background: var(--err); color: #fff; }
