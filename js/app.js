@@ -151,6 +151,8 @@
       const osszegEl = document.getElementById('jegy-osszeg');
       const foEl = document.getElementById('jegy-fo');
       const tovabb = document.getElementById('jegy-tovabb');
+      // Kapacitás-plafon: ennél több fő nem választható (üres = nincs plafon).
+      const szabad = sheet.dataset.szabad === '' ? Infinity : Number(sheet.dataset.szabad);
       const huf = (n) => new Intl.NumberFormat('hu-HU').format(Math.round(n || 0)) + ' Ft';
       function frissit() {
         let osszeg = 0, fo = 0;
@@ -160,11 +162,14 @@
           const db = Math.max(0, Math.min(10, Number(out.dataset.db) || 0));
           out.dataset.db = db; out.textContent = db;
           sor.classList.toggle('valasztott', db > 0);
+          if (db > 0) { osszeg += (Number(sor.dataset.ar) || 0) * db; fo += db; reszek.push(`${sor.dataset.tipus}:${db}`); }
+        });
+        sorok.forEach((sor) => {
+          const db = Number(sor.querySelector('.stepper-db').dataset.db) || 0;
           const minusz = sor.querySelector('[data-lep="-1"]');
           if (minusz) minusz.disabled = db === 0;
           const plusz = sor.querySelector('[data-lep="1"]');
-          if (plusz) plusz.disabled = db === 10;
-          if (db > 0) { osszeg += (Number(sor.dataset.ar) || 0) * db; fo += db; reszek.push(`${sor.dataset.tipus}:${db}`); }
+          if (plusz) plusz.disabled = db === 10 || fo >= szabad;
         });
         if (osszegEl) osszegEl.textContent = osszeg > 0 ? huf(osszeg) : (fo ? 'Ingyenes' : '—');
         if (foEl) foEl.textContent = fo ? ` · ${fo} fő` : '';
@@ -183,7 +188,14 @@
         if (!b) return;
         e.preventDefault();
         const out = b.closest('.jegy-sor').querySelector('.stepper-db');
-        out.dataset.db = Math.max(0, Math.min(10, (Number(out.dataset.db) || 0) + Number(b.dataset.lep)));
+        const uj = Math.max(0, Math.min(10, (Number(out.dataset.db) || 0) + Number(b.dataset.lep)));
+        // Plafon: az összes fő nem léphet a szabad helyek fölé.
+        const tobbi = sorok.reduce((s, sor) => {
+          const o = sor.querySelector('.stepper-db');
+          return o === out ? s : s + (Number(o.dataset.db) || 0);
+        }, 0);
+        if (uj + tobbi > szabad) { HB.toast(`Már csak ${szabad} hely van.`); return; }
+        out.dataset.db = uj;
         frissit();
       });
       if (tovabb) tovabb.addEventListener('click', (e) => { if (tovabb.classList.contains('disabled')) { e.preventDefault(); HB.toast('Válassz legalább egy jegyet.'); } });

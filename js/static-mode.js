@@ -368,9 +368,18 @@
       const ev = evById(fd.get('eventId'));
       if (!ev) { window.HB && HB.toast('Ez a buli nem található.'); return; }
       const zar = (szoveg) => { f.dataset.kuldes = '1'; const g = f.querySelector('button[type="submit"]'); if (g) { g.disabled = true; g.setAttribute('aria-busy', 'true'); g.textContent = szoveg; } };
+      // Kapacitás (a routes/public.js párja): seed + helyi passzok fő-összege a plafonhoz képest.
+      const szabadHely = () => {
+        const kap = Number(ev.kapacitas) || 0;
+        if (!kap) return null;
+        const fogl = passesOf(ev.id).reduce((s, p) => s + (p.fo || 1), 0);
+        return Math.max(0, kap - fogl);
+      };
 
       // „Megyek”: ingyenes belépés → nincs jegy, nincs QR, elérhetőség sem kell.
       if (fd.get('mod') === 'megyek') {
+        const sz0 = szabadHely();
+        if (sz0 !== null && sz0 < 1) { window.HB && HB.toast('Ez a buli betelt.'); return; }
         zar('Egy pillanat…');
         const r = HBS.issuePass({ eventId: ev.id, nev, kapcsolat: '', ref: fd.get('ref') || null, tetelek: [], kind: 'megyek' });
         location.href = `${BASE}/p/?uj=1#${r.token}`;
@@ -382,6 +391,9 @@
       let tetelek = rendelesBol(ev, fd.get('t'));
       if (!tetelek.length) { const t0 = tipusokOf(ev)[0]; tetelek = t0 ? [{ tipusId: t0.id, nev: t0.nev, ar: t0.ar || 0, db: 1 }] : []; }
       if (!tetelek.length) { window.HB && HB.toast('Ezen a bulin nincs megvehető jegy — a belépés ingyenes.'); return; }
+      const kellFo = tetelek.reduce((s, x) => s + x.db, 0);
+      const sz = szabadHely();
+      if (sz !== null && kellFo > sz) { window.HB && HB.toast(sz < 1 ? 'Ez a buli időközben betelt.' : `Már csak ${sz} hely van — válassz kevesebb jegyet.`); return; }
       zar('Jegy készül…');
       const { token } = HBS.issuePass({ eventId: ev.id, nev, kapcsolat: k, ref: fd.get('ref') || null, tetelek });
       location.href = `${BASE}/p/?uj=1#${token}`;

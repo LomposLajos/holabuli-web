@@ -49,6 +49,9 @@
 .chip.on { background: var(--text); color: var(--bg); border-color: transparent; }
 .chip.sm { height: 30px; padding: 0 10px; font-size: 13px; }
 .chip.gold { background: var(--gold-grad); color: var(--on-accent); border-color: transparent; }
+/* Kapacitás-jelzők: fogyó helyek (figyelem-szín) és telt ház. */
+.chip.kevesk { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.chip.betelt { background: color-mix(in srgb, var(--err) 16%, transparent); color: var(--err); border-color: color-mix(in srgb, var(--err) 45%, transparent); }
 .chips-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* ===== Plakát-kártyák ===== */
