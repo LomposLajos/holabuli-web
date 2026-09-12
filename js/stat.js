@@ -16,6 +16,7 @@
 
   let lastUtolso = '';
   function render(d) {
+    if (document.getElementById('st-hozott')) setNum($('st-hozott'), d.hozott);
     setNum($('st-megyek'), d.megyek);
     setNum($('st-bent'), d.bent);
     setNum($('st-arany'), d.arany + '%');

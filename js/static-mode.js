@@ -134,6 +134,10 @@
     }
     return out;
   }
+  // Hány VENDÉGET hozott az app (routes/kapu.js hozott() párja): beolvasott jegyek fő-összege.
+  function hozottFo(eventId) {
+    return passesOf(eventId).filter((p) => p.status === 'scanned').reduce((s, p) => s + (p.fo || 1), 0);
+  }
   function allapot(eventId) { const ps = passesOf(eventId); return { megyek: ps.length, bent: ps.filter((p) => p.status === 'scanned').length }; }
   const newId = (pre) => pre + Math.random().toString(36).slice(2, 10);
 
@@ -243,7 +247,7 @@
       const bev = jogosult.filter((p) => juttatasAllapot(ev, p).some((x) => x.id === j.id && x.bevaltva)).length;
       return { ...j, jogosult: jogosult.length, bevaltva: bev, arany: jogosult.length ? Math.round((bev / jogosult.length) * 100) : 0 };
     });
-    return { eventId: ev.id, megyek, bent, arany: megyek ? Math.round((bent / megyek) * 100) : 0, meghivoval: ps.filter((p) => p.ref).length, buckets: bk, svg: chartSvg(bk), top, utolso, juttatasStat, frissitve: `${pad(nw.getHours())}:${pad(nw.getMinutes())}:${pad(nw.getSeconds())}` };
+    return { eventId: ev.id, megyek, bent, hozott: hozottFo(ev.id), arany: megyek ? Math.round((bent / megyek) * 100) : 0, meghivoval: ps.filter((p) => p.ref).length, buckets: bk, svg: chartSvg(bk), top, utolso, juttatasStat, frissitve: `${pad(nw.getHours())}:${pad(nw.getMinutes())}:${pad(nw.getSeconds())}` };
   }
 
   // ---------- chat helyben ----------
