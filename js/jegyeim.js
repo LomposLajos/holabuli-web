@@ -1,4 +1,40 @@
-/* Jegyeim: a telefonon tárolt passz-tokenekből tölti a listát. */
+/* Jegyeim: a telefonon tárolt passz-tokenekből tölti a listát + elveszett jegy visszakeresése. */
+
+// --- Elveszett jegy (D-028): elérhetőség ÉS név kell, a találatot felvesszük a telefonra ---
+(function kereso() {
+  'use strict';
+  const form = document.getElementById('jegy-kereso-form');
+  if (!form) return;
+  const doboz = document.getElementById('kereses-eredmeny');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const gomb = form.querySelector('button[type="submit"]');
+    gomb.disabled = true; gomb.textContent = 'Keresés…';
+    doboz.textContent = '';
+    try {
+      const r = await fetch('/api/jegy/kereses', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kapcsolat: fd.get('kapcsolat'), nev: fd.get('nev') }),
+      });
+      const d = await r.json();
+      if (r.status === 429) { doboz.textContent = 'Túl sok próbálkozás, várj egy percet.'; return; }
+      if (!d.ok || !d.talalatok.length) {
+        doboz.textContent = 'Nincs jegy ezzel az elérhetőséggel és névvel. Ellenőrizd, pontosan azt írtad-e be, amit a vásárlásnál.';
+        return;
+      }
+      // Megvan: felvesszük a telefonra, és újratöltjük a listát.
+      d.talalatok.forEach((t) => window.HB.addPass({ token: t.token, eventId: t.eventId, nev: t.nev, kind: t.kind, at: Date.now() }));
+      doboz.textContent = `${d.talalatok.length} jegy megvan — felvettük erre a telefonra.`;
+      setTimeout(() => location.reload(), 900);
+    } catch {
+      doboz.textContent = 'Nincs kapcsolat. Próbáld újra.';
+    } finally {
+      gomb.disabled = false; gomb.textContent = 'Keresés';
+    }
+  });
+})();
+
 (async function () {
   'use strict';
   const HB = window.HB;

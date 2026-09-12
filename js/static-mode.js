@@ -305,6 +305,23 @@
       const sajat = db.passes.find((x) => x.id === pd.id) || null;
       return json({ ok: true, pass: { id: pd.id, nev: pd.nev, status: db.scanned[pd.id] ? 'scanned' : (p.status || 'issued'), createdAt: pd.createdAt, scannedAt: db.scanned[pd.id] || null, kind: pd.kind, tetelek: (sajat && sajat.tetelek) || [], fo: (sajat && sajat.fo) || pd.fo || 1, sorszam: pd.sorszam || (sajat && sajat.sorszam) || '', amountHuf: (sajat && sajat.amountHuf) || 0 }, event: { id: ev.id, cim: ev.cim, kezdes: ev.kezdes, mufaj: ev.mufaj, ar: ev.ar, korhatar: ev.korhatar, when: when(ev.kezdes), longDate: longDate(ev.kezdes), price: price(ev), past: isPast(ev.kezdes) }, venue: v && { id: v.id, nev: v.nev, kerulet: v.kerulet, cim: v.cim }, token: decodeURIComponent(m[1]) });
     }
+    // Elveszett jegy visszakeresése (a routes/public.js párja, D-028): elérhetőség ÉS név kell.
+    if (path === '/api/jegy/kereses') {
+      let body = {}; try { body = JSON.parse((init && init.body) || '{}'); } catch { /* */ }
+      const kulcs = (s) => {
+        const t = String(s || '').trim().toLowerCase();
+        const sz = t.replace(/\D/g, '');
+        return sz.length >= 7 ? sz.slice(-9) : t.replace(/\s+/g, '');
+      };
+      const k = kulcs(body.kapcsolat), n = kulcs(body.nev);
+      if (!k || n.length < 2) return json({ ok: false, reason: 'format' }, 400);
+      const talalatok = db.passes
+        .filter((p) => p.status !== 'void' && kulcs(p.kapcsolat) === k && kulcs(p.nev) === n)
+        .map((p) => ({ p, ev: evById(p.eventId) }))
+        .filter((x) => x.ev && !isPast(x.ev.kezdes))
+        .map(({ p, ev }) => ({ token: tokenOf(p), eventId: ev.id, nev: p.nev, kind: p.kind, cim: ev.cim, hely: (venueById(ev.venueId) || {}).nev || '', when: when(ev.kezdes) }));
+      return json({ ok: true, talalatok });
+    }
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/allapot$/))) { const ev = evByKapu(decodeURIComponent(m[1])); return ev ? json({ ok: true, ...allapot(ev.id) }) : json({ ok: false, reason: 'unknown_kapu' }, 404); }
     if ((m = path.match(/^\/api\/kapu\/([^/]+)\/kereses$/))) {
       const ev = evByKapu(decodeURIComponent(m[1])); if (!ev) return json({ ok: false, reason: 'unknown_kapu' }, 404);
