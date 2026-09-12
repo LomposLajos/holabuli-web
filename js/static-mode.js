@@ -438,7 +438,7 @@
       $('ps-ticket').classList.add('rsvp');
       const ingyen = ev.ingyenEddig ? `Ingyenes belépés ${ev.ingyenEddig}-ig` : 'Ingyenes belépés';
       if (qrKell) {
-        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kódra a kapunál szelvényeket kapsz.`;
+        $('ps-hint').innerHTML = `<b>${ingyen}, jegy nem kell.</b> A kód a szelvényekhez kell.`;
       } else {
         $('ps-qr').classList.add('hidden');
         $('ps-rsvp').classList.remove('hidden');
@@ -478,8 +478,8 @@
         li.className = 'juttatas-sor' + (j.bevaltva ? ' bevaltva' : '');
         const i = document.createElement('span'); i.className = 'juttatas-ikon'; i.textContent = j.ikon;
         const n = document.createElement('span'); n.className = 'juttatas-nev'; n.textContent = j.nev;
-        const a = document.createElement('span'); a.className = 'juttatas-allapot'; a.textContent = j.bevaltva ? '✓ kiadva ' + hhmm(j.bevaltva) : 'a kapunál kapod';
-        li.appendChild(i); li.appendChild(n); li.appendChild(a);
+        let a = null; if (j.bevaltva) { a = document.createElement('span'); a.className = 'juttatas-allapot'; a.textContent = '✓ kiadva ' + hhmm(j.bevaltva); }
+        li.appendChild(i); li.appendChild(n); if (a) li.appendChild(a);
         ul.appendChild(li);
       });
       $('ps-juttatas-blokk').classList.remove('hidden');
